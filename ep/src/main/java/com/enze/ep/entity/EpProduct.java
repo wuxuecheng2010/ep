@@ -1,6 +1,10 @@
 package com.enze.ep.entity;
 
+import java.math.BigDecimal;
 
+import lombok.Data;
+
+@Data
 public class EpProduct {
 	
 	private int iproductid;
@@ -10,8 +14,10 @@ public class EpProduct {
 	private String vceasycode;
 	private String vcstandard;
 	private String vcmanufacturer;
-	
-	
+	private String title;//用于bigAutocomplete
+	private String unitname;
+	private BigDecimal numprice;
+	/*
 	public int getIproductid() {
 		return iproductid;
 	}
@@ -54,5 +60,19 @@ public class EpProduct {
 	public void setVcmanufacturer(String vcmanufacturer) {
 		this.vcmanufacturer = vcmanufacturer;
 	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getUnitname() {
+		return unitname;
+	}
+	public void setUnitname(String unitname) {
+		this.unitname = unitname;
+	}
+	*/
+	
 	
 }

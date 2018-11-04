@@ -1,5 +1,7 @@
 package com.enze.ep.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -10,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.enze.ep.entity.EpCounter;
 import com.enze.ep.entity.EpUser;
+import com.enze.ep.enums.UserType;
+import com.enze.ep.service.EpCounterService;
 import com.enze.ep.utils.MyAuthUtils;
 
 @Controller
@@ -19,6 +24,10 @@ public class IndexController {
 	
 	@Autowired
 	MyAuthUtils myAuthUtils;
+	
+	@Autowired
+	EpCounterService epCounterServiceImpl;
+	
 
 	@RequestMapping(value = "/doctor", method = RequestMethod.GET)
 	public ModelAndView dtIndex(HttpServletRequest request, HttpServletResponse response) {
@@ -39,7 +48,21 @@ public class IndexController {
 		ModelMap map=new ModelMap();
 		EpUser epUser=myAuthUtils.getEpUserByCookie(request, response);
 		map.put("epUser", epUser);
-		//String authToken=myAuthUtils.getAuthToken(request, response);
+
+        //护士用户所对应的柜台 
+		if(epUser.getUsertype()==UserType.NURSE.getTypeValue()) {
+			List<EpCounter> epCounterList=epCounterServiceImpl.findCounterBySectionid(epUser.getSectionid());
+			map.put("epCounterList", epCounterList);
+			String counterids="";
+			for(EpCounter c : epCounterList) {
+				counterids+=c.getIcounterid()+",";
+			}
+			if(!"".equals(counterids))
+				counterids=counterids.substring(0, counterids.length()-1);
+			map.put("counterids", counterids);
+		}
+		
+		
 		return map;
 	}
 
