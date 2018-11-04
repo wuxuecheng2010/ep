@@ -64,7 +64,7 @@
 								<div class="col-md-3"></div>
 								<div class="col-md-3"></div>
 								<div class="col-md-3">
-							            <input type="text" class="form-control" placeholder="输入病人信息快速获取" style="margin-top: -7px;">
+							            <input type="text" class="form-control" placeholder="输入病人信息快速获取" style="margin-top: -7px;" id="inpatientname">
 								</div>
 							</div>
 
@@ -75,20 +75,20 @@
 								<div class="col-md-3 column">
 									<div class="input-group">
 										<span class="input-group-addon">病人姓名</span>
-										<input type="text" class="form-control" placeholder="twitterhandle">
+										<input type="text" class="form-control" placeholder="姓名" id="name">
 									</div>
 								</div>
 								<div class="col-md-3 column">
 									<div class="input-group">
 										<span class="input-group-addon">床&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号</span>
-										<input type="text" class="form-control" placeholder="twitterhandle">
+										<input type="text" class="form-control" placeholder="床号" id="bedno">
 									</div>
 								</div>
 
 								<div class="col-md-3 column">
 									<div class="input-group">
 										<span class="input-group-addon">家庭住址</span>
-										<input type="text" class="form-control" placeholder="twitterhandle">
+										<input type="text" class="form-control" placeholder="家庭地址" id="address">
 									</div>
 								</div>
 
@@ -226,6 +226,8 @@
 					$(function() {
 						
 						//alert([[${counterids}]]);
+						
+						initpatientselect();
 
 						//设置下拉选择框
 						initselect();
@@ -243,6 +245,22 @@
 						inittotalcountschange();
 
 					});
+					
+					function initpatientselect(){
+						var url="/inpatient/select";
+						$("#inpatientname").bigAutocomplete({
+							width: 300,
+							url:url,
+							callback: function(data) {
+								
+								$("#name").val(data.name);
+								$("#bedno").val(data.bedno);
+								$("#address").val(data.address);
+
+							}
+						});
+						
+					}
 
 					//初始化商品信息输入框
 					function initselect() {
