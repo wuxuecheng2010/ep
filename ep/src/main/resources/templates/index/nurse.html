@@ -1,0 +1,360 @@
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>便民药房</title>
+		<link rel="stylesheet" href="/static/plugs/bootstrap-3.3.7/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="/static/plugs/bigautocomplete/css/jquery.bigautocomplete.css" type="text/css" />
+
+		<script type="text/javascript" src="/static/plugs/jquery-2.1.1/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="/static/plugs/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+		<script src="/static/plugs/bigautocomplete/js/jquery.bigautocomplete.js"></script>
+		<style>
+
+		</style>
+
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+					<nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+							<a class="navbar-brand" href="#">便民药房</a>
+						</div>
+
+						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+							<ul class="nav navbar-nav">
+								<li class="active">
+									<a href="#">温岭市第一人民医院</a>
+								</li>
+							</ul>
+							
+							<ul class="nav navbar-nav pull-right" style="margin-right: 16px;">
+								
+								<li class="dropdown">
+									 <a href="#" class="dropdown-toggle" data-toggle="dropdown" th:text="${epUser.username}">小明医生<strong class="caret"></strong></a>
+									<ul class="dropdown-menu">
+										<li>
+											 <a href="/logout">退出</a>
+										</li>
+									</ul>
+								</li>
+							</ul>
+					
+
+						</div>
+
+					</nav>
+					<div class="row clearfix" style="margin-top: 60px;">
+						<div class="col-md-4 column">
+							<h3>
+								便捷购物
+							</h3>
+						</div>
+					</div>
+
+					<div class="panel panel-default">
+						<div class="panel-heading" style="height: 40px;">
+							
+							<div class="row clearfix">
+								<div class="col-md-3"><span>病人信息</span></div>
+								<div class="col-md-3"></div>
+								<div class="col-md-3"></div>
+								<div class="col-md-3">
+							            <input type="text" class="form-control" placeholder="输入病人信息快速获取" style="margin-top: -7px;">
+								</div>
+							</div>
+
+						</div>
+						<div class="panel-body">
+							<div class="row clearfix" style="margin-top: 12px;">
+
+								<div class="col-md-3 column">
+									<div class="input-group">
+										<span class="input-group-addon">病人姓名</span>
+										<input type="text" class="form-control" placeholder="twitterhandle">
+									</div>
+								</div>
+								<div class="col-md-3 column">
+									<div class="input-group">
+										<span class="input-group-addon">床&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号</span>
+										<input type="text" class="form-control" placeholder="twitterhandle">
+									</div>
+								</div>
+
+								<div class="col-md-3 column">
+									<div class="input-group">
+										<span class="input-group-addon">家庭住址</span>
+										<input type="text" class="form-control" placeholder="twitterhandle">
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+					<div class="panel panel-default">
+						<div class="panel-heading" style="height: 40px;">
+							
+							<div class="row clearfix">
+								<div class="col-md-3"><span>购物清单</span></div>
+								<div class="col-md-3"></div>
+								<div class="col-md-3"></div>
+								<div class="col-md-3">
+							        <button class="btn btn-xs btn-success pull-right" onclick="createrow()" style="margin-top: -2px;"><em class="glyphicon glyphicon-plus"></em>添加明细</button>
+								</div>
+							</div>
+							
+						</div>
+						<div class="panel-body">
+							<div class="row clearfix">
+								<div class="col-md-12 column">
+
+									<table class="table table-condensed" style="font-size: 14px;">
+										<thead>
+											<tr>
+												<th>
+													序号
+												</th>
+												<th style="display: none;">
+													商品ID
+												</th>
+												<th>
+													商品编码
+												</th>
+												<th>
+													名称/通用名
+												</th>
+												<th>
+													规格
+												</th>
+
+												<th>
+													单位
+												</th>
+
+												<th>
+													数量
+												</th>
+												<th>
+													单价
+												</th>
+												<th>
+													金额
+												</th>
+												<th>
+													删除
+												</th>
+											</tr>
+										</thead>
+										<tbody id="cflist">
+											<tr>
+												<td>
+													<span id="numno" style="line-height: 20px;">1</span>
+												</td>
+												<td style="display: none;">
+													<span id="iproductid"></span>
+												</td>
+												<td>
+													<span id="vcproductcode"></span>
+												</td>
+												<td>
+													<input type="text" id="universalname" class="textvcuniversalname" autocomplete="off" style="width: 98%;" />
+												</td>
+												<td>
+													<span id="vcstandard"></span>
+												</td>
+												<td>
+													<span>克</span>
+												</td>
+
+												<td>
+													<input type="text" id="totalcounts" autocomplete="off" style="width: 80px;" />
+												</td>
+												<td>
+													<span>￥10</span>
+												</td>
+												<td>
+													<span>￥100</span>
+												</td>
+												<td>
+													<button class="btn btn-danger btn-xs" id="btn-del"><em class="glyphicon glyphicon-remove"></em>删除</button>
+												</td>
+											</tr>
+
+										</tbody>
+										
+										<tbody style="font-size:medium;">
+											<br />
+											<tr >
+												<td colspan="7" class="text-right" >
+													<label id="moneytotal" style="padding-top: 30px;">合计金额:</label>
+												</td>
+												
+												<td>
+													<label style="padding-top: 30px;">￥100</label>
+												</td>
+												<td>
+												</td>
+											</tr>
+										</tbody>
+										
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="panel panel-default">
+					    <div class="panel-body text-center">
+					        <button class="btn btn-danger">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+					        <button class="btn btn-primary">提交并购买</button>
+					    </div>
+					</div>
+
+
+
+				</div>
+
+				<script type="text/javascript">
+					
+
+					$(function() {
+
+						//设置下拉选择框
+						initselect();
+
+						//设置焦点
+						//$('#cflist input:first').focus();
+
+						//初始化按键
+						initkey();
+
+						//初始化明细删除键
+						initdel();
+
+					});
+
+					//初始化商品信息输入框
+					function initselect() {
+						$names = $(".textvcuniversalname");
+						$.each($names, function(i, c) {
+							//$(this).val($(this).val().toUpperCase());
+							$(this).bigAutocomplete({
+								width: 543,
+								url: 'http://localhost:85/ezapi/public/index.php/Data/customertest',
+								callback: function(data) {
+
+									$(c).parent().parent().find("#vcstandard").html(data.goodstype);
+									$(c).parent().parent().find("#vcproductcode").html(data.goodsno);
+
+									var precount = $("#cflist tr:first input").length;
+									var nexIdx = precount * i + 1;
+									$("#cflist input")[nexIdx].focus();
+
+								}
+							});
+
+						});
+					}
+
+					function initkey() {
+						var $inp = $("#cflist input");
+						var length = $inp.length;
+						$.each($inp, function(i, c) {
+							$(this).bind('keydown', function(e) {
+								var key = e.which;
+								//alert(key);
+								if((key == 13 && "universalname" != $(this).attr("id")) || key == 39) { //向右或者回车
+									e.preventDefault();
+									if(i + 1 != length) {
+										var nxtIdx = i + 1;
+										$("#cflist input")[nxtIdx].focus();
+									}
+								}
+								if(key == 37) { //向左
+									e.preventDefault();
+									if(i != 0) {
+										var preIdx = i - 1;
+										$("#cflist input")[preIdx].focus();
+									}
+								}
+								if((key == 40 || key == 13) && $(this).attr("id") == "totalcounts") { //向下
+									e.preventDefault();
+									createrow();
+									/*initselect();
+									//设置新行的首个输入框聚焦
+									$("#cflist tr:last").find("input:first").focus();
+									initkey();*/
+								}
+
+							})
+						});
+					}
+
+//删除行操作
+					function initdel() {
+						
+						$("#cflist #btn-del").click(function() {
+							$(this).parent().parent().remove();
+						})
+
+					}
+					//新加一行
+					function createrow() {
+						//var rownum=$("#cflist tr").length+1;
+						var numno = $("#cflist tr:last").length;
+						var rownum = numno == 0 ? 1 : Number($("#cflist tr:last").find('#numno').html()) + 1;
+						//var rownum = Number($("#cflist tr:last").find('#numno').html()) + 1;
+						var row = '<tr>' +
+							'<td>' +
+							'<span id="numno">' + rownum + '</span>' +
+							'</td>' +
+							'<td style="display: none;">' +
+							'<span id="iproductid"></span>' +
+							'</td>' +
+							'<td>' +
+							'<span id="vcproductcode"></span>' +
+							'</td>' +
+							'<td>' +
+							'<input type="text" id="universalname"  class="textvcuniversalname " autocomplete="off" style="width: 98%;" />' +
+							'</td>' +
+							'<td>' +
+							'<span id="vcstandard"></span>' +
+							'</td>' +
+
+							'<td>' +
+							'<span>克</span>' +
+							'</td>' +
+							'<td>' +
+							'<input type="number" id="totalcounts"  autocomplete="off" style="width: 80px;"  />' +
+							'</td>' +
+							'<td>' +
+							'<span>￥10</span>' +
+							'</td>' +
+							'<td>' +
+							'<span>￥100</span>' +
+							'</td>' +
+							'<td>' +
+							'<button class="btn btn-danger btn-xs" id="btn-del"><em class="glyphicon glyphicon-remove"></em>删除</button>' +
+							'</td>' +
+							'</tr>';
+
+						$("#cflist").append(row);
+
+						initdel();
+
+						initselect();
+						//设置新行的首个输入框聚焦
+						$("#cflist tr:last").find("input:first").focus();
+						initkey();
+
+					}
+				</script>
+
+	</body>
+
+</html>
