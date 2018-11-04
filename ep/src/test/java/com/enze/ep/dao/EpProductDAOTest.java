@@ -25,9 +25,10 @@ public class EpProductDAOTest {
 	@Test
 	public void testSelectProductByProductName() {
 		String counterids="52";
+		//String productName="吸痰杯（一次性）";
 		String productName="YC";
 		List<EpProduct> list=epProductDAO.selectProductByProductName(counterids, productName);
-		
+		log.info("list length:"+list.size());
 	}
 
 }
