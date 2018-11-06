@@ -3,13 +3,14 @@ package com.enze.ep.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@RestController
+@Controller
 @RequestMapping("/test")
 public class TestController {
 
@@ -17,11 +18,13 @@ public class TestController {
 	private StringRedisTemplate stringRedisTemplate;
 	@Autowired
 	private RedisTemplate redisTemplate;
+	
+	
 
-	@GetMapping("/test/{info}")
-	public String test(@PathVariable(name = "info") String info) {
+	@GetMapping("/test")
+	public String test() {
 
-		return "x你好"+info;
+		return "test";
 	}
 
 	@GetMapping("/get/{key}")

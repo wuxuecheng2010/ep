@@ -212,7 +212,7 @@
 					<div class="panel panel-default">
 					    <div class="panel-body text-center">
 					        <button class="btn btn-danger">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
-					        <button class="btn btn-primary">提交并购买</button>
+					        <button class="btn btn-primary" id="submit">提交并购买</button>
 					    </div>
 					</div>
 
@@ -243,8 +243,24 @@
 						
 						//数量变动事件
 						inittotalcountschange();
+						
+						//提交按钮
+						initSubmit();
 
 					});
+					
+					function initSubmit(){
+						//获取数据 同时校验数据
+						
+						//提交到后台
+						
+						$("#submit").click(function(e){
+							window.location.href="http://www.jb51.net";
+							//$(this).attr("onclick","location.href='http://www.baidu.com'");
+						})
+						
+						
+					}
 					
 					function initpatientselect(){
 						var url="/inpatient/select";
@@ -275,7 +291,8 @@
 								width: 543,
 								url:url,
 								callback: function(data) {
-
+									
+									$(c).parent().parent().find("#iproductid").html(data.iproductid);
 									$(c).parent().parent().find("#vcstandard").html(data.vcstandard);
 									$(c).parent().parent().find("#vcproductcode").html(data.vcproductcode);
 									$(c).parent().parent().find("#unitname").html(data.unitname);
