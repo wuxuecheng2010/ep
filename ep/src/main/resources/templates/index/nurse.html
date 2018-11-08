@@ -1,230 +1,218 @@
 <html>
 
-	<head>
-		<meta charset="utf-8" />
-		<title>便民药房</title>
-		<link rel="stylesheet" href="/static/plugs/bootstrap-3.3.7/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="/static/plugs/bigautocomplete/css/jquery.bigautocomplete.css" type="text/css" />
+<head>
+<meta charset="utf-8" />
+<title>便民药房</title>
+<link rel="stylesheet"
+	href="/static/plugs/layui/css/layui.css"
+	type="text/css" />
+<link rel="stylesheet"
+	href="/static/plugs/bootstrap-3.3.7/css/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="/static/plugs/bigautocomplete/css/jquery.bigautocomplete.css"
+	type="text/css" />
 
-		<script type="text/javascript" src="/static/plugs/jquery-2.1.1/jquery-2.1.1.min.js"></script>
-		<script type="text/javascript" src="/static/plugs/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-		<script src="/static/plugs/bigautocomplete/js/jquery.bigautocomplete.js"></script>
-		<style>
 
-		</style>
 
-	</head>
+<script type="text/javascript"
+	src="/static/plugs/jquery-2.1.1/jquery-2.1.1.min.js"></script>
+<script type="text/javascript"
+	src="/static/plugs/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="/static/plugs/bigautocomplete/js/jquery.bigautocomplete.js"></script>
+<script src="/static/plugs/layui/layui.all.js"></script>
 
-	<body>
-		<div class="container">
-			<div class="row clearfix">
-				<div class="col-md-12 column">
-					<nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
-						<div class="navbar-header">
-							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
-							<a class="navbar-brand" href="#">便民药房</a>
-						</div>
+<style>
+</style>
 
-						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-							<ul class="nav navbar-nav">
-								<li class="active">
-									<a href="#">温岭市第一人民医院</a>
-								</li>
-							</ul>
-							
-							<ul class="nav navbar-nav pull-right" style="margin-right: 16px;">
-								
-								<li class="dropdown">
-									 <a href="#" class="dropdown-toggle" data-toggle="dropdown" th:text="${epUser.username}"><strong class="caret"></strong></a>
-									<ul class="dropdown-menu">
-										<li>
-											 <a href="/logout">退出</a>
-										</li>
-									</ul>
-								</li>
-							</ul>
-					
+</head>
 
-						</div>
-
-					</nav>
-					<div class="row clearfix" style="margin-top: 60px;">
-						<div class="col-md-4 column">
-							<h3>
-								便捷购物
-							</h3>
-						</div>
+<body>
+	<div class="container">
+		<div class="row clearfix">
+			<div class="col-md-12 column">
+				<nav class="navbar navbar-default navbar-inverse navbar-fixed-top"
+					role="navigation">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse"
+							data-target="#bs-example-navbar-collapse-1">
+							<span class="sr-only">Toggle navigation</span><span
+								class="icon-bar"></span><span class="icon-bar"></span><span
+								class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#">便民药房</a>
 					</div>
 
-					<div class="panel panel-default">
-						<div class="panel-heading" style="height: 40px;">
-							
-							<div class="row clearfix">
-								<div class="col-md-3"><span>病人信息</span></div>
-								<div class="col-md-3"></div>
-								<div class="col-md-3"></div>
-								<div class="col-md-3">
-							            <input type="text" class="form-control" placeholder="输入病人信息快速获取" style="margin-top: -7px;" id="inpatientname">
-								</div>
-							</div>
+					<div class="collapse navbar-collapse"
+						id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav">
+							<li class="active"><a href="#">温岭市第一人民医院</a></li>
+						</ul>
 
-						</div>
-						<div class="panel-body">
-							<div class="row clearfix" style="margin-top: 12px;">
+						<ul class="nav navbar-nav pull-right" style="margin-right: 16px;">
 
-								<div class="col-md-3 column">
-									<div class="input-group">
-										<span class="input-group-addon">病人姓名</span>
-										<input type="text" class="form-control" placeholder="姓名" id="name">
-									</div>
-								</div>
-								<div class="col-md-3 column">
-									<div class="input-group">
-										<span class="input-group-addon">床&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号</span>
-										<input type="text" class="form-control" placeholder="床号" id="bedno">
-									</div>
-								</div>
+							<li class="dropdown"><a href="#" class="dropdown-toggle"
+								data-toggle="dropdown" th:text="${epUser.username}"><strong
+									class="caret"></strong></a>
+								<ul class="dropdown-menu">
+									<li><a href="/logout">退出</a></li>
+								</ul></li>
+						</ul>
 
-								<div class="col-md-3 column">
-									<div class="input-group">
-										<span class="input-group-addon">家庭住址</span>
-										<input type="text" class="form-control" placeholder="家庭地址" id="address">
-									</div>
-								</div>
 
-							</div>
-						</div>
 					</div>
 
-					<div class="panel panel-default">
-						<div class="panel-heading" style="height: 40px;">
-							
-							<div class="row clearfix">
-								<div class="col-md-3"><span>购物清单</span></div>
-								<div class="col-md-3"></div>
-								<div class="col-md-3"></div>
-								<div class="col-md-3">
-							        <button class="btn btn-xs btn-success pull-right" onclick="createrow()" style="margin-top: -2px;"><em class="glyphicon glyphicon-plus"></em>添加明细</button>
-								</div>
-							</div>
-							
-						</div>
-						<div class="panel-body">
-							<div class="row clearfix">
-								<div class="col-md-12 column">
-
-									<table class="table table-condensed" style="font-size: 14px;">
-										<thead>
-											<tr>
-												<th>
-													序号
-												</th>
-												<th style="display: none;">
-													商品ID
-												</th>
-												<th>
-													商品编码
-												</th>
-												<th>
-													名称/通用名
-												</th>
-												<th>
-													规格
-												</th>
-
-												<th>
-													单位
-												</th>
-
-												<th>
-													数量
-												</th>
-												<th>
-													单价
-												</th>
-												<th>
-													金额
-												</th>
-												<th>
-													删除
-												</th>
-											</tr>
-										</thead>
-										<tbody id="cflist">
-											<tr>
-												<td>
-													<span id="numno" style="line-height: 20px;">1</span>
-												</td>
-												<td style="display: none;">
-													<span id="iproductid"></span>
-												</td>
-												<td>
-													<span id="vcproductcode"></span>
-												</td>
-												<td>
-													<input type="text" id="universalname" class="textvcuniversalname" autocomplete="off" style="width: 98%;" />
-												</td>
-												<td>
-													<span id="vcstandard"></span>
-												</td>
-												<td>
-													<span id="unitname">-</span>
-												</td>
-
-												<td>
-													<input type="text" id="totalcounts" autocomplete="off" style="width: 80px;" />
-												</td>
-												<td>
-													<span  id="numprice">0</span>
-												</td>
-												<td>
-													<span  id="nummoney">0</span>
-												</td>
-												<td>
-													<button class="btn btn-danger btn-xs" id="btn-del"><em class="glyphicon glyphicon-remove"></em>删除</button>
-												</td>
-											</tr>
-
-										</tbody>
-										
-										<tbody style="font-size:medium;">
-											<br />
-											<tr >
-												<td colspan="7" class="text-right" >
-													<label id="moneytotal" style="padding-top: 30px;">合计金额:</label>
-												</td>
-												
-												<td>
-													<label style="padding-top: 30px;" id="moneyall">￥100</label>
-												</td>
-												<td>
-												</td>
-											</tr>
-										</tbody>
-										
-									</table>
-								</div>
-							</div>
-						</div>
+				</nav>
+				<div class="row clearfix" style="margin-top: 60px;">
+					<div class="col-md-4 column">
+						<h3>便捷购物</h3>
 					</div>
-					
-					
-					<div class="panel panel-default">
-					    <div class="panel-body text-center">
-					        <button class="btn btn-danger">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
-					        <button class="btn btn-primary" id="submit">提交并购买</button>
-					    </div>
-					</div>
-
-
-
 				</div>
 
-				<script th:inline="javascript">
+				<div class="panel panel-default">
+					<div class="panel-heading" style="height: 40px;">
+
+						<div class="row clearfix">
+							<div class="col-md-3">
+								<span>病人信息</span>
+							</div>
+							<div class="col-md-3"></div>
+							<div class="col-md-3"></div>
+							<div class="col-md-3">
+								<input type="text" class="form-control" placeholder="输入病人信息快速获取"
+									style="margin-top: -7px;" id="inpatientname">
+							</div>
+						</div>
+
+					</div>
+					<div class="panel-body">
+						<div class="row clearfix" style="margin-top: 12px;">
+
+							<div class="col-md-3 column">
+								<div class="input-group">
+									<span class="input-group-addon">病人姓名</span> <input type="text"
+										class="form-control" placeholder="姓名" id="name">
+								</div>
+							</div>
+							<div class="col-md-3 column">
+								<div class="input-group">
+									<span class="input-group-addon">床&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号</span>
+									<input type="text" class="form-control" placeholder="床号"
+										id="bedno">
+								</div>
+							</div>
+
+							<div class="col-md-3 column">
+								<div class="input-group">
+									<span class="input-group-addon">家庭住址</span> <input type="text"
+										class="form-control" placeholder="家庭地址" id="address">
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+				<div class="panel panel-default">
+					<div class="panel-heading" style="height: 40px;">
+
+						<div class="row clearfix">
+							<div class="col-md-3">
+								<span>购物清单</span>
+							</div>
+							<div class="col-md-3"></div>
+							<div class="col-md-3"></div>
+							<div class="col-md-3">
+								<button class="btn btn-xs btn-success pull-right"
+									onclick="createrow()" style="margin-top: -2px;">
+									<em class="glyphicon glyphicon-plus"></em>添加明细
+								</button>
+							</div>
+						</div>
+
+					</div>
+					<div class="panel-body">
+						<div class="row clearfix">
+							<div class="col-md-12 column">
+
+								<table class="table table-condensed" style="font-size: 14px;">
+									<thead>
+										<tr>
+											<th>序号</th>
+											<th style="display: none;">商品ID</th>
+											<th>商品编码</th>
+											<th>名称/通用名</th>
+											<th>规格</th>
+
+											<th>单位</th>
+
+											<th>数量</th>
+											<th>单价</th>
+											<th>金额</th>
+											<th>删除</th>
+										</tr>
+									</thead>
+									<tbody id="cflist">
+										<tr>
+											<td><span id="numno" style="line-height: 20px;">1</span>
+											</td>
+											<td style="display: none;"><span id="iproductid"></span>
+												<span id="iunitid"></span></td>
+											<td><span id="vcproductcode"></span></td>
+											<td><input type="text" id="vcuniversalname"
+												class="textvcuniversalname" autocomplete="off"
+												style="width: 98%;" /></td>
+											<td><span id="vcstandard"></span></td>
+											<td><span id="unitname">-</span></td>
+
+											<td><input type="text" id="totalcounts"
+												autocomplete="off" style="width: 80px;" /></td>
+											<td><span id="numprice">0</span></td>
+											<td><span id="nummoney">0</span></td>
+											<td>
+												<button class="btn btn-danger btn-xs" id="btn-del">
+													<em class="glyphicon glyphicon-remove"></em>删除
+												</button>
+											</td>
+										</tr>
+
+									</tbody>
+
+									<tbody style="font-size: medium;">
+										<br />
+										<tr>
+											<td colspan="7" class="text-right"><label
+												id="moneytotal" style="padding-top: 30px;">合计金额:</label></td>
+
+											<td><label style="padding-top: 30px;" id="moneyall">￥100</label>
+											</td>
+											<td></td>
+										</tr>
+									</tbody>
+
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="panel panel-default">
+					<div class="panel-body text-center">
+						<button class="btn btn-danger">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+						<button class="btn btn-primary" id="submit">提交并购买</button>
+					</div>
+				</div>
+
+
+
+			</div>
+
+			<script th:inline="javascript">
 					
+			var layer = layui.layer
+			  ,form = layui.form;
 
 					$(function() {
-						
 						//alert([[${counterids}]]);
 						
 						initpatientselect();
@@ -250,17 +238,88 @@
 					});
 					
 					function initSubmit(){
-						//获取数据 同时校验数据
-						
-						//提交到后台
 						
 						$("#submit").click(function(e){
-							window.location.href="http://www.jb51.net";
-							//$(this).attr("onclick","location.href='http://www.baidu.com'");
-						})
-						
-						
+							
+							//layer.msg("xxxx");
+							//获取数据 同时校验数据
+							var name=$("#name").val();
+							var bedno=$("#bedno").val();
+							var address=$("#address").val();
+							var trs=$("#cflist tr");
+							var orders=[];
+							var valiflag=true;
+							$.each(trs,function(i,c){
+								var numno=$(c).find("#numno").html();
+								var iproductid=$(c).find("#iproductid").html();
+								var vcproductcode=$(c).find("#vcproductcode").html();
+								var vcuniversalname=$(c).find("#vcuniversalname").val();
+								var vcstandard=$(c).find("#vcstandard").html();
+								var iunitid=$(c).find("#iunitid").html();
+								var unitname=$(c).find("#unitname").html();
+								var totalcounts=$(c).find("#totalcounts").val();
+								var numprice=$(c).find("#numprice").html();
+								var nummoney=$(c).find("#nummoney").html();
+								
+								var row={'numno':numno,'iproductid':iproductid,'vcproductcode':vcproductcode,'vcuniversalname':vcuniversalname,
+										'vcstandard':vcstandard,'iunitid':iunitid,'unitname':unitname,'totalcounts':totalcounts,
+										'numprice':numprice,'nummoney':nummoney};
+								if(numprice==""){
+									layer.msg("第"+numno+"行,售价未设置，不允许销售，请删除后再尝试此操作");
+									valiflag=false;
+								}
+								if(totalcounts==""||totalcounts=="0"){
+									layer.msg("第"+numno+"行,未填写购买数量，请填写后再尝试此操作");
+									valiflag=false;
+								}
+								if(iproductid==""){
+									layer.msg("第"+numno+"行,未选择商品名称。");
+									valiflag=false;
+								}
+								orders.push(row);
+								
+							})
+							//提交到后台
+							if(valiflag){
+								var ordersstr=JSON.stringify(orders);
+								alert(ordersstr);
+								var data={"name":name,"bedno":bedno,"address":address,"orders":ordersstr};
+								ajaxSubmit(data);
+								//ajax 提交
+								//window.location.href="http://www.jb51.net"; 
+							}else{
+								return ;
+							}
+						});
 					}
+					
+					
+					function ajaxSubmit(data){
+						
+						$.ajax({
+						    type:"POST",
+						    url:"/order/create",
+						    dataType:"json",
+						    data:data,
+						    success:function(data){
+						    	//layer.msg(JSON.stringify(data));
+						    	var code=data.code;
+						    	var msg=data.msg;
+						    	if(code=="success"){
+						    		var orderid=data.orderid;
+						    		//重定向到付款页面
+						    		window.location.href="/pay/scantopay/"+orderid;
+						    	}else{
+						    		layer.alert(msg);
+						    	}
+						    },
+						    error:function(jqXHR){
+						    	//layer.msg("发生错误："+jqXHR.status);
+						    	layer.alert("发生错误："+jqXHR.status);
+						    }
+						});
+					}
+					
 					
 					function initpatientselect(){
 						var url="/inpatient/select";
@@ -296,7 +355,7 @@
 									$(c).parent().parent().find("#vcstandard").html(data.vcstandard);
 									$(c).parent().parent().find("#vcproductcode").html(data.vcproductcode);
 									$(c).parent().parent().find("#unitname").html(data.unitname);
-									
+									$(c).parent().parent().find("#iunitid").html(data.vcproductunit);
 									$(c).parent().parent().find("#numprice").html(data.numprice);
 
 									var precount = $("#cflist tr:first input").length;
@@ -325,7 +384,7 @@
 							$(this).bind('keydown', function(e) {
 								var key = e.which;
 								//alert(key);
-								if((key == 13 && "universalname" != $(this).attr("id")) || key == 39) { //向右或者回车
+								if((key == 13 && "vcuniversalname" != $(this).attr("id")) || key == 39) { //向右或者回车
 									e.preventDefault();
 									if(i + 1 != length) {
 										var nxtIdx = i + 1;
@@ -403,12 +462,13 @@
 							'</td>' +
 							'<td style="display: none;">' +
 							'<span id="iproductid"></span>' +
+							'<span id="iunitid"></span>'+
 							'</td>' +
 							'<td>' +
 							'<span id="vcproductcode"></span>' +
 							'</td>' +
 							'<td>' +
-							'<input type="text" id="universalname"  class="textvcuniversalname " autocomplete="off" style="width: 98%;" />' +
+							'<input type="text" id="vcuniversalname"  class="textvcuniversalname " autocomplete="off" style="width: 98%;" />' +
 							'</td>' +
 							'<td>' +
 							'<span id="vcstandard"></span>' +
@@ -444,7 +504,6 @@
 
 					}
 				</script>
-
-	</body>
+</body>
 
 </html>

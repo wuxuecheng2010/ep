@@ -14,10 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
-public class EpInpatientDaoTest {
+public class EpInpatientDAOTest {
 	
 	@Autowired
-	EpInpatientDao epInpatientDao;
+	EpInpatientDAO epInpatientDao;
 
 	@Test
 	public void testAddInpatient() {

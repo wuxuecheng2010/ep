@@ -12,7 +12,7 @@ import com.enze.ep.entity.EpInpatient;
 
 @Repository
 @Mapper
-public interface EpInpatientDao {
+public interface EpInpatientDAO {
 
 	String TABLE_NAME = "ep_inpatient";
 	String INSET_FIELDS = " hisinid,name, idcard,age,bedno,sectionid,describe,memo,usestatus,address ";
