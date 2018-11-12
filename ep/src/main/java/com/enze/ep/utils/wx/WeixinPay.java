@@ -2,21 +2,24 @@ package com.enze.ep.utils.wx;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;  
-import java.io.UnsupportedEncodingException;  
-import java.net.URLEncoder;  
-import java.util.HashMap;  
-import java.util.Map;  
-import java.util.SortedMap;  
-import java.util.TreeMap;  
-import javax.imageio.ImageIO;  
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;  
-import com.google.zxing.BarcodeFormat;  
-import com.google.zxing.MultiFormatWriter;  
-import com.google.zxing.WriterException;  
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;  
 
 
@@ -25,6 +28,8 @@ public class WeixinPay {
 public static Logger lg=Logger.getLogger(WeixinPay.class);  
 private static final int BLACK = 0xff000000;  
 private static final int WHITE = 0xFFFFFFFF;  
+
+
 
 /** 
 * 获取微信支付的二维码地址 
@@ -118,7 +123,7 @@ public static String getCodeUrl(WeChatParams ps) throws Exception {
      Map hints = new HashMap();  
      BitMatrix bitMatrix = null;  
      try {  
-         bitMatrix = multiFormatWriter.encode(content, BarcodeFormat.QR_CODE, 250, 250,hints);  
+         bitMatrix = multiFormatWriter.encode(content, BarcodeFormat.QR_CODE, 350, 350,hints);  
          BufferedImage image = toBufferedImage(bitMatrix);  
          //输出二维码图片流  
          try {  

@@ -7,8 +7,12 @@ import lombok.Data;
 
 @Data
 public class EpOrder {
+	
+	public static final String Prefix_Redis_Key="EpOrder";
+	public static final String Prefix_Redis_Key_Separtor="-";
 
 	private int orderid;
+	private int ordertype;
 	private String ordercode;
 	private int creuserid ;
 	private Date credate;
@@ -19,13 +23,18 @@ public class EpOrder {
 	private String memo;
 	private int sectionid;
 	
+	private String outpatientnumber;
 	private String name;
 	private String bedno;
 	private String address;
-	private String idcard;
 	private Date birthday;
 	private String sex;
+	private int age;
+	private String symptom;
+	private String idcard;
 	private String micard;
 	private String hicard;
+	
+	
 	
 }

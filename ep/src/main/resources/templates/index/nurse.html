@@ -45,7 +45,7 @@
 					<div class="collapse navbar-collapse"
 						id="bs-example-navbar-collapse-1">
 						<ul class="nav navbar-nav">
-							<li class="active"><a href="#">温岭市第一人民医院</a></li>
+							<li class="active"><a href="#"><span th:text="${hospital}"></span></a></li>
 						</ul>
 
 						<ul class="nav navbar-nav pull-right" style="margin-right: 16px;">
@@ -107,6 +107,58 @@
 										class="form-control" placeholder="家庭地址" id="address">
 								</div>
 							</div>
+							
+							<div style="display:none;">
+								<div class="col-md-3 column">
+									<div class="input-group">
+										<span class="input-group-addon">性别</span> <input type="text"
+											class="form-control" placeholder="sex" id="sex">
+									</div>
+								</div>
+								
+								<div class="col-md-3 column">
+									<div class="input-group">
+										<span class="input-group-addon">年龄</span> <input type="text"
+											class="form-control" placeholder="age" id="age">
+									</div>
+								</div>
+								
+								<div class="col-md-3 column">
+									<div class="input-group">
+										<span class="input-group-addon">身份证</span> <input type="text"
+											class="form-control" placeholder="idcard" id="idcard">
+									</div>
+								</div>
+								
+								<div class="col-md-3 column">
+									<div class="input-group">
+										<span class="input-group-addon">医保卡</span> <input type="text"
+											class="form-control" placeholder="micard" id="micard">
+									</div>
+								</div>
+								
+								<div class="col-md-3 column">
+									<div class="input-group">
+										<span class="input-group-addon">医院就诊卡</span> <input type="text"
+											class="form-control" placeholder="hicard" id="hicard">
+									</div>
+								</div>
+								
+								<div class="col-md-3 column">
+									<div class="input-group">
+										<span class="input-group-addon">症状</span> <input type="text"
+											class="form-control" placeholder="symptom" id="symptom">
+									</div>
+								</div>
+								
+								<div class="col-md-3 column">
+									<div class="input-group">
+										<span class="input-group-addon">备注</span> <input type="text"
+											class="form-control" placeholder="memo" id="memo">
+									</div>
+								</div>
+							</div>
+							
 
 						</div>
 					</div>
@@ -243,12 +295,32 @@
 							
 							//layer.msg("xxxx");
 							//获取数据 同时校验数据
+							var ordertype=1;//普通销售单
+							var outpatientnumber='';//$("#outpatientnumber").val();
+							//var creuserid=[[${epUser.userid}]];
+							//var sectionid=[[${epUser.sectionid}]];
+							var sex='';//$("#sex").val();
+							var age=0;//$("#age").val();
+							var idcard='';//$("#idcard").val();
+							var micard='';//$("#micard").val();
+							var hicard='';//$("#hicard").val();
+							var credate='';//$("#credate").val();
+							var symptom='';//$("#symptom").val();
+							var memo='';//$("#memo").val();
+							
 							var name=$("#name").val();
-							var bedno=$("#bedno").val();
 							var address=$("#address").val();
-							var trs=$("#cflist tr");
+							var bedno=$("#bedno").val();
+							
+							var order={"ordertype":ordertype,"outpatientnumber":outpatientnumber,"bedno":bedno,
+									"name":name,"address":address,"sex":sex,
+									"age":age,"idcard":idcard,"micard":micard,"hicard":hicard,"symptom":symptom,
+									"memo":memo
+									};
+							
 							var orders=[];
 							var valiflag=true;
+							var trs=$("#cflist tr");
 							$.each(trs,function(i,c){
 								var numno=$(c).find("#numno").html();
 								var iproductid=$(c).find("#iproductid").html();
@@ -281,12 +353,24 @@
 							})
 							//提交到后台
 							if(valiflag){
+								var orderstr=JSON.stringify(order);
 								var ordersstr=JSON.stringify(orders);
-								alert(ordersstr);
-								var data={"name":name,"bedno":bedno,"address":address,"orders":ordersstr};
-								ajaxSubmit(data);
-								//ajax 提交
-								//window.location.href="http://www.jb51.net"; 
+								//alert(ordersstr);
+								//var data={"order":orderstr,"orders":ordersstr};
+								
+								 layer.confirm('确定提交订单吗？', {
+									  btn: ['确定','取消'] //按钮
+									}, function(){
+										//展现订单情况  确认就提交  取消则返回
+										var data={"order":orderstr,"orders":ordersstr};
+										ajaxSubmit(data);
+										//layer.msg('的确很重要', {icon: 1});
+
+									}, function(){
+										
+									}); 
+								 
+ 
 							}else{
 								return ;
 							}
@@ -308,7 +392,8 @@
 						    	if(code=="success"){
 						    		var orderid=data.orderid;
 						    		//重定向到付款页面
-						    		window.location.href="/pay/scantopay/"+orderid;
+						    		//window.location.href="/pay/scantopay/"+orderid;
+						    		window.location.href="/pay/payqrcode/"+orderid;
 						    	}else{
 						    		layer.alert(msg);
 						    	}

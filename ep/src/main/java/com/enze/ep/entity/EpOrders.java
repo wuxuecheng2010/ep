@@ -7,6 +7,9 @@ import lombok.Data;
 
 @Data
 public class EpOrders {
+	
+	public static final String Prefix_Redis_Key="EpOrders";
+	public static final String Prefix_Redis_Key_Separtor="-";
     
 	private int ordersid;
 	private int numno;
@@ -20,6 +23,10 @@ public class EpOrders {
 	private BigDecimal totalcounts;
 	private BigDecimal numprice;
 	private BigDecimal nummoney;
+	
+	private String dosis;
+	private String frequency;
+	private String usage;
 	
 	
 }

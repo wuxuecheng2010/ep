@@ -1,0 +1,248 @@
+<html>
+
+<head>
+<meta charset="utf-8" />
+<title>支付</title>
+<link rel="stylesheet"
+	href="/static/plugs/layui/css/layui.css"
+	type="text/css" />
+<link rel="stylesheet"
+	href="/static/plugs/bootstrap-3.3.7/css/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="/static/plugs/bigautocomplete/css/jquery.bigautocomplete.css"
+	type="text/css" />
+
+
+
+<script type="text/javascript"
+	src="/static/plugs/jquery-2.1.1/jquery-2.1.1.min.js"></script>
+<script type="text/javascript"
+	src="/static/plugs/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="/static/plugs/bigautocomplete/js/jquery.bigautocomplete.js"></script>
+<script src="/static/plugs/layui/layui.all.js"></script>
+
+<style>
+</style>
+
+</head>
+
+<body>
+	<div class="container">
+		<div class="row clearfix">
+			<div class="col-md-12 column">
+				<nav class="navbar navbar-default navbar-inverse navbar-fixed-top"
+					role="navigation">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse"
+							data-target="#bs-example-navbar-collapse-1">
+							<span class="sr-only">Toggle navigation</span><span
+								class="icon-bar"></span><span class="icon-bar"></span><span
+								class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#">便民药房</a>
+					</div>
+
+					<div class="collapse navbar-collapse"
+						id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav">
+							<li class="active"><a href="#"><span th:text="${hospital}"></span></a></li>
+						</ul>
+
+						<ul class="nav navbar-nav pull-right" style="margin-right: 16px;">
+
+							<li class="dropdown"><a href="#" class="dropdown-toggle"
+								data-toggle="dropdown" th:text="${epUser.username}"><strong
+									class="caret"></strong></a>
+								<ul class="dropdown-menu">
+									<li><a href="/logout">退出</a></li>
+								</ul></li>
+						</ul>
+
+
+					</div>
+
+				</nav>
+				<div class="row clearfix" style="margin-top: 60px;">
+					<div class="col-md-4 column">
+						<h3>扫码支付</h3>
+					</div>
+				</div>
+
+
+			</div>
+			<div class="row clearfix">
+			
+			<div class="col-md-4 column " style="text-align:center;">
+			<h3>
+				微信
+			</h3>
+			<p>
+				<img alt="" src="" id="weixin">
+			</p>
+			<p>
+				 <a class="btn" href="#">打开微信扫一扫</a>
+			</p>
+		</div>
+			
+			<div class="col-md-4 column " style="text-align:center;">
+			<h3>
+				购物清单
+			</h3>
+			
+			<p>
+				<table class="table table-condensed" style="font-size:12px;">
+				<thead>
+					<tr>
+						<th>
+							名称
+						</th>
+						<th>
+							单价
+						</th>
+						<th>
+							数量
+						</th>
+						<th>
+							金额
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="info,infoStat : ${orderslist}">
+						<td th:text="${info.vcuniversalname}">
+							
+						</td>
+						<td th:text="${info.numprice}">
+							
+						</td>
+						<td th:text="${info.totalcounts}">
+							
+						</td>
+						<td th:text="${info.nummoney}">
+							
+						</td>
+					</tr>
+					
+				</tbody>
+				<tbody>
+					<tr>
+						<td colspan="3" style="text-align:right;">
+							合计金额:
+						</td>
+						
+						<td th:text="${eporder.ordermoney}">
+							
+						</td>
+					</tr>
+					
+				</tbody>
+			</table>
+			</p>
+		</div>
+		
+		
+		<div class="col-md-4 column " style="text-align:center;">
+			<h3>
+				支付宝
+			</h3>
+			<p >
+				<img alt="" src="" id="alipay">
+			</p>
+			<p>
+				 <a class="btn" href="#">打开支付宝扫一扫</a>
+			</p>
+		</div>
+		
+	</div>
+
+			<script th:inline="javascript">
+					
+			  var layer = layui.layer
+			  ,form = layui.form;
+
+					$(function() {
+
+						initQrCode("alipay");
+						initQrCode("weixin");
+						interval();
+						
+					});
+					
+					
+					
+					function initQrCode(paytype){
+						
+						//1、获取支付url 2、设置图片对象的src
+						var url="/pay/"+paytype+"/"+[[${orderid}]];
+						//alert(url);
+						$.ajax({
+						    type:"GET",
+						    url:url,
+						    dataType:"json",
+						    //data:data,
+						    success:function(data){
+						    	var code=data.code;
+						    	if(code=="success"){
+						    		var payurl=data.payurl;
+						    		$("#"+paytype).attr("src","/pay/strtoqr?str="+payurl);
+						    		//重定向到付款页面
+						    		//window.location.href="/pay/scantopay/"+orderid;
+						    	}else{
+						    		layer.alert("生成二维码失败，请刷新再试");
+						    	}
+						    },
+						    error:function(jqXHR){
+						    	//layer.msg("发生错误："+jqXHR.status);
+						    	layer.alert("发生错误："+jqXHR.status);
+						    }
+						});
+						
+					}
+					
+					function interval(){
+						
+						window.setInterval(function(){
+							queryOrderUsestatus();
+						},3000);
+						
+					}
+					
+					function queryOrderUsestatus(){
+						var url="/order/getOrder/"+[[${orderid}]];
+						$.ajax({
+						    type:"GET",
+						    url:url,
+						    dataType:"json",
+						    //data:data,
+						    success:function(data){
+						    	layer.msg(JSON.stringify(data));
+						    	var usestatus=data.usestatus;
+						    	if(usestatus==1){
+						    		//切换到支付成功页面
+						    		//显示正在支付 2秒后
+						    		window.location.href="/order/success/"+[[${orderid}]];
+						    	}
+						    	
+						    	/* var code=data.code;
+						    	//alert(JSON.stringify(data));
+						    	if(code=="success"){
+						    		var payurl=data.payurl;
+						    		//alert("/pay/strtoqr?str="+payurl);
+						    		$("#"+paytype).attr("src","/pay/strtoqr?str="+payurl);
+						    		//重定向到付款页面
+						    		//window.location.href="/pay/scantopay/"+orderid;
+						    	}else{
+						    		layer.alert("生成二维码失败，请刷新再试");
+						    	} */
+						    },
+						    error:function(jqXHR){
+						    	//layer.msg("发生错误："+jqXHR.status);
+						    	layer.alert("发生错误："+jqXHR.status);
+						    }
+						});
+					}
+					
+				</script>
+</body>
+
+</html>

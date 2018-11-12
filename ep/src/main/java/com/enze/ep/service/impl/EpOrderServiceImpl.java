@@ -1,8 +1,10 @@
 package com.enze.ep.service.impl;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,9 @@ public class EpOrderServiceImpl implements EpOrderService {
 	
 	@Autowired
 	EpPayInfoDAO epPayInfoDAO;
+	
+	@Autowired
+	RedisTemplate redisTemplate;
 
 	@Transactional
 	@Override
@@ -40,9 +45,34 @@ public class EpOrderServiceImpl implements EpOrderService {
 
 	@Override
 	public EpOrder findEpOrderById(int orderid) {
-		return epOrderDAO.selectOrderByOrderid(orderid);
+
+		String key=EpOrder.Prefix_Redis_Key+EpOrder.Prefix_Redis_Key_Separtor+orderid;
+		EpOrder epOrder=(EpOrder) redisTemplate.opsForValue().get(key);
+        if(epOrder==null) {
+        	epOrder=epOrderDAO.selectOrderByOrderid(orderid);
+        	redisTemplate.opsForValue().set(key, epOrder);
+        	redisTemplate.expire(key, 150, TimeUnit.SECONDS);
+        }
+		return epOrder;
+		//return epOrderDAO.selectOrderByOrderid(orderid);
 	}
 
+	
+
+	@Override
+	public List<EpOrders> findEpOrdersListByOrderid(int orderid) {
+		String key=EpOrders.Prefix_Redis_Key+EpOrders.Prefix_Redis_Key_Separtor+orderid;
+		
+		List<EpOrders> list=(List<EpOrders>) redisTemplate.opsForValue().get(key);
+        if(list==null) {
+        	list=epOrdersDAO.selectOrdersByOrderid(orderid);
+        	redisTemplate.opsForValue().set(key, list);
+        	redisTemplate.expire(key, 150, TimeUnit.SECONDS);
+        }
+		return list;
+	}
+
+	
 	@Transactional
 	@Override
 	public void finishOrderPay(EpPayInfo payinfo)throws Exception {
@@ -53,7 +83,6 @@ public class EpOrderServiceImpl implements EpOrderService {
 		
 		//启动药店系统记账
 	}
-
 
 
 }

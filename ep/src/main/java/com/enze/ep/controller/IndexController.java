@@ -32,19 +32,19 @@ public class IndexController {
 	@RequestMapping(value = "/doctor", method = RequestMethod.GET)
 	public ModelAndView dtIndex(HttpServletRequest request, HttpServletResponse response) {
 		//1、获取cookie身份认证信息
-		ModelMap map=getAuthInfo(request,response);
+		ModelMap map=myAuthUtils.getAuthInfo(request,response);
 		//return "index/doctor";
 		return new ModelAndView("index/doctor",map);
 	}
 
 	@RequestMapping(value = "/nurse", method = RequestMethod.GET)
 	public ModelAndView nsIndex(HttpServletRequest request, HttpServletResponse response) {
-		ModelMap map=getAuthInfo(request,response);
+		ModelMap map=myAuthUtils.getAuthInfo(request,response);
 		return new ModelAndView("index/nurse",map);
 		//return "index/nurse";
 	}
 	
-	private ModelMap getAuthInfo(HttpServletRequest request, HttpServletResponse response) {
+	/*private ModelMap getAuthInfo(HttpServletRequest request, HttpServletResponse response) {
 		ModelMap map=new ModelMap();
 		EpUser epUser=myAuthUtils.getEpUserByCookie(request, response);
 		map.put("epUser", epUser);
@@ -64,6 +64,6 @@ public class IndexController {
 		
 		
 		return map;
-	}
+	}*/
 
 }

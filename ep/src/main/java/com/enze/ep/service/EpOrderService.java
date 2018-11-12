@@ -9,5 +9,6 @@ import com.enze.ep.entity.EpPayInfo;
 public interface EpOrderService {
     void saveEpOrder(EpOrder epOrder,List<EpOrders> list) throws Exception;
     EpOrder findEpOrderById(int orderid);
+    List<EpOrders> findEpOrdersListByOrderid(int orderid);
     void finishOrderPay(EpPayInfo payinfo) throws Exception ;
 }

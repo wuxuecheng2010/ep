@@ -1,0 +1,41 @@
+package com.enze.ep.utils.alipay;
+
+public class AlipayConfig {
+
+	
+
+//# 支付宝网关名、partnerId和appId
+public static String  open_api_domain = "https://openapi.alipay.com/gateway.do";
+public static String mcloud_api_domain = "http://mcloudmonitor.com/gateway.do";
+public static String pid = "2088921268340131";
+public static String appid = "2018102261809454";
+
+//# RSA私钥、公钥和支付宝公钥
+public static String private_key = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC9Ic6t9QBqcOk6scZTLJvVrIM8uxfRAY+ki06s2ezrRIVtrFr6XfgOgPhwCKG81D4m6IFbEH8PFU6rRjrP0MCN51vjn3HfBuvl2jaGdOk9TtVrKsIsAghXA0QpxJHci/bv7RvvPv8Lj/69v2CirQPKf6NlHg1sTa3ls65sUQ6oVONNOiniG+1dK05AvkCejjYWbTyJ+sVyRvj+55gUq5G5qCcN8tbeqKpV+E2rIgO4LAYydLx+ylvUVErP3TgcHhgZzb+fmu5y+7dOY69qKtP91iLUnFK3GkNhOf6hDPGZb2+zxkess4XmcA3hwdwzeZl1SizLhuAqQXxuLd8GaBqVAgMBAAECggEBAIhjweUG4obf6AFQxEGk0LhVUMrR7QnnQ0wYveK+wTCkWEhP28fjTgg/j2lTgDdpI2zxjJ88FTSuW+39llnZI5Lxvf03NWntVt6J73olAzIYEKXYzu/ng1YkX9pzC/Ds6mX5KoTsfAY9kCoLwcduV2aHhzBbbLimh/o3CljIV3ahi21gyfTKcX+11Y473uz/kb+X0CrzaTcPg7K5BofEhDXaM6L1loRmz4RY66wAX8A85jb6tTNymcjDVuQxPGsmP6kZnxfpdON3Vv01Z/eeWllkZ4LkzddsHZWM+P4plkCew6pxCRwUq0vsEHERSK/1cW3q1Ho3IexE3N52mS+mTgECgYEA3gBxyvXq5YkAclbEo2kGsgSLGKTlj7ScbymeIz8Kkwr/8MGvE4kSMVkYmY/mtORf2zcBM4Zxv8+Yi5B+IddPUaZIz2zB7/MTMDJr9+Vrq75F0fJz4f0Xj0ZQ+NLR4Mjjd8YBCgFMDhbELcgS6LuNnr28m4UU4MIBWUPIg11kuRUCgYEA2hi15Hw0NAXlh2V5Yg3Aa4U2msQoJr1J2H+/WaCcFP3kCCQev3jlzRC9crMmJAP/WoD8I3cWexPQGX4mj2PhP01O45zYOHsQhFrFwIP99uBOdbtYbFO14MdX5nEm5Z7ahTOM5gVVeh2UB2ttwbK/K4qb50a9a2HScUSErfHDO4ECgYAdrj2Ifxxql8iBgOxFVLNadZULNHCkp+cKTawg1jrZsezKCXsYx4ixJFJPpZeYs7fFHTOB6gWnOWARuL3EVH78UZkGcmnzZLI6DWO1/uxIR+YZzaqEmkveEe6ddcItpW4UA1r8NXQvpgeQf2FX0Et8360ptb821XlMr+1M8t2WiQKBgGvvYsWLOoKskGWrsKD4UUxlBxsdDQnvEAbXYinHNLem1x24UodMG96a9Ec5phyY5d0yjJY4r6WFrq2PIyI/uhAMAIjg7Jk3PntiORAHwr5VUD8v0pj57L8rqLLhOPDW5yqY0phb92uSC9qILi94eOfhlzqkZcYpCW8JC+jSB18BAoGATG0UQexFjQRLc3ybzxZoO+eZTOQ/PSgGG5ySANGQagmUv9vmI2w9+oAzvs+et0fZwrMTxbjDBALV3YeAuMBD1CFTl3JV2lnuQVY9BsSXHj1zzAZ2Tl+i3iNOtckmfa2sg2LkqYshVKWIU1afHQfGSmRfP1W/jHA7IEL+rr+GGxc=";
+public static String public_key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvSHOrfUAanDpOrHGUyyb1ayDPLsX0QGPpItOrNns60SFbaxa+l34DoD4cAihvNQ+JuiBWxB/DxVOq0Y6z9DAjedb459x3wbr5do2hnTpPU7VayrCLAIIVwNEKcSR3Iv27+0b7z7/C4/+vb9goq0Dyn+jZR4NbE2t5bOubFEOqFTjTTop4hvtXStOQL5Ano42Fm08ifrFckb4/ueYFKuRuagnDfLW3qiqVfhNqyIDuCwGMnS8fspb1FRKz904HB4YGc2/n5rucvu3TmOvairT/dYi1JxStxpDYTn+oQzxmW9vs8ZHrLOF5nAN4cHcM3mZdUosy4bgKkF8bi3fBmgalQIDAQAB";
+
+//#SHA1withRsa对应支付宝公钥
+//#alipay_public_key = MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDI6d306Q8fIfCOaTXyiUeJHkrIvYISRcc73s3vF1ZT7XN8RNPwJxo8pWaJMmvyTn9N4HQ632qJBVHf8sxHi/fEsraprwCtzvzQETrNRwVxLO5jVmRGi60j8Ue1efIlzPXV9je9mkjzOmdssymZkh2QhUrCmZYI/FCEa3/cNMW0QIDAQAB
+
+//#SHA256withRsa对应支付宝公钥
+public static String alipay_public_key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxtp1g6c3dgUS+fLjglD+lXwE3cQA6CPxNM5m7gQyHu0SfJ7bKP+AqH4KTI8qTJ6SEP0FG+CKgu99QKf6oN8dnnqaV73qUEeUxY9EwoE62ZMvZh9w9MmqcK9gyZCnU5PdyRphLQTvzT6BMIga7xp0kTQcKvXD0XC2XNCRO94CKTuOf8c8Ci6VDeQ6+eBqtsD8df/aV8RIZCXvo5UaeOUc1DtYoOjmt8DH3htUQjz5dk0lZQ8zwa02FWQAX97clJc8T6CIyEkWeXaFBy7vqLFY+QcEOGilbYTiCTJLzDPY3PWuN16zDfV0HA5DZWIoRl3U7Q400PfjfakRH0cuXknp2QIDAQAB";
+
+//# 签名类型: RSA->SHA1withRsa,RSA2->SHA256withRsa
+public static String sign_type = "RSA2";
+//# 当面付最大查询次数和查询间隔（毫秒）
+public static int max_query_retry = 5;
+public static int query_duration = 5000;
+
+//# 当面付最大撤销次数和撤销间隔（毫秒）
+public static int max_cancel_retry = 3;
+public static int cancel_duration = 2000;
+
+//# 交易保障线程第一次调度延迟和调度间隔（秒）
+public static int heartbeat_delay = 5;
+public static int heartbeat_duration = 900;
+
+//支付宝回调地址参数
+public static String notifyUrl="http://122.226.128.221:8099/pay/alipay_notify_url";
+
+	
+}

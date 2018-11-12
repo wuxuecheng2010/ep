@@ -41,5 +41,18 @@ public class EpOrderServiceImplTest {
 		}
 		
 	}
+	
+	@Test
+	public void testFindEpOrderById() {
+		
+		EpOrder epOrder= epOrderServiceImpl.findEpOrderById(10);
+		System.out.println(epOrder.getAddress());
+	}
+	@Test
+	public void testFindEpOrdersListByOrderid() {
+		List<EpOrders> list=epOrderServiceImpl.findEpOrdersListByOrderid(10);
+		System.out.println(list.size());
+		
+	}
 
 }

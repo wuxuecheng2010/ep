@@ -11,6 +11,7 @@ public class WeChatConfig {
 * 微信服务号APPID 
 */  
 public static String APPID="wx3d51af6b1af73327";  
+
 /** 
 * 微信支付的商户号 
 */  
