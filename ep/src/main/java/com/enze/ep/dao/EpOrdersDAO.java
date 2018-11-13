@@ -15,10 +15,10 @@ import com.enze.ep.entity.EpOrders;
 @Mapper
 public interface EpOrdersDAO {
 	String TABLE_NAME = "ep_orders";
-    String INSET_FIELDS = "numno,orderid,iproductid,vcproductcode,vcuniversalname,vcstandard,iunitid,vcunitname,totalcounts,numprice,nummoney ";
-    String SELECT_FIELDS = "numno,orderid,iproductid,vcproductcode,vcuniversalname,vcstandard,iunitid,vcunitname,totalcounts,numprice,nummoney,ordersid";
+    String INSET_FIELDS = "numno,orderid,iproductid,vcproductcode,vcuniversalname,vcstandard,iunitid,vcunitname,totalcounts,numprice,nummoney,dosis,frequency,usage ";
+    String SELECT_FIELDS = "numno,orderid,iproductid,vcproductcode,vcuniversalname,vcstandard,iunitid,vcunitname,totalcounts,numprice,nummoney,dosis,frequency,usage,ordersid";
 
-    @Insert({"insert into ", TABLE_NAME, "(", INSET_FIELDS, ") values (#{numno},#{orderid},#{iproductid},#{vcproductcode},#{vcuniversalname},#{vcstandard},#{iunitid},#{vcunitname},#{totalcounts},#{numprice},#{nummoney} )"})
+    @Insert({"insert into ", TABLE_NAME, "(", INSET_FIELDS, ") values (#{numno},#{orderid},#{iproductid},#{vcproductcode},#{vcuniversalname},#{vcstandard},#{iunitid},#{vcunitname},#{totalcounts},#{numprice},#{nummoney},#{dosis},#{frequency},#{usage} )"})
     int addOrders(EpOrders epOrders);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where orderid = #{orderid}"})

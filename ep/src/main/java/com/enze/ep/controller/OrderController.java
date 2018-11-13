@@ -217,7 +217,7 @@ public class OrderController {
 	@RequestMapping(value="getOrder/{orderid}",method=RequestMethod.GET)
 	@ResponseBody
 	public EpOrder getOrder(@PathVariable(name="orderid") int orderid) {
-		EpOrder eporder=epOrderServiceImpl.findEpOrderById(orderid);
+		EpOrder eporder=epOrderServiceImpl.findEpOrderByIdRealTime(orderid);
 		return eporder;
 	}
 	

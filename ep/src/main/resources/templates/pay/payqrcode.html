@@ -3,8 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <title>支付</title>
-<link rel="stylesheet"
-	href="/static/plugs/layui/css/layui.css"
+<link rel="stylesheet" href="/static/plugs/layui/css/layui.css"
 	type="text/css" />
 <link rel="stylesheet"
 	href="/static/plugs/bootstrap-3.3.7/css/bootstrap.min.css" />
@@ -45,7 +44,8 @@
 					<div class="collapse navbar-collapse"
 						id="bs-example-navbar-collapse-1">
 						<ul class="nav navbar-nav">
-							<li class="active"><a href="#"><span th:text="${hospital}"></span></a></li>
+							<li class="active"><a href="#"><span
+									th:text="${hospital}"></span></a></li>
 						</ul>
 
 						<ul class="nav navbar-nav pull-right" style="margin-right: 16px;">
@@ -63,97 +63,93 @@
 
 				</nav>
 				<div class="row clearfix" style="margin-top: 60px;">
-					<div class="col-md-4 column">
+					<div class="col-md-4 column" style="text-align: center;">
+					</div>
+					<div class="col-md-4 column" style="text-align: center;">
 						<h3>扫码支付</h3>
+					</div>
+					<div class="col-md-4 column" style="text-align: right;">
+					     <a class="btn btn-danger" href="/index/nurse" style="margin-right:-100px;" >
+					     	<span class="glyphicon glyphicon-chevron-left"></span>返回
+					     </a>
 					</div>
 				</div>
 
 
 			</div>
 			<div class="row clearfix">
-			
-			<div class="col-md-4 column " style="text-align:center;">
-			<h3>
-				微信
-			</h3>
-			<p>
-				<img alt="" src="" id="weixin">
-			</p>
-			<p>
-				 <a class="btn" href="#">打开微信扫一扫</a>
-			</p>
-		</div>
-			
-			<div class="col-md-4 column " style="text-align:center;">
-			<h3>
-				购物清单
-			</h3>
-			
-			<p>
-				<table class="table table-condensed" style="font-size:12px;">
-				<thead>
-					<tr>
-						<th>
-							名称
-						</th>
-						<th>
-							单价
-						</th>
-						<th>
-							数量
-						</th>
-						<th>
-							金额
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="info,infoStat : ${orderslist}">
-						<td th:text="${info.vcuniversalname}">
-							
-						</td>
-						<td th:text="${info.numprice}">
-							
-						</td>
-						<td th:text="${info.totalcounts}">
-							
-						</td>
-						<td th:text="${info.nummoney}">
-							
-						</td>
-					</tr>
-					
-				</tbody>
-				<tbody>
-					<tr>
-						<td colspan="3" style="text-align:right;">
-							合计金额:
-						</td>
-						
-						<td th:text="${eporder.ordermoney}">
-							
-						</td>
-					</tr>
-					
-				</tbody>
-			</table>
-			</p>
-		</div>
-		
-		
-		<div class="col-md-4 column " style="text-align:center;">
-			<h3>
-				支付宝
-			</h3>
-			<p >
-				<img alt="" src="" id="alipay">
-			</p>
-			<p>
-				 <a class="btn" href="#">打开支付宝扫一扫</a>
-			</p>
-		</div>
-		
-	</div>
+
+				<div class="col-md-4 column " style="text-align: center;">
+
+
+					<h3>
+						<img alt="微信扫码" src="/static/img/wechat.png">
+					</h3>
+
+					<p>
+						<img alt="微信扫码" src="" id="weixin">
+					</p>
+
+					<p>
+						<a class="btn" href="#">打开微信扫一扫</a>
+					</p>
+				</div>
+
+				<div class="col-md-4 column " style="text-align: center;">
+
+
+					<hr>
+					<p style="text-align: left;">
+						<span>患者姓名：</span><span th:text="${eporder.name}"></span>
+					</p>
+
+
+
+					<p>
+					<table class="table table-condensed" style="font-size: 12px;">
+						<thead>
+							<tr>
+								<th>名称</th>
+								<th>单价</th>
+								<th>数量</th>
+								<th>金额</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="info,infoStat : ${orderslist}">
+								<td th:text="${info.vcuniversalname}"></td>
+								<td th:text="${info.numprice}"></td>
+								<td th:text="${info.totalcounts}"></td>
+								<td th:text="${info.nummoney}"></td>
+							</tr>
+
+						</tbody>
+						<tbody>
+							<tr>
+								<td colspan="3" style="text-align: right;">合计金额:</td>
+
+								<td th:text="${eporder.ordermoney}"></td>
+							</tr>
+
+						</tbody>
+					</table>
+					</p>
+				</div>
+
+
+				<div class="col-md-4 column " style="text-align: center;">
+					<h3>
+						<img alt="支付宝扫码" src="/static/img/alipay.png">
+					</h3>
+					<p>
+						<img alt="微信扫码" src="" id="alipay">
+					</p>
+					<p>
+						<a class="btn" href="#">打开支付宝扫一扫</a>
+					</p>
+				</div>
+
+			</div>
 
 			<script th:inline="javascript">
 					
@@ -215,7 +211,7 @@
 						    dataType:"json",
 						    //data:data,
 						    success:function(data){
-						    	layer.msg(JSON.stringify(data));
+						    	//layer.msg(JSON.stringify(data));
 						    	var usestatus=data.usestatus;
 						    	if(usestatus==1){
 						    		//切换到支付成功页面

@@ -123,7 +123,7 @@ public static String getCodeUrl(WeChatParams ps) throws Exception {
      Map hints = new HashMap();  
      BitMatrix bitMatrix = null;  
      try {  
-         bitMatrix = multiFormatWriter.encode(content, BarcodeFormat.QR_CODE, 350, 350,hints);  
+         bitMatrix = multiFormatWriter.encode(content, BarcodeFormat.QR_CODE, 300, 300,hints);  
          BufferedImage image = toBufferedImage(bitMatrix);  
          //输出二维码图片流  
          try {  

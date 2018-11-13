@@ -57,6 +57,13 @@ public class EpOrderServiceImpl implements EpOrderService {
 		//return epOrderDAO.selectOrderByOrderid(orderid);
 	}
 
+
+	@Override
+	public EpOrder findEpOrderByIdRealTime(int orderid) {
+		EpOrder epOrder=epOrderDAO.selectOrderByOrderid(orderid);
+		return epOrder;
+	}
+
 	
 
 	@Override
@@ -83,6 +90,7 @@ public class EpOrderServiceImpl implements EpOrderService {
 		
 		//启动药店系统记账
 	}
+
 
 
 }

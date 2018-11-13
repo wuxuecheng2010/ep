@@ -66,30 +66,56 @@
 						<h3>支付成功</h3>
 					</div>
 				</div> -->
+				
 				<div class="row clearfix" style="margin-top: 60px;">
+					<div class="col-md-1 column "></div>
+					<div class="col-md-7 column" style="text-align: left;">
+						<h3 th:switch="${order.usestatus}">
+							<div th:case="'1'">
+								<span><img alt="" src="/static/img/success.png" width=48;></span>
+								<span>&nbsp;&nbsp;&nbsp;&nbsp;支付成功.</span>
+							</div>
+							<div th:case="'0'">
+								<span><img alt="" src="/static/img/fail.png" width=48;></span>
+								<span>&nbsp;&nbsp;&nbsp;&nbsp;尚未支付.</span>
+							</div>
+						</h3>
+					</div>
+					<div class="col-md-4 column" style="text-align: right;">
+					     <a class="btn btn-danger" href="/index/nurse" style="margin-right:-100px;" >
+					     	<span class="glyphicon glyphicon-chevron-left"></span>返回
+					     </a>
+					</div>
+				</div>
+				
+				
+<!-- 				<div class="row clearfix" style="margin-top: 60px;">
 					<div class="col-md-12 column">
 						<div class="alert alert-success">
 							恭喜您，<span th:text="${order.name}"></span>，您的支付已成功.。
 						</div>
 					</div>
-				</div>
+				</div> -->
 
 
 			</div>
 			<div class="row clearfix">
 
-
 				<div class="col-md-1 column "></div>
 
 				<div class="col-md-7 column ">
-					<h3>购物清单</h3>
+					<hr>
+					<p style="text-align: left;">
+						<span>患者姓名：</span><span th:text="${order.name}"></span>
+					</p>
 
 					<p>
-					<table class="table table-condensed"
-						style="font-size: 12px; margin-left: 0px;">
+					<table class="table"
+						style="font-size: 14px; margin-left: 0px;">
 						<thead>
 							<tr>
 								<th>名称</th>
+								<th>规格</th>
 								<th>单价</th>
 								<th>数量</th>
 								<th>金额</th>
@@ -98,6 +124,7 @@
 						<tbody>
 							<tr th:each="info,infoStat : ${orderslist}">
 								<td th:text="${info.vcuniversalname}"></td>
+								<td th:text="${info.vcstandard}"></td>
 								<td th:text="${info.numprice}"></td>
 								<td th:text="${info.totalcounts}"></td>
 								<td th:text="${info.nummoney}"></td>
@@ -106,7 +133,7 @@
 						</tbody>
 						<tbody>
 							<tr>
-								<td colspan="3" style="text-align: right;">合计金额:</td>
+								<td colspan="4" style="text-align: right;">合计金额:</td>
 
 								<td th:text="${order.ordermoney}"></td>
 							</tr>
@@ -117,7 +144,7 @@
 				</div>
 
 
-				<div class="col-md-4 column " style="text-align: left;">
+				<!-- <div class="col-md-4 column " style="text-align: left;">
 					<h3>回到主页</h3>
 					<p>
 						<img alt="" src="" id="alipay">
@@ -125,7 +152,7 @@
 					<p>
 						<a class="btn" href="/index/nurse">点击返回</a>
 					</p>
-				</div>
+				</div> -->
 
 
 
