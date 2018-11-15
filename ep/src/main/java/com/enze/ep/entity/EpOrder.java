@@ -35,6 +35,9 @@ public class EpOrder {
 	private String micard;
 	private String hicard;
 	
+	private String weixinnoncestr;//微信下单时创建的随机码  订单查询的时 跟ordercode组合成out_trade_no
+	private int flagsendstore;//是否处理到药店 0初始  1已经处理
+	
 	
 	
 }

@@ -31,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alipay.demo.trade.model.ExtendParams;
 import com.alipay.demo.trade.model.GoodsDetail;
 import com.alipay.demo.trade.model.builder.AlipayTradePrecreateRequestBuilder;
+import com.enze.ep.entity.EpBussType;
 import com.enze.ep.entity.EpOrder;
 import com.enze.ep.entity.EpOrders;
 import com.enze.ep.entity.EpPayInfo;
@@ -68,6 +69,12 @@ public class PayController {
 	
 	@Autowired
 	RedisTemplate redisTemplate;
+	
+	@Autowired
+	WeixinPay weixinPay;
+	
+	@Autowired
+	AliPay alipay;
 	
 	//打开扫码界面
 	@RequestMapping(value="/payqrcode/{orderid}",method=RequestMethod.GET)
@@ -146,7 +153,7 @@ public class PayController {
 	            .setNotifyUrl(AlipayConfig.notifyUrl)//支付宝服务器主动通知商户服务器里指定的页面http路径,根据需要设置
 	            .setGoodsDetailList(goodsDetailList);
 			
-	        payurl=AliPay.getCodeUrl(builder);
+	        payurl=alipay.getCodeUrl(builder);
 	        redisTemplate.opsForValue().set(key, payurl);
         	redisTemplate.expire(key, 100, TimeUnit.MINUTES);
 	        
@@ -179,7 +186,7 @@ public class PayController {
 				ps.setOut_trade_no(eporder.getOrdercode());
 				ps.setAttach("销售订单");
 				try {
-					payurl=WeixinPay.getCodeUrl(ps);
+					payurl=weixinPay.getCodeUrl(ps);
 					redisTemplate.opsForValue().set(key, payurl);
 		        	redisTemplate.expire(key, 100, TimeUnit.MINUTES);
 					//String qrcode_path="/pay/strtoqr?str="+payurl;
@@ -200,7 +207,7 @@ public class PayController {
 		@ResponseBody
 		@RequestMapping(value="/strtoqr",method=RequestMethod.GET)
 		public byte[] strtoqr(String str) {
-			byte[] bytes=WeixinPay.encodeQrcodeToByte(str);
+			byte[] bytes=weixinPay.encodeQrcodeToByte(str);
 			return bytes;
 		}
 
@@ -230,7 +237,7 @@ public class PayController {
 
 	        //验签是不是支付宝发起的回调
 	        map.remove("sign_type");
-	        boolean bool=AliPay.alipayCallBack(map);//延签
+	        boolean bool=alipay.alipayCallBack(map);//延签
 	        if(bool) {
 	        	String out_trade_no = map.get("out_trade_no");
 	    	    String trade_status = map.get("trade_status");
@@ -341,6 +348,7 @@ public class PayController {
 	                payinfo.setPaydate(time_end);
 	                payinfo.setPaytypeid(EpPayType.WEIXIN);
 	                payinfo.setPlordercode(transaction_id);
+	                payinfo.setBusstypeid(EpBussType.SALE);
 	                
 	                try {
 	                	//商家单据信息变更及支付信息记录
@@ -399,7 +407,7 @@ public class PayController {
 		ps.setAttach("销售订单");
 		String weixin_pay_url="";
 		try {
-			weixin_pay_url=WeixinPay.getCodeUrl(ps);
+			weixin_pay_url=weixinPay.getCodeUrl(ps);
 			String qrcode_path="/pay/strtoqr?str="+weixin_pay_url;
 			map.put("weixin", qrcode_path);
 		} catch (Exception e) {
@@ -421,7 +429,7 @@ public class PayController {
 		ps.setAttach("没有了");
 		String codeurl="";
 		try {
-			codeurl = WeixinPay.getCodeUrl(ps);
+			codeurl = weixinPay.getCodeUrl(ps);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -434,7 +442,7 @@ public class PayController {
 	@RequestMapping(value="/qr",method=RequestMethod.GET)
 	public byte[] getPayQrCodeByte(HttpServletRequest request,HttpServletResponse response) {
 		String c="1234560";
-		byte[] bytes=WeixinPay.encodeQrcodeToByte(c);
+		byte[] bytes=weixinPay.encodeQrcodeToByte(c);
 		return bytes;
 	}
 	

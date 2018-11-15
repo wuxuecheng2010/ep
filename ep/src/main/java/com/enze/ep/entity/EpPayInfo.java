@@ -13,6 +13,7 @@ public class EpPayInfo {
 	private String fee;//订单金额   单位分
 	private String attach ;//附加信息
 	private String paydate;//支付时间
+	private String tradestatus;//交易状态
 	
 	@Override
 	public String toString() {

@@ -2,22 +2,31 @@ package com.enze.ep.utils.alipay;
 
 import java.util.HashMap;
 
-
+import org.springframework.stereotype.Service;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.demo.trade.config.Configs;
 import com.alipay.demo.trade.model.builder.AlipayTradePrecreateRequestBuilder;
+import com.alipay.demo.trade.model.builder.AlipayTradeQueryRequestBuilder;
 import com.alipay.demo.trade.model.result.AlipayF2FPrecreateResult;
+import com.alipay.demo.trade.model.result.AlipayF2FQueryResult;
 import com.alipay.demo.trade.service.AlipayMonitorService;
 import com.alipay.demo.trade.service.AlipayTradeService;
 import com.alipay.demo.trade.service.impl.AlipayMonitorServiceImpl;
 import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
 import com.alipay.demo.trade.service.impl.AlipayTradeWithHBServiceImpl;
+import com.enze.ep.entity.EpBussType;
+import com.enze.ep.entity.EpOrder;
+import com.enze.ep.entity.EpPayInfo;
+import com.enze.ep.entity.EpPayType;
+import com.enze.ep.utils.DateUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
+@Service
 @Slf4j
 public class AliPay {
 	
@@ -70,7 +79,7 @@ public class AliPay {
         Configs.setSignType(AlipayConfig.sign_type);
     }
     
-    public static String getCodeUrl(AlipayTradePrecreateRequestBuilder builder) {
+    public  String getCodeUrl(AlipayTradePrecreateRequestBuilder builder) {
     	String alipay_pay_url="";
       
 
@@ -102,7 +111,7 @@ public class AliPay {
     }
     
     //支付宝回调
-    public static boolean alipayCallBack(HashMap<String, String> map) {
+    public  boolean alipayCallBack(HashMap<String, String> map) {
     	boolean bool=false;
     	 try {
 	            //Configs.init("zfbinfo.properties");
@@ -119,7 +128,68 @@ public class AliPay {
     }
     
     
+    public  EpPayInfo queryOrderUsestatusByOrder(EpOrder order) {
+    	return queryOrderUsestatusByOutTradeNo(order.getOrdercode());
+    }
+    /**
+     * 
+    * @Title: queryAlipayOrderUsestatus
+    * @Description: TODO(查询alipay订单支付状态)
+    * @param @param outTradeNo    商家订单号
+    * @author wuxuecheng
+    * @return void    返回类型
+    * @throws
+     */
+    public  EpPayInfo queryOrderUsestatusByOutTradeNo(String outTradeNo) {
+    	EpPayInfo payinfo=null;
+    	String tradeStatus="";
+    	if(!"".equals(outTradeNo) && outTradeNo!=null){
 
+    		AlipayTradeService tradeService = new AlipayTradeServiceImpl.ClientBuilder().build();
+
+    		// (必填) 商户订单号，通过此商户订单号查询当面付的交易状态
+            AlipayTradeQueryRequestBuilder builder = new AlipayTradeQueryRequestBuilder()
+            		.setOutTradeNo(outTradeNo);
+    		AlipayF2FQueryResult result = tradeService.queryTradeResult(builder);
+    		switch (result.getTradeStatus()) {
+    			case SUCCESS:
+    				//log.info("查询返回该订单支付成功: )");
+    				AlipayTradeQueryResponse resp = result.getResponse();
+    				tradeStatus=resp.getTradeStatus();
+    				payinfo=new EpPayInfo();
+	                //payinfo.setAttach(attach);
+	                payinfo.setOrdercode(outTradeNo);
+	                payinfo.setFee(resp.getBuyerPayAmount());
+	                payinfo.setPaydate(DateUtils.formatDateToDefaultStr(resp.getSendPayDate()));
+	                payinfo.setPaytypeid(EpPayType.ALIPAY);
+	                payinfo.setPlordercode(resp.getTradeNo());
+	                payinfo.setBusstypeid(EpBussType.SALE);
+	                payinfo.setTradestatus(tradeStatus);
+    				//log.info(resp.getTradeStatus());
+    				break;
+
+    			case FAILED:
+    				log.error("查询返回该订单支付失败!!!");
+    				break;
+
+    			case UNKNOWN:
+    				log.error("系统异常，订单支付状态未知!!!");
+    				break;
+
+    			default:
+    				log.error("不支持的交易状态，交易返回异常!!!");
+    				break;
+    		}
+ 
+    	}
+    	return payinfo;
+    }
+
+    
+    public static void main(String[] agur) {
+    	String outTradeNo="2018111408110366845056";
+    	new AliPay().queryOrderUsestatusByOutTradeNo(outTradeNo);
+    }
 
 	
 }

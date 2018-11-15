@@ -224,7 +224,7 @@ public class OrderController {
 	@RequestMapping(value="success/{orderid}",method=RequestMethod.GET)
 	public ModelAndView success( HttpServletRequest request,HttpServletResponse response,@PathVariable(name="orderid") int orderid) {
 		ModelMap map=myAuthUtils.getAuthInfo(request,response);
-		EpOrder eporder=epOrderServiceImpl.findEpOrderById(orderid);
+		EpOrder eporder=epOrderServiceImpl.findEpOrderByIdRealTime(orderid);
 		List<EpOrders> eporderslist=epOrderServiceImpl.findEpOrdersListByOrderid(orderid);
 		map.put("order", eporder);
 		map.put("orderslist", eporderslist);

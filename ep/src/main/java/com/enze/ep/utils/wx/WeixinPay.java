@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,21 +16,32 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import com.enze.ep.entity.EpBussType;
+import com.enze.ep.entity.EpOrder;
+import com.enze.ep.entity.EpPayInfo;
+import com.enze.ep.entity.EpPayType;
+import com.enze.ep.service.EpOrderService;
+import com.enze.ep.utils.DateUtils;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;  
+import com.google.zxing.common.BitMatrix;
 
+import lombok.extern.slf4j.Slf4j;  
 
+@Service
+@Slf4j
 public class WeixinPay {  
 
-public static Logger lg=Logger.getLogger(WeixinPay.class);  
+//public static Logger lg=Logger.getLogger(WeixinPay.class);  
 private static final int BLACK = 0xff000000;  
 private static final int WHITE = 0xFFFFFFFF;  
 
-
+@Autowired
+EpOrderService epOrderServiceImpl;
 
 /** 
 * 获取微信支付的二维码地址 
@@ -37,7 +49,7 @@ private static final int WHITE = 0xFFFFFFFF;
 * @author chenp 
 * @throws Exception 
 */  
-public static String getCodeUrl(WeChatParams ps) throws Exception {    
+public  String getCodeUrl(WeChatParams ps) throws Exception {    
         /** 
          * 账号信息   
          */  
@@ -76,11 +88,13 @@ public static String getCodeUrl(WeChatParams ps) throws Exception {
         packageParams.put("sign", sign);    
 
         String requestXML = PayForUtil.getRequestXml(packageParams);//将请求参数转换成String类型    
-        lg.info("微信支付请求参数的报文"+requestXML);    
+        log.info("微信支付请求参数的报文"+requestXML);    
         String resXml = HttpUtil.postData(ufdoder_url,requestXML);  //解析请求之后的xml参数并且转换成String类型  
         Map map = XMLUtil.doXMLParse(resXml);    
-        lg.info("微信支付响应参数的报文"+resXml);   
-        String urlCode = (String) map.get("code_url");    
+        log.info("微信支付响应参数的报文"+resXml);   
+        String urlCode = (String) map.get("code_url");   
+        
+        epOrderServiceImpl.recordOrderWeixinNonceStr(ps.out_trade_no, nonce_str);
 
         return urlCode;    
 }    
@@ -92,7 +106,7 @@ public static String getCodeUrl(WeChatParams ps) throws Exception {
    * @param response 
    */  
   @SuppressWarnings({ "unchecked", "rawtypes" })  
-  public static void encodeQrcode(String content,HttpServletResponse response){  
+  public  void encodeQrcode(String content,HttpServletResponse response){  
 
       if(StringUtils.isBlank(content))  
           return;  
@@ -114,7 +128,7 @@ public static String getCodeUrl(WeChatParams ps) throws Exception {
  }  
   
   
-  public static byte[] encodeQrcodeToByte(String content){  
+  public  byte[] encodeQrcodeToByte(String content){  
 	  ByteArrayOutputStream out = new ByteArrayOutputStream();
 
       if(StringUtils.isBlank(content))  
@@ -145,7 +159,7 @@ public static String getCodeUrl(WeChatParams ps) throws Exception {
   * @param matrix 
   * @return 
   */  
-public static BufferedImage toBufferedImage(BitMatrix matrix) {  
+public  BufferedImage toBufferedImage(BitMatrix matrix) {  
          int width = matrix.getWidth();  
          int height = matrix.getHeight();  
          BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);  
@@ -157,10 +171,85 @@ public static BufferedImage toBufferedImage(BitMatrix matrix) {
          return image;  
 }  
 // 特殊字符处理    
-public static String UrlEncode(String src)  throws UnsupportedEncodingException {    
+public  String UrlEncode(String src)  throws UnsupportedEncodingException {    
    return URLEncoder.encode(src, "UTF-8").replace("+", "%20");    
 }  
 
+
+public EpPayInfo queryOrderUsestatusByOrder(EpOrder order) throws Exception{
+	return queryOrderUsestatusByOrderCodeAndWeixinNonceStr(order.getOrdercode(),order.getWeixinnoncestr());
+}
+
+/**
+ * 
+* @Title: queryOrderUsestatus
+* @Description: TODO(这里用一句话描述这个方法的作用)
+* @param @param outTradeNo  =ordercode+noncestr(拼接)
+* @param @return
+* @param @throws Exception    参数
+* @author wuxuecheng
+* @return EpPayInfo    返回类型
+* @throws
+ */
+public  EpPayInfo queryOrderUsestatusByOrderCodeAndWeixinNonceStr(String outTradeNo,String weixinNoncestr)throws Exception  {
+	
+    /** 
+     * 账号信息   
+     */  
+    String appid = WeChatConfig.APPID;//微信服务号的appid    
+    String mch_id = WeChatConfig.MCHID; //微信支付商户号    
+    String key = WeChatConfig.APIKEY; // 微信支付的API密钥    
+    String orderquery_url=WeChatConfig.ORDERQUERY_URL;//微信下单API地址  
+
+    /** 
+     * 时间字符串 
+     */  
+    String currTime = PayForUtil.getCurrTime();  
+    String strTime = currTime.substring(8, currTime.length());    
+    String strRandom = PayForUtil.buildRandom(4) + "";    
+    String nonce_str = strTime + strRandom;    
+
+    /** 
+     * 参数封装 
+     */  
+    SortedMap<Object,Object> packageParams = new TreeMap<Object,Object>();  
+    
+    packageParams.put("appid", appid);
+    packageParams.put("mch_id", mch_id);
+    packageParams.put("out_trade_no", outTradeNo+weixinNoncestr);
+    packageParams.put("nonce_str", nonce_str);//随机字符串  
+ 
+    String sign = PayForUtil.createSign("UTF-8", packageParams,key);  //获取签名  
+    packageParams.put("sign", sign); 
+    
+    String requestXML = PayForUtil.getRequestXml(packageParams);//将请求参数转换成String类型    
+    log.info("微信支付请求参数的报文"+requestXML);    
+    String resXml = HttpUtil.postData(orderquery_url,requestXML);  //解析请求之后的xml参数并且转换成String类型  
+    Map map = XMLUtil.doXMLParse(resXml); 
+    
+    EpPayInfo payinfo=null;
+    String trade_state=(String)map.get("trade_state");
+    if("SUCCESS".equals(trade_state)) {
+    	payinfo=new EpPayInfo();
+        payinfo.setAttach((String)map.get("attach"));
+        payinfo.setOrdercode(outTradeNo);
+        String total_fee=(String)map.get("total_fee");
+        BigDecimal fee=new BigDecimal(total_fee).divide(new BigDecimal(100));
+        payinfo.setFee(fee.toString());
+        String time_end=(String)map.get("time_end");
+        String payDate=DateUtils.formatSimpleStrToDefaultStr(time_end);
+        payinfo.setPaydate(payDate);
+        payinfo.setPaytypeid(EpPayType.WEIXIN);
+        payinfo.setPlordercode((String)map.get("transaction_id"));
+        payinfo.setBusstypeid(EpBussType.SALE);
+        payinfo.setTradestatus(trade_state);
+    }
+     
+    
+    log.info("微信支付响应参数的报文"+resXml);   
+    //String urlCode = (String) map.get("code_url");    
+	return payinfo;
+}
 
 
 

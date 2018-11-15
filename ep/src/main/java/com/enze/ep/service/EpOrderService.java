@@ -1,5 +1,6 @@
 package com.enze.ep.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.enze.ep.entity.EpOrder;
@@ -20,6 +21,35 @@ public interface EpOrderService {
     * @throws
      */
     EpOrder findEpOrderByIdRealTime(int orderid) ;
+    List<EpOrder> findOrderListByOrderTypeAndUsestatusAndMinutesAOB(int ordertype, int usestatus, int minutes,int flagsendstore);
+    
     List<EpOrders> findEpOrdersListByOrderid(int orderid);
     void finishOrderPay(EpPayInfo payinfo) throws Exception ;
+    
+    /**
+     * 
+    * @Title: setOrderWeixinNonceStr
+    * @Description: TODO(记录商家订单下单时的随机码)
+    * @param @param ordercode
+    * @param @param noncestr    参数
+    * @author wuxuecheng
+    * @return void    返回类型
+    * @throws
+     */
+    void recordOrderWeixinNonceStr(String ordercode,String noncestr);
+    
+    /**
+     * 
+    * @Title: doSendOrderToStore
+    * @Description: TODO(订单发送到药店系统 做账)
+    * @param @param order    参数
+    * @author wuxuecheng
+    * @return void    返回类型
+    * @throws
+     */
+    void doSendOrderToStore(EpOrder order);
+    
+    
+    void saveOrderStock(List<EpOrders> orderslist,String counterids);
+    
 }

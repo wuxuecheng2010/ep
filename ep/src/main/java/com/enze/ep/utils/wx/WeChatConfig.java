@@ -33,4 +33,9 @@ public static String UFDODER_URL="https://api.mch.weixin.qq.com/pay/unifiedorder
 */  
 public static String WXPAY="";  
 
+/**
+ * 订单查询地址
+ */
+public static String ORDERQUERY_URL="https://api.mch.weixin.qq.com/pay/orderquery";
+
 }  

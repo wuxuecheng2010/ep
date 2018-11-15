@@ -13,10 +13,10 @@ import com.enze.ep.entity.EpPayInfo;
 @Mapper
 public interface EpPayInfoDAO {
 	String TABLE_NAME = "ep_payinfo";
-    String INSET_FIELDS = "paytypeid,busstypeid,ordercode,plordercode,baseinfo,fee,paydate,attach ";
-    String SELECT_FIELDS = "paytypeid,busstypeid,ordercode,plordercode,baseinfo,fee,paydate,attach,payinfoid ";
+    String INSET_FIELDS = "paytypeid,busstypeid,ordercode,plordercode,baseinfo,fee,paydate,attach,tradestatus ";
+    String SELECT_FIELDS = "paytypeid,busstypeid,ordercode,plordercode,baseinfo,fee,paydate,attach,tradestatus,payinfoid ";
 
-    @Insert({"insert into ", TABLE_NAME, "(", INSET_FIELDS, ") values (#{paytypeid},#{busstypeid},#{ordercode},#{plordercode},#{baseinfo},#{fee},#{paydate},#{attach})"})
+    @Insert({"insert into ", TABLE_NAME, "(", INSET_FIELDS, ") values (#{paytypeid},#{busstypeid},#{ordercode},#{plordercode},#{baseinfo},#{fee},#{paydate},#{attach},#{tradestatus})"})
     int addPayInfo(EpPayInfo epPayInfo);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where ordercode = #{ordercode} or plordercode=#{ordercode}"})

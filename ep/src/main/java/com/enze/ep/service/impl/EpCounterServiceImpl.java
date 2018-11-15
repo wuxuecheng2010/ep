@@ -22,5 +22,18 @@ public class EpCounterServiceImpl implements EpCounterService {
 	public List<EpCounter> findCounterBySectionid(int sectionid) {
 		return epCounterDAO.selectCounterBySectionid(sectionid);
 	}
+
+	@Override
+	public String findCouteridsBySectionid(int sectionid) {
+		String counterids="";
+		List<EpCounter> counterlist=findCounterBySectionid(sectionid);
+		for(EpCounter epCounter:counterlist) {
+			int _icounterid=epCounter.getIcounterid();
+			counterids+=_icounterid+",";
+		}
+		if(!"".equals(counterids))
+		counterids=counterids.substring(0, counterids.length()-1);
+		return counterids;
+	}
 	
 }
