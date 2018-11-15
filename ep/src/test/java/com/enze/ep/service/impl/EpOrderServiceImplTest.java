@@ -54,5 +54,16 @@ public class EpOrderServiceImplTest {
 		System.out.println(list.size());
 		
 	}
+	
+	@Test
+	public void testSaveOrderStock() {
+		
+		EpOrder order=epOrderServiceImpl.findEpOrderById(36);
+		epOrderServiceImpl.saveEpOrderStock(order);
+		
+	}
+	
+	
+	
 
 }

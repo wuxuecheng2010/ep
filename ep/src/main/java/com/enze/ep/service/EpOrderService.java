@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.enze.ep.entity.EpOrder;
+import com.enze.ep.entity.EpOrderStock;
 import com.enze.ep.entity.EpOrders;
 import com.enze.ep.entity.EpPayInfo;
 
@@ -47,9 +48,14 @@ public interface EpOrderService {
     * @return void    返回类型
     * @throws
      */
-    void doSendOrderToStore(EpOrder order);
+    void doSendEpOrderToStore(EpOrder order);
     
+    boolean saveEpOrderStock(EpOrder order);
     
-    void saveOrderStock(List<EpOrders> orderslist,String counterids);
+    boolean createSalesOrderByOrderStock(EpOrder order);
+    
+    String createSalesOrderDoc(EpOrder order,int idepartid);
+    
+    void createSalesOrderDtl(String vcbillno,List<EpOrderStock> orderStockList);
     
 }

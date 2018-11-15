@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.enze.ep.entity.EpCounter;
+import com.enze.ep.entity.TbCounter;
 import com.enze.ep.entity.EpUser;
 import com.enze.ep.enums.UserType;
 import com.enze.ep.service.EpCounterService;

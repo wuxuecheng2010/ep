@@ -36,7 +36,7 @@ public class OrderProcessingJob {
 	  List<EpOrder> list=epOrderServiceImpl.findOrderListByOrderTypeAndUsestatusAndMinutesAOB(ordertype, usestatus, minutes,flagsendstore);
 	  
 	  for(EpOrder order:list) {
-		  epOrderServiceImpl.doSendOrderToStore(order);
+		  epOrderServiceImpl.doSendEpOrderToStore(order);
 	  }
   
   }

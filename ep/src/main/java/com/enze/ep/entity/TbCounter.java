@@ -3,7 +3,7 @@ package com.enze.ep.entity;
 import lombok.Data;
 
 @Data
-public class EpCounter {
+public class TbCounter {
 	
 	private int icounterid;
 	private String vccountercode;

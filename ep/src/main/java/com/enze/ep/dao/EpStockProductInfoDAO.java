@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
-import com.enze.ep.entity.EpStockProductInfo;
+import com.enze.ep.entity.TbStockProductInfo;
 
 @Repository
 @Mapper
@@ -15,8 +15,8 @@ public interface EpStockProductInfoDAO {
     String SELECT_FIELDS ="isid,idepartid,icounterid,iproductid,numstocks,numinprice,vcbatchnumber";
     
 
-    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where iproductid = #{iproductid} and counterids = #{counterids} and and NUMSTOCKS>0 and isnull(FlagStop,'N')='N' order by dtusefulllife "})
-    List<EpStockProductInfo> selectStockProductInfoListByProductIDAndCounterIDS(int iproductid,String counterids);
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where iproductid = #{iproductid} and icounterid in (#{counterids}) and  NUMSTOCKS>0 and isnull(FlagStop,'N')='N' order by dtusefulllife "})
+    List<TbStockProductInfo> selectStockProductInfoListByProductIDAndCounterIDS(int iproductid,String counterids);
     
    
 }

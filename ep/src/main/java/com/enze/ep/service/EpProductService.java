@@ -2,13 +2,13 @@ package com.enze.ep.service;
 
 import java.util.List;
 
-import com.enze.ep.entity.EpProduct;
-import com.enze.ep.entity.EpProductPrice;
+import com.enze.ep.entity.TbProduct;
+import com.enze.ep.entity.TbProductPrice;
 
 public interface EpProductService {
 
-	public List<EpProduct> findEpProductListByProductNameAndCounters(String counterids,String productName);
+	public List<TbProduct> findEpProductListByProductNameAndCounters(String counterids,String productName);
 
-	public EpProductPrice findEpProductPriceByProductid(int iproductid);
+	public TbProductPrice findEpProductPriceByProductid(int iproductid);
 
 }

@@ -13,5 +13,6 @@ public class EpOrderStock {
 	private int idepartid;
 	private int stockisid;
 	private BigDecimal qty;
+	private BigDecimal numprice;
 
 }

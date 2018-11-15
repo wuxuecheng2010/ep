@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.enze.ep.entity.EpCounter;
+import com.enze.ep.entity.TbCounter;
 
 import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
@@ -24,7 +24,7 @@ public class EpCounterDAOTest {
 	@Test
 	public void testSelectCounterBySectionid() {
 		int sectionid=1;
-		List<EpCounter>  list=epCounterDao.selectCounterBySectionid(sectionid);
+		List<TbCounter>  list=epCounterDao.selectCounterBySectionid(sectionid);
 		log.info("list size:"+list.size());
 	}
 

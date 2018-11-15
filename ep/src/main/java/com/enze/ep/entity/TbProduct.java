@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
-public class EpProduct {
+public class TbProduct {
 	
 	private int iproductid;
 	private String vcproductcode;

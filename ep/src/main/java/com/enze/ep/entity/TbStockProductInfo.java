@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
-public class EpStockProductInfo {
+public class TbStockProductInfo {
 	
    private int isid;
    private int idepartid;

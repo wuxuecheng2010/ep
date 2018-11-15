@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.enze.ep.entity.EpInpatient;
-import com.enze.ep.entity.EpProduct;
+import com.enze.ep.entity.TbProduct;
 import com.enze.ep.service.EpInpatientService;
 import com.enze.ep.service.EpProductService;
 

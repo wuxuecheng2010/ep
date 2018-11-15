@@ -2,10 +2,10 @@ package com.enze.ep.service;
 
 import java.util.List;
 
-import com.enze.ep.entity.EpCounter;
+import com.enze.ep.entity.TbCounter;
 
 public interface EpCounterService {
-	 List<EpCounter> findCounterBySectionid(int sectionid);
+	 List<TbCounter> findCounterBySectionid(int sectionid);
 	 String findCouteridsBySectionid(int sectionid);
 	 
 }

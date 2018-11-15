@@ -23,7 +23,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.enze.ep.entity.EpOrder;
 import com.enze.ep.entity.EpOrders;
-import com.enze.ep.entity.EpProductPrice;
+import com.enze.ep.entity.TbProductPrice;
 import com.enze.ep.entity.EpUser;
 import com.enze.ep.service.EpOrderService;
 import com.enze.ep.service.EpProductService;
@@ -97,7 +97,7 @@ public class OrderController {
 			JSONObject obj=ordersJsonArray.getJSONObject(i);
 			int numno=obj.getInteger("numno");
 			int iproductid=obj.getInteger("iproductid");
-			EpProductPrice epProductPrice=epProductService.findEpProductPriceByProductid(iproductid);
+			TbProductPrice epProductPrice=epProductService.findEpProductPriceByProductid(iproductid);
 			String vcproductcode=obj.getString("vcproductcode");
 			String vcuniversalname=obj.getString("vcuniversalname");
 			String vcstandard=obj.getString("vcstandard");

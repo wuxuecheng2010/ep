@@ -6,8 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
-import com.enze.ep.entity.EpProduct;
-import com.enze.ep.entity.EpProductPrice;
+import com.enze.ep.entity.TbProduct;
+import com.enze.ep.entity.TbProductPrice;
 
 @Repository
 @Mapper
@@ -19,11 +19,11 @@ public interface EpProductDAO {
     	                                         "left join tb_UnitInfo c on a.VCPRODUCTUNIT=c.ISID",
     	                                         "left join (select * from tb_ProductPrice where ipricetypeid=3 )d on a.IPRODUCTID = d.IPRODUCTID ",
     	                                         " where  b.ICOUNTERID in (#{counterids}) and b.NUMSTOCKS>0 and (a.VCUNIVERSALNAME like '%${productName}%' or a.VCPRODUCTNAME like '%${productName}%' or a.VCEASYCODE like '%${productName}%' or a.VCPRODUCTCODE like '%${productName}%' or a.VCSTANDARD like '%${productName}%')"})
-    List<EpProduct> selectProductByProductName(String counterids,  String productName);
+    List<TbProduct> selectProductByProductName(String counterids,  String productName);
     
     
     @Select({"select ", "iproductid,numprice", " from tb_ProductPrice  where ipricetypeid=3 "," and iproductid=#{iproductid}"})
-    EpProductPrice selectProductByProductid(int iproductid);
+    TbProductPrice selectProductByProductid(int iproductid);
 
 
 }

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.enze.ep.entity.EpProduct;
+import com.enze.ep.entity.TbProduct;
 import com.enze.ep.service.EpProductService;
 
 @Controller
@@ -29,10 +29,10 @@ public class ProductController {
 	
 	@ResponseBody
 	@PostMapping("/select/{counterids}")
-	public Map<String,List<EpProduct>> productSelect(HttpServletRequest  request,HttpServletResponse response,@PathVariable(name="counterids")String counterids) {
+	public Map<String,List<TbProduct>> productSelect(HttpServletRequest  request,HttpServletResponse response,@PathVariable(name="counterids")String counterids) {
 		String productName=request.getParameter("keyword");
-		List<EpProduct> list=epProductServiceImpl.findEpProductListByProductNameAndCounters(counterids, productName);
-		Map<String,List<EpProduct>> map=new HashMap<String,List<EpProduct>>();
+		List<TbProduct> list=epProductServiceImpl.findEpProductListByProductNameAndCounters(counterids, productName);
+		Map<String,List<TbProduct>> map=new HashMap<String,List<TbProduct>>();
 		map.put("data", list);
 		return map;
 	}

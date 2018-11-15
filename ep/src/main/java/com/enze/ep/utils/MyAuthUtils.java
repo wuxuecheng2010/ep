@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
 import com.enze.ep.entity.EpConfig;
-import com.enze.ep.entity.EpCounter;
+import com.enze.ep.entity.TbCounter;
 import com.enze.ep.entity.EpUser;
 import com.enze.ep.enums.UserType;
 import com.enze.ep.service.EpConfigService;
@@ -68,10 +68,10 @@ public class MyAuthUtils {
 		
         //护士用户所对应的柜台 
 		if(epUser.getUsertype()==UserType.NURSE.getTypeValue()) {
-			List<EpCounter> epCounterList=epCounterServiceImpl.findCounterBySectionid(epUser.getSectionid());
+			List<TbCounter> epCounterList=epCounterServiceImpl.findCounterBySectionid(epUser.getSectionid());
 			map.put("epCounterList", epCounterList);
 			String counterids="";
-			for(EpCounter c : epCounterList) {
+			for(TbCounter c : epCounterList) {
 				counterids+=c.getIcounterid()+",";
 			}
 			if(!"".equals(counterids))
