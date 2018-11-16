@@ -29,9 +29,10 @@ public class QueryJob {
 	@Autowired
 	WeixinPay weixinPay;
 
-//  3秒钟之后开始，每12秒一次
-  @Scheduled(initialDelay = 300000,fixedRate = 500000)
+  //10秒钟之后开始，每5秒一次
+  @Scheduled(initialDelay = 10000,fixedRate = 5000)
   public void queryOrderPayState(){
+	  log.info("*****************Start queryOrderPayState***************");
 	  int ordertype=EpOrderType.sales_order;
 	  int usestatus=EpOrderUsestatus.initial;
 	  int minutes=-1000;
@@ -41,6 +42,7 @@ public class QueryJob {
 	  for(EpOrder order:list) {
 		  doQuery(order);
 	  }
+	  log.info("*****************end queryOrderPayState*****************");
   
   }
   

@@ -14,17 +14,22 @@ import com.enze.ep.dao.EpOrderDAO;
 import com.enze.ep.dao.EpOrderStockDAO;
 import com.enze.ep.dao.EpOrdersDAO;
 import com.enze.ep.dao.EpPayInfoDAO;
+import com.enze.ep.dao.EpSalesInfoDAO;
+import com.enze.ep.dao.EpSalesInfoSDAO;
 import com.enze.ep.dao.EpStockProductInfoDAO;
-import com.enze.ep.entity.TbDepartMent;
 import com.enze.ep.entity.EpOrder;
 import com.enze.ep.entity.EpOrderStock;
 import com.enze.ep.entity.EpOrderType;
 import com.enze.ep.entity.EpOrderUsestatus;
 import com.enze.ep.entity.EpOrders;
 import com.enze.ep.entity.EpPayInfo;
+import com.enze.ep.entity.TbDepartMent;
+import com.enze.ep.entity.TbSalesInfo;
+import com.enze.ep.entity.TbSalesInfoS;
 import com.enze.ep.entity.TbStockProductInfo;
 import com.enze.ep.service.EpCounterService;
 import com.enze.ep.service.EpOrderService;
+import com.enze.ep.utils.DateUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +45,12 @@ public class EpOrderServiceImpl implements EpOrderService {
 
 	@Autowired
 	EpPayInfoDAO epPayInfoDAO;
+
+	@Autowired
+	EpSalesInfoDAO epSalesInfoDAO;
+
+	@Autowired
+	EpSalesInfoSDAO epSalesInfoSDAO;
 
 	@Autowired
 	EpStockProductInfoDAO epStockProductInfoDAO;
@@ -128,42 +139,26 @@ public class EpOrderServiceImpl implements EpOrderService {
 		int usestatus = order.getUsestatus();// 是否付款
 		int ordertype = order.getOrdertype();// 普通销售单类型
 		int flagsendstore = order.getFlagsendstore();// 是否发生到药店系统
-		int orderid=order.getOrderid();
-		// 判断订单状态
-		if (usestatus == EpOrderUsestatus.payed && ordertype == EpOrderType.sales_order && flagsendstore == 0) {
+		int orderid = order.getOrderid();
+		
+		//为通用起见  此处不判断
+		//if (usestatus == EpOrderUsestatus.payed && ordertype == EpOrderType.sales_order && flagsendstore == 0) {
 
-			// 保存临时数据
+			// 1、保存临时数据
 			boolean flagsave = saveEpOrderStock(order);
+			String vcbillno = "";
+			List<String> vcbillnoList=new ArrayList<String>();
+			int approvelSalesInfoResult = 0;
 			if (flagsave) {
-				// 分部门创建销售订单
-				boolean flagcreate=createSalesOrderByOrderStock(order);
+			// 2、分部门创建销售订单
+			    vcbillnoList = createSalesOrderByOrder(order);
 			}
-		}
-
-		/*
-		 * int usestatus = order.getUsestatus();// 是否付款 int ordertype =
-		 * order.getOrdertype();// 普通销售单类型 int flagsendstore =
-		 * order.getFlagsendstore();// 是否发生到药店系统 int orderid = order.getOrderid();//
-		 * 商家订单号 int sectionid = order.getSectionid();// 科室或者住院病区
-		 * 
-		 * // 判断订单状态 if (usestatus == EpOrderUsestatus.payed && ordertype ==
-		 * EpOrderType.sales_order && flagsendstore == 0) { // 获取订单明细数据 List<EpOrders>
-		 * orderslist = epOrdersDAO.selectOrdersByOrderid(orderid); String counterids =
-		 * epCounterServiceImpl.findCouteridsBySectionid(sectionid);
-		 * 
-		 * // 根据orders和柜台 创建临时的中间表数据ep_order_stock saveOrderStock(orderslist,
-		 * counterids);
-		 * 
-		 * // 创建药店订单主表
-		 * 
-		 * // 创建药店订单细表
-		 * 
-		 * // 提交数据处理存储过程
-		 * 
-		 * // 更改销售单据flagsendstore标志
-		 * 
-		 * }
-		 */
+			if (vcbillnoList.size()>0) {
+			// 3、提交存储过程执行记账
+				approvelSalesInfoList(vcbillnoList,order.getOrderid());
+			}
+			
+		//}
 
 	}
 
@@ -171,9 +166,7 @@ public class EpOrderServiceImpl implements EpOrderService {
 	public boolean saveEpOrderStock(EpOrder order) {
 		boolean flag = false;
 		List<EpOrderStock> epOrderStockList = new ArrayList<EpOrderStock>();
-		// int usestatus = order.getUsestatus();// 是否付款
-		// int ordertype = order.getOrdertype();// 普通销售单类型
-		// int flagsendstore = order.getFlagsendstore();// 是否发生到药店系统
+		
 		int orderid = order.getOrderid();// 商家订单号
 		int sectionid = order.getSectionid();// 科室或者住院病区
 
@@ -191,7 +184,7 @@ public class EpOrderServiceImpl implements EpOrderService {
 
 				TbStockProductInfo epStockProductInfo = list.get(i);
 				BigDecimal numstocks = epStockProductInfo.getNumstocks();
-				BigDecimal _needcount=needcount;
+				BigDecimal _needcount = needcount;
 				needcount = needcount.subtract(numstocks);// 需求-库存
 				int n = needcount.compareTo(BigDecimal.ZERO);
 				EpOrderStock epOrderStock = new EpOrderStock();
@@ -205,7 +198,7 @@ public class EpOrderServiceImpl implements EpOrderService {
 				epOrderStock.setNumprice(numprice);
 				if (n <= 0) {
 					// 创建 ep_order_stock对象并保存
-					//BigDecimal qty = epOrders.getTotalcounts();
+					// BigDecimal qty = epOrders.getTotalcounts();
 					epOrderStock.setQty(_needcount.abs());
 					epOrderStockList.add(epOrderStock);
 					// epOrderStockDAO.addOrderStock(epOrderStock);
@@ -240,32 +233,113 @@ public class EpOrderServiceImpl implements EpOrderService {
 	}
 
 	@Override
-	public boolean createSalesOrderByOrderStock(EpOrder order) {
-		List<TbDepartMent> epDepartMentlist  =epOrderStockDAO.selectDepartsFromOrderStock(order.getOrderid());
-		int orderid=order.getOrderid();
-		for(TbDepartMent epDepartMent:epDepartMentlist) {
-			//创建主表
-			String vcbillno=createSalesOrderDoc(order,epDepartMent.getIdepartid());
-			
-			//创建细表
-			int idepartid=epDepartMent.getIdepartid();
-			List<EpOrderStock> orderStockList=epOrderStockDAO.selectOrderStockByOrderIDAndDepartID(orderid, idepartid);
-			createSalesOrderDtl(vcbillno,orderStockList);
+	public List<String> createSalesOrderByOrder(EpOrder order) {
+		List<String> vcbillnoList=new ArrayList<String>();
+		String vcbillno = "";
+		List<TbDepartMent> epDepartMentlist = epOrderStockDAO.selectDepartsFromOrderStock(order.getOrderid());
+		int orderid = order.getOrderid();
+		for (TbDepartMent epDepartMent : epDepartMentlist) {
+			int idepartid = epDepartMent.getIdepartid();
+
+			// 创建主表
+			vcbillno = epSalesInfoDAO.getSalesInfoDoc(TbSalesInfo.VCBILLNO_PREFIX, idepartid);
+			vcbillno += DateUtils.getMillisecond();
+			int flagep = order.getOrdertype() == EpOrderType.electronic_prescribing ? 1 : 0;// 是否为处方单
+			boolean flagcreate = createSalesOrderDoc(vcbillno, order, idepartid, flagep);
+
+			// 创建细表
+			if (flagcreate) {
+				List<EpOrderStock> orderStockList = epOrderStockDAO.selectOrderStockByOrderIDAndDepartID(orderid,
+						idepartid);
+				createSalesOrderDtl(vcbillno, orderStockList);
+			}
+			vcbillnoList.add(vcbillno);
+		}
+
+		return vcbillnoList;
+	}
+
+	@Override
+	public boolean createSalesOrderDoc(String vcbillno, EpOrder order, int idepartid, int flagep) {
+		TbSalesInfo tbSalesInfo = new TbSalesInfo();
+		tbSalesInfo.setVcbillno(vcbillno);
+		tbSalesInfo.setIdepartid(idepartid);
+		// tbSalesInfo.setDtbilldate(new Date());
+		tbSalesInfo.setCreatedby(TbSalesInfo.DEFAULT_CREATER_MAN);
+		// tbSalesInfo.setCreationdate(new Date());
+		// tbSalesInfo.setLastupdatedate(new Date());
+		tbSalesInfo.setBstatus(0);
+		// tbSalesInfo.setImembercardid(0);
+		tbSalesInfo.setIprescriptionid(order.getOrderid());//网单id
+		tbSalesInfo.setNummoneyall(order.getOrdermoney());
+		tbSalesInfo.setFlagapp(0);
+		tbSalesInfo.setSalespreson(TbSalesInfo.DEFAULT_SALES_PERSON);
+		// tbSalesInfo.setNumdiscount(0);
+		tbSalesInfo.setIpackage(1);
+		tbSalesInfo.setVcpreson(order.getName());
+		tbSalesInfo.setDyqk(0);
+		tbSalesInfo.setCfsb(flagep);
+		tbSalesInfo.setPaytypeid(order.getPaytypeid());
+		epSalesInfoDAO.addSalesInfo(tbSalesInfo);
+		return true;
+	}
+
+	@Override
+	public boolean createSalesOrderDtl(String vcbillno, List<EpOrderStock> orderStockList) {
+		float q = 1.0f;
+		for (EpOrderStock epOrderStock : orderStockList) {
+			int stockisid = epOrderStock.getStockisid();// 库存明细索引
+			TbStockProductInfo tbStockProductInfo = epStockProductInfoDAO.selectStockProductInfoByISID(stockisid);
+
+			TbSalesInfoS tbSalesInfos = new TbSalesInfoS();
+			tbSalesInfos.setVcbillno(vcbillno);
+			tbSalesInfos.setIproductid(tbStockProductInfo.getIproductid());
+			tbSalesInfos.setNumsales(epOrderStock.getQty());
+			tbSalesInfos.setNumprice(epOrderStock.getNumprice());
+			tbSalesInfos.setVcbatchnumber(tbStockProductInfo.getVcbatchnumber());
+			tbSalesInfos.setVcconfirmfile(tbStockProductInfo.getVcconfirmfile());
+			tbSalesInfos.setVcproductunit(tbStockProductInfo.getVcproductunit());
+			tbSalesInfos.setNuminprice(tbStockProductInfo.getNuminprice());
+			tbSalesInfos.setDtusefulllife(tbStockProductInfo.getDtusefulllife());
+			tbSalesInfos.setIproviderid(tbStockProductInfo.getIproviderid());
+			tbSalesInfos.setIstockinforid(stockisid);
+			tbSalesInfos.setNummoney(
+					epOrderStock.getNumprice().multiply(epOrderStock.getQty()).setScale(0, BigDecimal.ROUND_HALF_UP));
+			tbSalesInfos.setQueue(q);
+			tbSalesInfos.setCreatedby(TbSalesInfo.DEFAULT_CREATER_MAN);
+			tbSalesInfos.setIchailing(0);
+			tbSalesInfos.setNumpricezd(epOrderStock.getNumprice());
+			tbSalesInfos.setIpackage(1);
+			tbSalesInfos.setIcounterid(tbStockProductInfo.getIcounterid());
+			tbSalesInfos.setIflagaccpayed(0);
+			q += 0.2f;
+			epSalesInfoSDAO.addSalesInfoS(tbSalesInfos);
+		}
+		return true;
+	}
+
+	private void approvelSalesInfoList(List<String> vcbillnoList,int orderid) {
+		for(String vcbillno:vcbillnoList) {
+			int approvelSalesInfoResult = epSalesInfoDAO.approvelSalesInfo(vcbillno, "Y",
+					TbSalesInfo.DEFAULT_CREATER_MAN);
+			switch (approvelSalesInfoResult) {
+			case -1:
+				log.error("审核销售单据：{}，发现该单据已经审核.(原始网单ORDERID：{})", vcbillno,orderid);
+				break;
+			case -2:
+				log.error("审核销售单据：{}，发生错误.(原始网单ORDERID：{})", vcbillno,orderid);
+				break;
+			case 1:
+				// 更改销售单据flagsendstore标志
+				epOrderDAO.updateOrderFlagSendStore(orderid);
+				log.info("销售单据：{}，结算成功.(原始网单ORDERID：{})", vcbillno,orderid);
+				break;
+
+			default:
+				break;
+			}
 			
 		}
-		
-		return false;
 	}
-
-	@Override
-	public String createSalesOrderDoc(EpOrder order, int idepartid) {
-		
-		return null;
-	}
-
-	@Override
-	public void createSalesOrderDtl(String vcbillno, List<EpOrderStock> orderStockList) {
-		
-	}
-
+	
 }

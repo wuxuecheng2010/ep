@@ -2,6 +2,7 @@ package com.enze.ep.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtils {
@@ -26,6 +27,14 @@ public class DateUtils {
 		}
 		String s=formatDateToDefaultStr(d);
 		return s;
+	}
+	
+	//获取毫秒数
+	public static int getMillisecond() {
+		
+		Calendar Cld = Calendar.getInstance();
+		int MI = Cld.get(Calendar.MILLISECOND);
+		return MI;
 	}
 
 	public static void main(String[] args) {

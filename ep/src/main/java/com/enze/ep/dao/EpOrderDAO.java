@@ -48,5 +48,9 @@ public interface EpOrderDAO {
     
     @Update({"update", TABLE_NAME ,"set weixinnoncestr=#{weixinnoncestr}","where ordercode=#{ordercode}"})
     void updateOrderWeixinNonceStrByCode(String ordercode,String weixinnoncestr);
+    
+    
+    @Update({"update", TABLE_NAME ,"set flagsendstore=1","where orderid=#{orderid}"})
+    void updateOrderFlagSendStore(int orderid);
 
 }

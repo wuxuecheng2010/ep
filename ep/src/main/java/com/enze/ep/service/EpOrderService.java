@@ -52,10 +52,20 @@ public interface EpOrderService {
     
     boolean saveEpOrderStock(EpOrder order);
     
-    boolean createSalesOrderByOrderStock(EpOrder order);
+    /**
+     * 
+    * @Title: createSalesOrderByOrder
+    * @Description: TODO(创建销售单，并且返回销售单号)
+    * @param @param order
+    * @param @return    参数
+    * @author wuxuecheng
+    * @return List<String>    返回类型
+    * @throws
+     */
+    List<String> createSalesOrderByOrder(EpOrder order);
     
-    String createSalesOrderDoc(EpOrder order,int idepartid);
+    boolean createSalesOrderDoc(String vcbillno,EpOrder order,int idepartid,int flagep);
     
-    void createSalesOrderDtl(String vcbillno,List<EpOrderStock> orderStockList);
+    boolean createSalesOrderDtl(String vcbillno,List<EpOrderStock> orderStockList);
     
 }

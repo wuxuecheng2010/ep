@@ -63,7 +63,15 @@ public class EpOrderServiceImplTest {
 		
 	}
 	
+	@Test
+	public void testDoSendEpOrderToStore() {
+		EpOrder order=epOrderServiceImpl.findEpOrderById(10);
+		epOrderServiceImpl.doSendEpOrderToStore(order);
+	}
 	
-	
+	@Test
+	public void testLog() {
+		log.error("hello {} ,good by{} e","ooooo",5555);
+	}
 
 }

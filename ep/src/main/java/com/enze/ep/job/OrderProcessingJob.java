@@ -24,10 +24,10 @@ public class OrderProcessingJob {
 	EpOrderService epOrderServiceImpl;
 	
 
-//  3秒钟之后开始，每12秒一次
-  @Scheduled(initialDelay = 3000,fixedRate = 500000)
+  //  20秒钟之后开始，每15秒一次
+  @Scheduled(initialDelay = 20000,fixedRate = 15000)
   public void processing(){
-	  
+	  log.info("*****************Start OrderProcessing***************");
 	  int ordertype=EpOrderType.sales_order;
 	  int usestatus=EpOrderUsestatus.payed;
 	  int minutes=-1000;
@@ -38,6 +38,7 @@ public class OrderProcessingJob {
 	  for(EpOrder order:list) {
 		  epOrderServiceImpl.doSendEpOrderToStore(order);
 	  }
+	  log.info("*****************End   OrderProcessing***************");
   
   }
 
