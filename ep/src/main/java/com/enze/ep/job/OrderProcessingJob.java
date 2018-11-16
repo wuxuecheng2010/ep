@@ -26,8 +26,8 @@ public class OrderProcessingJob {
 
   //  20秒钟之后开始，每15秒一次
   @Scheduled(initialDelay = 20000,fixedRate = 15000)
-  public void processing(){
-	  log.info("*****************Start OrderProcessing***************");
+  public void salesOrderProcessing(){
+	  log.info("-------------------Start salesOrderProcessing-------------------");
 	  int ordertype=EpOrderType.sales_order;
 	  int usestatus=EpOrderUsestatus.payed;
 	  int minutes=-100000;
@@ -36,10 +36,28 @@ public class OrderProcessingJob {
 	  List<EpOrder> list=epOrderServiceImpl.findOrderListByOrderTypeAndUsestatusAndMinutesAOB(ordertype, usestatus, minutes,flagsendstore);
 	  
 	  for(EpOrder order:list) {
-		  epOrderServiceImpl.doSendEpOrderToStore(order);
+		  epOrderServiceImpl.doSendSalesOrderToStore(order);
 	  }
-	  log.info("*****************End   OrderProcessing***************");
+	  log.info("-------------------End   salesOrderProcessing-------------------");
   
   }
+  
+  @Scheduled(initialDelay = 30000,fixedRate = 15000)
+  public void epOrderProcessing(){
+	  log.info("-------------------Start epOrderProcessing-------------------");
+	  int ordertype=EpOrderType.electronic_prescribing;
+	  int usestatus=EpOrderUsestatus.initial;
+	  int minutes=-100000;
+	  int flagsendstore=0;
+	  //查询未结账的销售单据  时间   类型等因数查询
+	  List<EpOrder> list=epOrderServiceImpl.findOrderListByOrderTypeAndUsestatusAndMinutesAOB(ordertype, usestatus, minutes,flagsendstore);
+	  
+	  for(EpOrder order:list) {
+		  epOrderServiceImpl.doSendEpOrderToStore(order);
+	  }
+	  log.info("-------------------End   epOrderProcessing-------------------");
+  
+  }
+  
 
 }

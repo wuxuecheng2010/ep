@@ -18,7 +18,7 @@ import com.enze.ep.entity.EpPayInfo;
 public interface EpOrderDAO {
 	String TABLE_NAME = "ep_order";
     String INSET_FIELDS ="ordertype,ordercode,creuserid,credate,ordermoney,memo,sectionid,name,bedno,address,idcard,birthday,sex,micard,hicard,age,symptom,outpatientnumber";
-    String SELECT_FIELDS ="ordertype,ordercode,creuserid,credate,ordermoney,memo,sectionid,name,bedno,address,idcard,birthday,sex,micard,hicard,age,symptom,outpatientnumber,orderid,usestatus,paydate,paytypeid,weixinnoncestr,flagsendstore";
+    String SELECT_FIELDS ="ordertype,ordercode,creuserid,credate,ordermoney,memo,sectionid,name,bedno,address,idcard,birthday,sex,micard,hicard,age,symptom,outpatientnumber,orderid,usestatus,paydate,paytypeid,weixinnoncestr,flagsendstore,flagclosed";
     
     @Insert({"insert into ", TABLE_NAME, "(", INSET_FIELDS, ") values (#{ordertype},#{ordercode},#{creuserid},GETDATE(),#{ordermoney},#{memo},#{sectionid},#{name},#{bedno},#{address},#{idcard},#{birthday},#{sex},#{micard},#{hicard},#{age},#{symptom},#{outpatientnumber})"})
     @Options(useGeneratedKeys=true,keyProperty="orderid",keyColumn="orderid")
@@ -52,5 +52,8 @@ public interface EpOrderDAO {
     
     @Update({"update", TABLE_NAME ,"set flagsendstore=1","where orderid=#{orderid}"})
     void updateOrderFlagSendStore(int orderid);
+    
+    @Update({"update", TABLE_NAME ,"set flagclosed=1","where orderid=#{orderid}"})
+    void updateOrderFlagClosed(int orderid);
 
 }

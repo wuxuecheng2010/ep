@@ -39,16 +39,29 @@ public interface EpOrderService {
      */
     void recordOrderWeixinNonceStr(String ordercode,String noncestr);
     
+    
     /**
      * 
-    * @Title: doSendOrderToStore
-    * @Description: TODO(订单发送到药店系统 做账)
+    * @Title: doSendEPOrderToStore
+    * @Description: TODO(处方单处理成分部门的临时数据)
     * @param @param order    参数
     * @author wuxuecheng
     * @return void    返回类型
     * @throws
      */
     void doSendEpOrderToStore(EpOrder order);
+    
+    /**
+     * 
+    * @Title: doSendOrderToStore
+    * @Description: TODO(普通订单发送到药店系统 做账)
+    * @param @param order    参数
+    * @author wuxuecheng
+    * @return void    返回类型
+    * @throws
+     */
+    void doSendSalesOrderToStore(EpOrder order);
+    
     
     boolean saveEpOrderStock(EpOrder order);
     

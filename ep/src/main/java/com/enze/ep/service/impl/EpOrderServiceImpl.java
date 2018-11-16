@@ -136,19 +136,19 @@ public class EpOrderServiceImpl implements EpOrderService {
 	@Transactional
 	@Override
 	public void doSendEpOrderToStore(EpOrder order) {
-		int usestatus = order.getUsestatus();// 是否付款
-		int ordertype = order.getOrdertype();// 普通销售单类型
-		int flagsendstore = order.getFlagsendstore();// 是否发生到药店系统
-		int orderid = order.getOrderid();
-		
-		//为通用起见  此处不判断
-		//if (usestatus == EpOrderUsestatus.payed && ordertype == EpOrderType.sales_order && flagsendstore == 0) {
-
+		// 1、保存临时数据
+		boolean flagsave = saveEpOrderStock(order);
+		if(flagsave)
+		// 2更改销售单据flagsendstore标志
+		epOrderDAO.updateOrderFlagSendStore(order.getOrderid());
+	}
+	
+	@Transactional
+	@Override
+	public void doSendSalesOrderToStore(EpOrder order) {
 			// 1、保存临时数据
 			boolean flagsave = saveEpOrderStock(order);
-			String vcbillno = "";
 			List<String> vcbillnoList=new ArrayList<String>();
-			int approvelSalesInfoResult = 0;
 			if (flagsave) {
 			// 2、分部门创建销售订单
 			    vcbillnoList = createSalesOrderByOrder(order);
@@ -157,14 +157,14 @@ public class EpOrderServiceImpl implements EpOrderService {
 			// 3、提交存储过程执行记账
 				approvelSalesInfoList(vcbillnoList,order.getOrderid());
 			}
-			
-		//}
 
 	}
+	
+	
 
 	@Override
 	public boolean saveEpOrderStock(EpOrder order) {
-		boolean flag = false;
+		//boolean flag = false;
 		List<EpOrderStock> epOrderStockList = new ArrayList<EpOrderStock>();
 		
 		int orderid = order.getOrderid();// 商家订单号
@@ -215,15 +215,14 @@ public class EpOrderServiceImpl implements EpOrderService {
 					log.error("Orderid:" + epOrders.getOrderid() + "Ordersid:" + epOrders.getOrdersid() + "库存缺："
 							+ needcount.toString() + "自动处理失败，请人工处理");
 					// 设置当前对象中的
-					return flag;
+					return false;
 				}
 			}
 		}
 
 		// 保存列表对象
 		addOrderStockList(epOrderStockList);
-		flag = true;
-		return flag;
+		return true;
 	}
 
 	private void addOrderStockList(List<EpOrderStock> epOrderStockList) {
@@ -332,6 +331,7 @@ public class EpOrderServiceImpl implements EpOrderService {
 			case 1:
 				// 更改销售单据flagsendstore标志
 				epOrderDAO.updateOrderFlagSendStore(orderid);
+				epOrderDAO.updateOrderFlagClosed(orderid);
 				log.info("销售单据：{}，结算成功.(原始网单ORDERID：{})", vcbillno,orderid);
 				break;
 
@@ -341,5 +341,7 @@ public class EpOrderServiceImpl implements EpOrderService {
 			
 		}
 	}
+
+
 	
 }
