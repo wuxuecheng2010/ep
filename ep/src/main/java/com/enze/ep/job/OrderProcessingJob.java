@@ -30,7 +30,7 @@ public class OrderProcessingJob {
 	  log.info("*****************Start OrderProcessing***************");
 	  int ordertype=EpOrderType.sales_order;
 	  int usestatus=EpOrderUsestatus.payed;
-	  int minutes=-1000;
+	  int minutes=-100000;
 	  int flagsendstore=0;
 	  //查询未结账的销售单据  时间   类型等因数查询
 	  List<EpOrder> list=epOrderServiceImpl.findOrderListByOrderTypeAndUsestatusAndMinutesAOB(ordertype, usestatus, minutes,flagsendstore);
