@@ -24,9 +24,9 @@ public class EpUserDAOTest {
 	@Test
 	public void testAddUser() {
 		EpUser epuser=new EpUser();
-		epuser.setUsername("wang");
+		epuser.setUsername("wangxx");
 		epuser.setUsertype(2);
-		epuser.setUsercode("10003");
+		epuser.setUsercode("100033");
 		epuser.setSectionid(1);
 		epuser.setPassword("1");
 		epuser.setMemo("护士长");

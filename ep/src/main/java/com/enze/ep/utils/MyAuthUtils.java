@@ -60,6 +60,36 @@ public class MyAuthUtils {
 	public  ModelMap getAuthInfo(HttpServletRequest request, HttpServletResponse response) {
 		ModelMap map=new ModelMap();
 		EpUser epUser=getEpUserByCookie(request, response);
+		map=getAuthInfoByEpUser(epUser);
+		return map;
+		/*map.put("epUser", epUser);
+		EpConfig epConfigHospital=epConfigServiceImpl.findEpConfigByCfgName("ep_hospital");
+		map.put("hospital", epConfigHospital.getCfgvalue());
+		map.put("sectionname", epSectionServiceImpl.findEpSectionByID(epUser.getSectionid()).getSectionname());
+		
+        //护士用户所对应的柜台 
+		if(epUser.getUsertype()==UserType.NURSE.getTypeValue()) {
+			List<TbCounter> epCounterList=epCounterServiceImpl.findCounterBySectionid(epUser.getSectionid());
+			map.put("epCounterList", epCounterList);
+			String counterids="";
+			for(TbCounter c : epCounterList) {
+				counterids+=c.getIcounterid()+",";
+			}
+			if(!"".equals(counterids))
+				counterids=counterids.substring(0, counterids.length()-1);
+			map.put("counterids", counterids);
+		}else if(epUser.getUsertype()==UserType.DOCTOR.getTypeValue()){
+			//获取配置文件信息
+			EpConfig epConfig =epConfigServiceImpl.findEpConfigByCfgName("ep_doctor_counter_set");
+			map.put("counterids", epConfig.getCfgvalue());
+		}
+		
+		return map;*/
+	}
+	
+	public  ModelMap getAuthInfoByEpUser(EpUser epUser) {
+		ModelMap map=new ModelMap();
+		//EpUser epUser=getEpUserByCookie(request, response);
 		map.put("epUser", epUser);
 
 		EpConfig epConfigHospital=epConfigServiceImpl.findEpConfigByCfgName("ep_hospital");
@@ -86,5 +116,7 @@ public class MyAuthUtils {
 		
 		return map;
 	}
+	
+	
 
 }

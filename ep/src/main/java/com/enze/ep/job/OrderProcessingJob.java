@@ -25,8 +25,8 @@ public class OrderProcessingJob {
 	
 
   //  20秒钟之后开始，每15秒一次
-  @Scheduled(initialDelay = 20000,fixedRate = 15000)
-  public void salesOrderProcessing(){
+  //@Scheduled(initialDelay = 20000,fixedRate = 15000)
+  public void salesOrderProcessing()throws Exception{
 	  log.info("-------------------Start salesOrderProcessing-------------------");
 	  int ordertype=EpOrderType.sales_order;
 	  int usestatus=EpOrderUsestatus.payed;
@@ -43,7 +43,7 @@ public class OrderProcessingJob {
   }
   
   @Scheduled(initialDelay = 30000,fixedRate = 15000)
-  public void epOrderProcessing(){
+  public void epOrderProcessing()throws Exception{
 	  log.info("-------------------Start epOrderProcessing-------------------");
 	  int ordertype=EpOrderType.electronic_prescribing;
 	  int usestatus=EpOrderUsestatus.initial;

@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 
 @Slf4j
-@WebFilter(filterName = "authfilter", urlPatterns = "/index/*")
+//@WebFilter(filterName = "authfilter", urlPatterns = "/index/*")
 public class AuthFilter implements Filter {
 	@Autowired
 	private RedisTemplate redisTemplate;

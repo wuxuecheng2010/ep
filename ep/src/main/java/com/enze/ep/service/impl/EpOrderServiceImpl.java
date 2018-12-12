@@ -135,24 +135,24 @@ public class EpOrderServiceImpl implements EpOrderService {
 
 	@Transactional
 	@Override
-	public void doSendEpOrderToStore(EpOrder order) {
+	public void doSendEpOrderToStore(EpOrder order) throws Exception{
 		// 1、保存临时数据
-		boolean flagsave = saveEpOrderStock(order);
-		if(flagsave)
+		saveEpOrderStock(order);
+		
 		// 2更改销售单据flagsendstore标志
 		epOrderDAO.updateOrderFlagSendStore(order.getOrderid());
 	}
 	
 	@Transactional
 	@Override
-	public void doSendSalesOrderToStore(EpOrder order) {
+	public void doSendSalesOrderToStore(EpOrder order)throws Exception {
 			// 1、保存临时数据
-			boolean flagsave = saveEpOrderStock(order);
+			saveEpOrderStock(order);
 			List<String> vcbillnoList=new ArrayList<String>();
-			if (flagsave) {
+			
 			// 2、分部门创建销售订单
 			    vcbillnoList = createSalesOrderByOrder(order);
-			}
+			
 			if (vcbillnoList.size()>0) {
 			// 3、提交存储过程执行记账
 				approvelSalesInfoList(vcbillnoList,order.getOrderid());
@@ -163,7 +163,7 @@ public class EpOrderServiceImpl implements EpOrderService {
 	
 
 	@Override
-	public boolean saveEpOrderStock(EpOrder order) {
+	public void saveEpOrderStock(EpOrder order)throws Exception {
 		//boolean flag = false;
 		List<EpOrderStock> epOrderStockList = new ArrayList<EpOrderStock>();
 		
@@ -171,15 +171,16 @@ public class EpOrderServiceImpl implements EpOrderService {
 		int sectionid = order.getSectionid();// 科室或者住院病区
 
 		List<EpOrders> orderslist = epOrdersDAO.selectOrdersByOrderid(orderid);
-		String counterids = epCounterServiceImpl.findCouteridsBySectionid(sectionid);
+		//String counterids = epCounterServiceImpl.findCouteridsBySectionid(sectionid);
 
 		for (EpOrders epOrders : orderslist) {
 			int iproductid = epOrders.getIproductid();
 			BigDecimal numprice = epOrders.getNumprice();
 			BigDecimal totalcounts = epOrders.getTotalcounts();
 			BigDecimal needcount = totalcounts;// 需要的库存数量
+			int iunitid=epOrders.getIunitid();
 			List<TbStockProductInfo> list = epStockProductInfoDAO
-					.selectStockProductInfoListByProductIDAndCounterIDS(iproductid, counterids);
+					.selectStockProductInfoListByProductIDAndSectionidAndUnitID(iproductid, sectionid,iunitid);
 			for (int i = 0; i < list.size(); i++) {
 
 				TbStockProductInfo epStockProductInfo = list.get(i);
@@ -215,20 +216,26 @@ public class EpOrderServiceImpl implements EpOrderService {
 					log.error("Orderid:" + epOrders.getOrderid() + "Ordersid:" + epOrders.getOrdersid() + "库存缺："
 							+ needcount.toString() + "自动处理失败，请人工处理");
 					// 设置当前对象中的
-					return false;
+					throw new Exception("开单数据超过库存.");
 				}
 			}
 		}
 
 		// 保存列表对象
-		addOrderStockList(epOrderStockList);
-		return true;
+		int count=addOrderStockList(epOrderStockList);
+		if(count!=epOrderStockList.size()) {
+			throw new Exception("orderstock保存的行数和实际保存的行数不一致");
+		}
+		
 	}
 
-	private void addOrderStockList(List<EpOrderStock> epOrderStockList) {
+	private int addOrderStockList(List<EpOrderStock> epOrderStockList) {
+		int count=0;
 		for (EpOrderStock epOrderStock : epOrderStockList) {
-			epOrderStockDAO.addOrderStock(epOrderStock);
+			int n=epOrderStockDAO.addOrderStock(epOrderStock);
+			count+=n;
 		}
+		return count;
 	}
 
 	@Override

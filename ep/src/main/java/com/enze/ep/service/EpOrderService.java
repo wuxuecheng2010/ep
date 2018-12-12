@@ -49,7 +49,7 @@ public interface EpOrderService {
     * @return void    返回类型
     * @throws
      */
-    void doSendEpOrderToStore(EpOrder order);
+    void doSendEpOrderToStore(EpOrder order)throws Exception;
     
     /**
      * 
@@ -60,10 +60,10 @@ public interface EpOrderService {
     * @return void    返回类型
     * @throws
      */
-    void doSendSalesOrderToStore(EpOrder order);
+    void doSendSalesOrderToStore(EpOrder order) throws Exception;
     
     
-    boolean saveEpOrderStock(EpOrder order);
+    void saveEpOrderStock(EpOrder order) throws Exception;
     
     /**
      * 

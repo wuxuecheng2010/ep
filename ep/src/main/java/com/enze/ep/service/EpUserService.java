@@ -4,4 +4,6 @@ import com.enze.ep.entity.EpUser;
 
 public interface EpUserService {
     EpUser findEpUserByUserName(String username);
+    
+    EpUser saveOrFindEpUserByWlAmdResponseSUser(EpUser WlAmdResponseSUser);
 }

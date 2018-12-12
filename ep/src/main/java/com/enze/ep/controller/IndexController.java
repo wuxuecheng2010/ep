@@ -1,6 +1,6 @@
 package com.enze.ep.controller;
 
-import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,10 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.enze.ep.entity.TbCounter;
 import com.enze.ep.entity.EpUser;
+import com.enze.ep.entity.WlAmdParam;
+import com.enze.ep.entity.WlAmdResponse;
+import com.enze.ep.entity.WlAmdUser;
+import com.enze.ep.entity.WlToken;
 import com.enze.ep.enums.UserType;
 import com.enze.ep.service.EpCounterService;
+import com.enze.ep.service.HistoryService;
 import com.enze.ep.utils.MyAuthUtils;
 
 @Controller
@@ -27,6 +31,49 @@ public class IndexController {
 	
 	@Autowired
 	EpCounterService epCounterServiceImpl;
+	
+	@Autowired
+	HistoryService historyServiceImpl;
+	
+	
+	//嵌入到对方系统中去的index主页方式
+	@RequestMapping(value = "/embed", method = RequestMethod.GET)
+	public ModelAndView index(HttpServletRequest request, HttpServletResponse response) {
+		//参数格式http://电子处方?action=xxx&user=xxx&adm=xxx&patient=xxx&card=xxx
+		
+		//提取参数
+		String action=request.getParameter("action");
+		String user=request.getParameter("user");
+		String adm=request.getParameter("adm");
+		String patient=request.getParameter("patient");
+		//String card=request.getParameter("card");
+		
+		WlToken wlToken= historyServiceImpl.getWlToken();
+		String token=wlToken.getToken();
+		//校验 如果参数不完整，跳转到错误页面
+		
+		//http方式获取信息
+		WlAmdParam wlAmdParam=new WlAmdParam(action,
+		 token,
+		 user,
+		 adm,
+		 patient);
+		WlAmdResponse  wlAmdResponse =historyServiceImpl.getAmdInfo(wlAmdParam);
+		Map<String,Object> amdmap=historyServiceImpl.saveDataByWlAmdResponse(wlAmdResponse);//保存基础信息
+		
+		//获取传递参数
+		EpUser epUser=(EpUser) amdmap.get("epUser");
+		ModelMap map=myAuthUtils.getAuthInfoByEpUser(epUser);
+		
+		//获取操作员账号类型  医生或者护士
+		String url="";
+		if(UserType.DOCTOR.getTypeValue()==epUser.getUsertype()) {
+			url="index/embed/doctor";
+		}else if(UserType.NURSE.getTypeValue()==epUser.getUsertype()) {
+			url="index/embed/nurse";
+		}
+		return new ModelAndView(url,map);
+	}
 	
 
 	@RequestMapping(value = "/doctor", method = RequestMethod.GET)

@@ -28,6 +28,6 @@ public class TbStockProductInfo {
 	private Date makedate;
 	private int ichailing;
 	private int numbili;
-	private int flagcgrk;
+	private String flagcgrk;
 
 }

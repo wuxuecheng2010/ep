@@ -22,7 +22,7 @@ public class EpInpatientDAOTest {
 	@Test
 	public void testAddInpatient() {
 		EpInpatient epInpatient=new EpInpatient();
-		epInpatient.setAge(10);
+		epInpatient.setAge("10");
 		epInpatient.setBedno("1002床");
 		epInpatient.setDescribe("还好");
 		epInpatient.setHisinid(102);

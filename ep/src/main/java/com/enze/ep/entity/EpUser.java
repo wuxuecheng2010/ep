@@ -2,6 +2,10 @@ package com.enze.ep.entity;
 
 
 public class EpUser {
+	public static final String Prefix_Redis_Key="EpUser";
+	public static final String Prefix_Redis_Key_Separtor="-";
+	//public static final String Prefix_Redis_Key_Separtor_H="--";//adm信息提取物分隔符
+	
 	
 	private int userid;
 	private int hisuserid;
