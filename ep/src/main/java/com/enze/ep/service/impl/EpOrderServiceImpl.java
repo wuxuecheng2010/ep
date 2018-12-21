@@ -20,16 +20,19 @@ import com.enze.ep.dao.EpStockProductInfoDAO;
 import com.enze.ep.entity.EpOrder;
 import com.enze.ep.entity.EpOrderStock;
 import com.enze.ep.entity.EpOrderType;
-import com.enze.ep.entity.EpOrderUsestatus;
 import com.enze.ep.entity.EpOrders;
 import com.enze.ep.entity.EpPayInfo;
+import com.enze.ep.entity.EpResult;
 import com.enze.ep.entity.TbDepartMent;
 import com.enze.ep.entity.TbSalesInfo;
 import com.enze.ep.entity.TbSalesInfoS;
 import com.enze.ep.entity.TbStockProductInfo;
+import com.enze.ep.enums.OrderType;
 import com.enze.ep.service.EpCounterService;
 import com.enze.ep.service.EpOrderService;
 import com.enze.ep.utils.DateUtils;
+import com.enze.ep.utils.alipay.AliPay;
+import com.enze.ep.utils.wx.WeixinPay;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,11 +66,18 @@ public class EpOrderServiceImpl implements EpOrderService {
 
 	@Autowired
 	RedisTemplate redisTemplate;
+	
+	@Autowired
+	AliPay aliPay;
+	
+	@Autowired
+	WeixinPay weixinPay;
 
 	@Transactional
 	@Override
 	public void saveEpOrder(EpOrder epOrder, List<EpOrders> list) throws Exception {
 		epOrderDAO.addOrder(epOrder);
+		//int ordertype=epOrder.getOrdertype();//单据类型 
 		int orderid = epOrder.getOrderid();
 		for (EpOrders epOrders : list) {
 			epOrders.setOrderid(orderid);
@@ -348,6 +358,205 @@ public class EpOrderServiceImpl implements EpOrderService {
 			
 		}
 	}
+
+	@Override
+	public List<EpOrder> findOrderListByAgus(int sectionid, 
+			String startdate, String enddate, String name,
+			int usestatus) {
+		enddate=DateUtils.getDateStringAfterX(enddate, DateUtils.SHORT_DATETIME_FORMAT, 1);
+		 List<EpOrder> list=epOrderDAO.selectOrderListBySectionidAndCredateAndName(sectionid, startdate, enddate,name);
+		
+		 List<EpOrder> _list=new ArrayList<EpOrder>();
+		 if(usestatus==2) {//全部
+			 _list=list;
+		 }else {
+			 for(EpOrder epOrder:list) {
+				 int _usestatus= epOrder.getUsestatus();
+				 if(usestatus==_usestatus) {
+					 _list.add(epOrder);
+				 }
+			}
+		 }
+		 return _list;
+	}
+
+	@Override
+	public EpOrders findEpOrdersByOrdersid(int ordersid) {
+		EpOrders epOrders=epOrdersDAO.selectOrdersByOrdersid(ordersid);
+		return epOrders;
+	}
+
+	@Transactional
+	@Override
+	public EpResult saveEpSalesBackOrder(EpOrder epOrder, List<EpOrders> list) throws Exception {
+		//1、保存退货单到数据库,及更新原始单据上面的退货数量
+		int sourceorderid=epOrder.getSourceorderid();//对原始单据进行判断
+		EpOrder sourceEpOrder=epOrderDAO.selectOrderByOrderid(sourceorderid);//查询原始单据
+		
+		int ordertype=sourceEpOrder.getOrdertype();//单据类型
+		int paytypeid =sourceEpOrder.getPaytypeid();//支付类型
+		int usestatus=sourceEpOrder.getUsestatus();//单据状态
+		
+		
+		EpResult result=new EpResult();
+		if(usestatus!=1)
+			return  new EpResult(EpResult.FAIL,"单据不为支付状态不允许，不允许退货操作","");
+		if(ordertype!=OrderType.saleorder.getTypeValue())
+			return new EpResult(EpResult.FAIL,"单据不是在线支付订单，不允许退货操作","");
+
+		//检查行明细是否合法
+		if(!refundDtlValidate(list)) {
+			return new EpResult(EpResult.FAIL,"退货数量不合法，请重新填写退货数量","");
+		}
+		//获取销售单的退款次数 并且更新退款单的 refundNum字段
+		int refundNum=this.getRefundNum(sourceorderid);
+		epOrder.setRefundnum(refundNum);
+		this.saveEpOrder(epOrder, list);//epOrder为退货单对象  list为退货单明细
+		
+		String outTradeNo=sourceEpOrder.getOrdercode();
+		BigDecimal refundmoney= epOrder.getOrdermoney();
+		
+		
+		//2、发起在线退款处理
+		switch (paytypeid) {
+			case 1://支付宝
+				
+				String refundAmount=refundmoney.toString();
+				String storeId=String.valueOf(epOrder.getSectionid());
+				String refundReason="多买错买退货";
+				List<EpOrder> epOrderList=epOrderDAO.selectOrderListBySourceOrderid(sourceorderid);
+				int outRequestNoCount=1;
+				if(epOrderList!=null) {
+					outRequestNoCount=epOrderList.size();
+				}
+				String outRequestNo=String.valueOf(outRequestNoCount);
+				String myrefundno=epOrder.getOrdercode();
+				result=aliPay.tradeRefund(outTradeNo, refundAmount, outRequestNo, refundReason, storeId,myrefundno);
+				break;
+			case 2://微信
+				String out_refund_no=epOrder.getOrdercode();
+				String out_trade_no=outTradeNo+sourceEpOrder.getWeixinnoncestr();
+				String total_fee=sourceEpOrder.getOrdermoney().multiply(new BigDecimal(100)).setScale(0).toString();
+				String refund_fee=refundmoney.multiply(new BigDecimal(100)).setScale(0).toString();
+				EpPayInfo epPayInfo= epPayInfoDAO.selectPayInfoByOrdercodeAndPaytypeid(sourceEpOrder.getOrdercode(),2);
+				if(epPayInfo==null) {
+					result=new EpResult(EpResult.FAIL,"原微信平台支付订单信息不存在或者错误，退款申请失败","");
+				}else {
+					String transaction_id=epPayInfo.getPlordercode();
+					result=weixinPay.tradeRefund(transaction_id, out_trade_no, out_refund_no, total_fee,refund_fee);
+				}
+				break;
+				
+			default:
+				result=new EpResult(EpResult.FAIL,"错误的付款类型","");
+				break;
+		}
+		
+		
+		//3、更新商家单据相关状态   支付宝直接更新usestatue   微信更新WeiXinRefundAppFlag
+		doAfterTradeRefund( result, epOrder,list) ;
+
+		return result;
+		
+	}
+	
+	/**
+	 * 获取销售订单的退款次数  第几次  用于下退货单用   并且这个值可用于查询退款情况用
+	* @Title: getRefundNum
+	* @Description: TODO(这里用一句话描述这个方法的作用)
+	* @param @param sourceorderid
+	* @param @return    参数
+	* @author wuxuecheng
+	* @return int    返回类型
+	* @throws
+	 */
+	private int getRefundNum(int sourceorderid) {
+		List<EpOrder> epOrderList=epOrderDAO.selectOrderListBySourceOrderid(sourceorderid);
+		int refundnum=0;
+		if(epOrderList!=null && epOrderList.size()>0) {
+			refundnum=epOrderList.size();
+		}
+		return refundnum;
+	}
+
+/**
+ * 
+* @Title: doAfterTradeRefund
+* @Description: 退货处理之后  对商家退货单信息的处理    支付宝退款  直接更新usestatus   微信退款  因为是退款申请  先标识申请是否成功标志WeiXinRefundAppFlag
+* @param @param result   在线退款结果
+* @param @param epOrder  退款单
+* @author wuxuecheng
+* @return void    返回类型
+* @throws
+ */
+	private void doAfterTradeRefund(EpResult result,EpOrder epOrder,List<EpOrders> list)throws Exception {
+		if(result!=null && EpResult.SUCCESS.equals(result.getCode())) {
+			
+			int paytypeid=epOrder.getPaytypeid();
+			switch (paytypeid) {
+			case 1://支付宝
+				epOrderDAO.updateOrderUsestatue(epOrder.getOrderid(),1,"");
+				updateOrdersBackcountsByrefundList(list);
+				break;
+				
+			case 2://微信
+				epOrderDAO.updateOrderWeiXinRefundAppFlag(epOrder.getOrderid());
+				break;
+
+			default:
+				break;
+			}
+		}else {
+			String memo="";
+			if(result!=null) {
+				memo=result.getMsg()+" "+result.getMemo();
+			}
+			epOrderDAO.updateOrderUsestatue(epOrder.getOrderid(), -1,memo);
+		}
+		
+		
+	}
+
+@Override
+public void updateOrdersBackcountsByrefundList(List<EpOrders> list) {
+	for (EpOrders epOrders : list) {
+		epOrdersDAO.updateOrdersBackcounts(epOrders);
+	}
+}
+
+
+@Override
+public boolean refundDtlValidate(List<EpOrders> list) {
+	boolean flag=true;
+	for(EpOrders epOrders:list) {//内存中的退货数据明细
+		int ordersid=epOrders.getSourceordersid();
+		EpOrders _epOrders= epOrdersDAO.selectOrdersByOrdersid(ordersid);//数据库中的
+		BigDecimal _totalcounts=_epOrders.getTotalcounts();//销售数量
+		BigDecimal _backcounts=_epOrders.getBackcounts();//退货件数
+		//本次退货件数
+		BigDecimal backcounts=epOrders.getTotalcounts();
+		
+		BigDecimal _canbackcounts=_totalcounts.subtract(_backcounts);
+		if(backcounts.compareTo(_canbackcounts)>0) {
+			//退货数量大于可退数量
+			flag= false;
+			break;
+		}
+		
+	}
+	return flag;
+}
+
+@Override
+public List<EpOrder> findOrderByOrderTypeAndUsestatusAndMinutesAndWeixinRefundAppFlag(int ordertype, int usestatus,
+		int minutes, int weixinrefundappflag) {
+	return epOrderDAO.selectOrderByOrderTypeAndUsestatusAndMinutesAndWeixinRefundAppFlag(ordertype, usestatus, minutes, weixinrefundappflag);
+}
+	
+	
+
+
+
 
 
 	

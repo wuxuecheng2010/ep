@@ -4,18 +4,25 @@ import java.net.Inet4Address;
 import java.net.InetAddress;  
 import java.net.InterfaceAddress;  
 import java.net.NetworkInterface;  
-import java.net.SocketException;  
-import java.text.SimpleDateFormat;  
+import java.net.SocketException;
+import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;  
 import java.util.Enumeration;  
 import java.util.Iterator;  
 import java.util.List;  
 import java.util.Map;  
 import java.util.Set;  
-import java.util.SortedMap;  
+import java.util.SortedMap;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.log4j.Logger;  
+import org.apache.log4j.Logger;
+
+import com.github.wxpay.sdk.WXPayConstants;
+import com.github.wxpay.sdk.WXPayConstants.SignType;  
 
 
 public class PayForUtil {  
@@ -72,6 +79,66 @@ private static Logger lg=Logger.getLogger(PayForUtil.class);
         String sign = MD5Util.MD5Encode(sb.toString(), characterEncoding).toUpperCase();    
         return sign;    
     }    
+    
+    public static String generateSignature( Map<Object, Object> data, String key, SignType signType) throws Exception {
+        Set<Object> keySet = data.keySet();
+        String[] keyArray = keySet.toArray(new String[keySet.size()]);
+        Arrays.sort(keyArray);
+        StringBuilder sb = new StringBuilder();
+        for (String k : keyArray) {
+            if (k.equals(WXPayConstants.FIELD_SIGN)) {
+                continue;
+            }
+            if (((String)data.get(k)).trim().length() > 0) // 参数值为空，则不参与签名
+                sb.append(k).append("=").append(((String)data.get(k)).trim()).append("&");
+        }
+        sb.append("key=").append(key);
+        if (SignType.MD5.equals(signType)) {
+            return MD5(sb.toString()).toUpperCase();
+        }
+        else if (SignType.HMACSHA256.equals(signType)) {
+            return HMACSHA256(sb.toString(), key);
+        }
+        else {
+            throw new Exception(String.format("Invalid sign_type: %s", signType));
+        }
+    }
+    
+    /**
+     * 生成 MD5
+     *
+     * @param data 待处理数据
+     * @return MD5结果
+     */
+    public static String MD5(String data) throws Exception {
+        java.security.MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] array = md.digest(data.getBytes("UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        for (byte item : array) {
+            sb.append(Integer.toHexString((item & 0xFF) | 0x100).substring(1, 3));
+        }
+        return sb.toString().toUpperCase();
+    }
+
+    /**
+     * 生成 HMACSHA256
+     * @param data 待处理数据
+     * @param key 密钥
+     * @return 加密结果
+     * @throws Exception
+     */
+    public static String HMACSHA256(String data, String key) throws Exception {
+        Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+        SecretKeySpec secret_key = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
+        sha256_HMAC.init(secret_key);
+        byte[] array = sha256_HMAC.doFinal(data.getBytes("UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        for (byte item : array) {
+            sb.append(Integer.toHexString((item & 0xFF) | 0x100).substring(1, 3));
+        }
+        return sb.toString().toUpperCase();
+    }
+    
 
     /**  
      * @author chenp 
@@ -99,6 +166,33 @@ private static Logger lg=Logger.getLogger(PayForUtil.class);
         return sb.toString();    
     }    
 
+    /**  
+     * @author chenp 
+     * @Description：将请求参数转换为xml格式的string  
+     * @param parameters  
+     *            请求参数  
+     * @return  
+     */    
+    public static String getRequestXml2(SortedMap<Object, Object> parameters) {    
+        StringBuffer sb = new StringBuffer();    
+        sb.append("<xml>");    
+        Set es = parameters.entrySet();    
+        Iterator it = es.iterator();    
+        while (it.hasNext()) {    
+            Map.Entry entry = (Map.Entry) it.next();    
+            String k = (String) entry.getKey();    
+            String v = (String) entry.getValue();    
+            /*if ("attach".equalsIgnoreCase(k) || "body".equalsIgnoreCase(k) || "sign".equalsIgnoreCase(k)) {    
+                sb.append("<" + k + ">" + "<![CDATA[" + v + "]]></" + k + ">");    
+            } else {    
+                sb.append("<" + k + ">" + v + "</" + k + ">");    
+            }    */
+            sb.append("<" + k + ">" + v + "</" + k + ">");   
+        }    
+        sb.append("</xml>");    
+        return sb.toString();    
+    }
+    
     /**  
      * 取出一个指定长度大小的随机正整数.  
      *   

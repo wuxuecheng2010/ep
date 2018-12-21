@@ -28,5 +28,9 @@ public class EpOrders {
 	private String frequency;
 	private String usage;
 	
+	private BigDecimal backcounts;
+	
+	private int sourceordersid;
+	
 	
 }

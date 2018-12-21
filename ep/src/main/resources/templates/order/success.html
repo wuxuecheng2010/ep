@@ -81,11 +81,18 @@
 							</div>
 						</h3>
 					</div>
-					<div class="col-md-4 column" style="text-align: right;">
+					<!-- <div class="col-md-4 column" style="text-align: right;">
 					     <a class="btn btn-danger" href="/index/nurse" style="margin-right:-100px;" >
 					     	<span class="glyphicon glyphicon-chevron-left"></span>返回
 					     </a>
+					</div> -->
+					<div class="col-md-4 column" style="text-align: right;" onClick="closewin()" >
+					     <a class="btn btn-danger"  style="margin-right:-100px;" >
+					     	<span class="glyphicon glyphicon-remove"></span>关闭
+					     </a>
 					</div>
+					
+					
 				</div>
 				
 				
@@ -189,6 +196,30 @@
 				$(function() {
 
 				});
+				
+
+				
+				function closewin(){  
+					layer.confirm('确定关闭当前页面吗？', {
+						  btn: ['确定','取消'] //按钮
+						}, function(){
+							if (navigator.userAgent.indexOf("Firefox") != -1 || navigator.userAgent.indexOf("Chrome") !=-1) {  
+						        window.location.href="about:blank";  
+						        window.close();  
+						    } else {  
+						        window.opener = null;  
+						        window.open("", "_self");  
+						        window.close();  
+						    }  
+
+						}, function(){
+							
+						}); 
+					
+
+				} 
+				
+				
 			</script>
 </body>
 

@@ -22,5 +22,9 @@ public interface EpPayInfoDAO {
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where ordercode = #{ordercode} or plordercode=#{ordercode}"})
     List<EpPayInfo> selectPayInfoByOrdercode(String ordercode);
     
+    
+    
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where ordercode = #{ordercode} and paytypeid=#{paytypeid}"})
+    EpPayInfo selectPayInfoByOrdercodeAndPaytypeid(String ordercode,int paytypeid);
 
 }

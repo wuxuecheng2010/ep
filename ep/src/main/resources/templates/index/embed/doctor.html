@@ -20,6 +20,7 @@
 <script src="/static/plugs/bigautocomplete/js/jquery.bigautocomplete.js"></script>
 <script src="/static/plugs/layui/layui.all.js"></script>
 
+
 <style>
 </style>
 
@@ -70,9 +71,9 @@
 						
 					</div>
 					
-					<div class="col-md-4" style="margin-top: 20px;">
+					<!-- <div class="col-md-4" style="margin-top: 20px;">
 						<input type="text" class="form-control" placeholder="输入门诊病人信息快速获取" id="outpatientname">
-					</div>
+					</div> -->
 				</div>
 
 				<div class="panel panel-default">
@@ -131,7 +132,7 @@
 							<div class="col-md-3 column">
 								<div class="input-group">
 									<span class="input-group-addon">门诊号码</span> <input type="text"
-										class="form-control" id="outpatientnumber"
+										th:value="${epInpatient.hisinid}" class="form-control" disabled="disabled" id="outpatientnumber"
 										placeholder="Outpatient number">
 								</div>
 							</div>
@@ -139,19 +140,19 @@
 							<div class="col-md-3 column">
 								<div class="input-group">
 									<span class="input-group-addon">病人姓名</span> <input type="text"
-										class="form-control" id="name" placeholder="Name">
+										th:value="${epInpatient.name}" class="form-control" id="name" disabled="disabled" placeholder="Name">
 								</div>
 							</div>
 							<div class="col-md-3 column">
 								<div class="input-group">
 									<span class="input-group-addon">病人性别</span> <input type="text"
-										class="form-control" id="sex" placeholder="Sex">
+										th:value="${epInpatient.sex}" class="form-control" id="sex" disabled="disabled" placeholder="Sex">
 								</div>
 							</div>
 							<div class="col-md-3 column">
 								<div class="input-group">
-									<span class="input-group-addon">病人年龄</span> <input type="number"
-										class="form-control" id="age" placeholder="Age">
+									<span class="input-group-addon">病人年龄</span> <input type="text"
+										th:value="${epInpatient.age}" class="form-control" id="age" disabled="disabled" placeholder="Age">
 								</div>
 							</div>
 
@@ -163,14 +164,14 @@
 							<div class="col-md-3 column">
 								<div class="input-group">
 									<span class="input-group-addon">病人地址</span> <input type="text"
-										class="form-control" id="address" placeholder="Address">
+										th:value="${epInpatient.address}" class="form-control" id="address" disabled="disabled" placeholder="Address">
 								</div>
 							</div>
 
 							<div class="col-md-3 column">
 								<div class="input-group">
 									<span class="input-group-addon">就诊日期</span> <input type="text"
-										class="form-control" id="credate" placeholder="Date of visit">
+									th:value="${credate}"	class="form-control" id="credate" disabled="disabled" placeholder="Date of visit">
 								</div>
 							</div>
 
@@ -179,20 +180,20 @@
 								<div class="input-group">
 									<span class="input-group-addon">症&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;状</span>
 									<input type="text" class="form-control" id="symptom"
-										placeholder="Symptom">
+									th:value="${epInpatient.describe}" 	placeholder="Symptom">
 								</div>
 							</div>
 							<div class="col-md-3 column">
 								<div class="input-group">
 									<span class="input-group-addon">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</span>
-									<input type="text" class="form-control" id="memo"
+									<input type="text" class="form-control"  id="memo"
 										placeholder="Memo">
 								</div>
 							</div>
 							<div style="display:none">
-							   <span id="birthday">生日</span>
-							   <span id="idcard">身份证</span>
-							   <span id="hicard">医院就诊卡</span>
+							   <span id="birthday" th:text="${epInpatient.dob}">生日</span>
+							   <span id="idcard" th:text="${epInpatient.idcard}">身份证</span>
+							   <span id="hicard" th:text="${epInpatient.regno}">医院就诊卡</span>
 							   <span id="micard">医保卡</span>
 							</div>
 						</div>
@@ -310,7 +311,7 @@
 					$(function() {
 						//alert([[${counterids}]]);
 						
-						initpatientselect();
+						//initpatientselect();
 
 						//设置下拉选择框
 						initselect();
@@ -441,7 +442,8 @@
 									  btn: ['确定','取消'] //按钮
 									}, function(){
 										//展现订单情况  确认就提交  取消则返回
-										var data={"order":orderstr,"orders":ordersstr};
+										var usercode=[[${epUser.usercode}]];
+										var data={"order":orderstr,"orders":ordersstr,"usercode":usercode};
 										ajaxSubmit(data);
 										//layer.msg('的确很重要', {icon: 1});
 
@@ -472,10 +474,14 @@
 						    	var msg=data.msg;
 						    	if(code=="success"){
 						    		
-						    		layer.msg('提交成功', {icon: 1});
-						    		window.setTimeout(function(){
-						    			window.location.reload();//刷新页面
-						    		},800);
+                                    layer.alert('提交成功', {
+                                      title: "提示",
+                                        btn: ['确定']
+						    		},function (index, item) {
+ 										 window.location.reload();//刷新页面 
+						    			});
+						    		
+						    		//layer.msg('提交成功');
 						    		//var orderid=data.orderid;
 						    		//重定向到付款页面
 						    		//window.location.href="/pay/scantopay/"+orderid;

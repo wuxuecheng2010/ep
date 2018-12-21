@@ -101,11 +101,13 @@ public class MyAuthUtils {
 			List<TbCounter> epCounterList=epCounterServiceImpl.findCounterBySectionid(epUser.getSectionid());
 			map.put("epCounterList", epCounterList);
 			String counterids="";
-			for(TbCounter c : epCounterList) {
+			/*for(TbCounter c : epCounterList) {
 				counterids+=c.getIcounterid()+",";
 			}
 			if(!"".equals(counterids))
-				counterids=counterids.substring(0, counterids.length()-1);
+				counterids=counterids.substring(0, counterids.length()-1);*/
+			
+			counterids=epCounterServiceImpl.findCouteridsBySectionid(epUser.getSectionid());
 			map.put("counterids", counterids);
 		}else if(epUser.getUsertype()==UserType.DOCTOR.getTypeValue()){
 			//获取配置文件信息
@@ -116,7 +118,6 @@ public class MyAuthUtils {
 		
 		return map;
 	}
-	
 	
 
 }

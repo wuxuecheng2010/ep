@@ -1,0 +1,477 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8" />
+<title>订单详情</title>
+<link rel="stylesheet" href="/static/plugs/layui/css/layui.css"
+	type="text/css" />
+<link rel="stylesheet"
+	href="/static/plugs/bootstrap-3.3.7/css/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="/static/plugs/bigautocomplete/css/jquery.bigautocomplete.css"
+	type="text/css" />
+
+<link href="/static/plugs/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"
+	rel="stylesheet" />
+	
+<link href="/static/plugs/icheck/skins/all.css?v=1.0.2" rel="stylesheet">
+
+
+
+<script type="text/javascript"
+	src="/static/plugs/jquery-2.1.1/jquery-2.1.1.min.js"></script>
+<script type="text/javascript"
+	src="/static/plugs/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="/static/plugs/bigautocomplete/js/jquery.bigautocomplete.js"></script>
+<script src="/static/plugs/layui/layui.all.js"></script>
+
+<script type="text/javascript"
+	src="/static/plugs/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript"
+	src="/static/plugs/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+	
+
+<script src="/static/plugs/icheck/icheck.js?v=1.0.2"></script>
+
+<style>
+</style>
+
+</head>
+
+<body>
+
+	<div class="container">
+		<div class="row clearfix">
+			<div class="col-md-12 column">
+				<nav th:replace="fragments/ep::nurse_nav"></nav>
+
+
+				<div class="row clearfix" style="margin-top: 60px;">
+					<div class="col-md-3 column ">
+						<div class="row">
+							
+				
+								<div id="legend" class="">
+									<h4>订单详情</h4>
+									<hr />
+								</div>
+								<div class="form-group">
+								    <div class="col-sm-4">
+								    	<h5>订单编号</h5>
+								    </div>
+									<div class="col-sm-8">
+									   <h5 th:text="${eporder.ordercode}"></h5>
+								    </div>
+								</div>
+								
+								<div class="form-group">
+								    <div class="col-sm-4">
+								    	<h5 >患者姓名</h5>
+								    </div>
+									<div class="col-sm-8">
+									   <h5 th:text="${eporder.name}"></h5>
+								    </div>
+								</div>
+								
+								<div class="form-group">
+								    <div class="col-sm-4">
+								    	<h5>是否付款</h5>
+								    </div>
+									<div class="col-sm-8" th:switch="${eporder.usestatus}">
+									   <h5 th:case="1" class="text-primary">已支付</h5>
+					                   <h5 th:case="0" class="text-danger">未支付</h5>
+					                   
+								    </div>
+								</div>
+								
+								<div class="form-group">
+								    <div class="col-sm-4">
+								    	<h5>付款金额</h5>
+								    </div>
+									<div class="col-sm-8">
+									   <h5 th:text="${eporder.ordermoney}"></h5>
+								    </div>
+								</div>
+								
+								<div class="form-group">
+								    <div class="col-sm-4">
+								    	<h5>支付方式</h5>
+								    </div>
+									<div class="col-sm-8" th:switch="${eporder.paytypeid}">
+					                   <img th:case="1" src="/static/img/alipay.png" height="5%" >
+					                   <img th:case="2" src="/static/img/wechat.png" height="5%" >
+								    </div>
+								</div>
+								
+								
+								
+
+						</div>
+					</div>
+
+					<div class="col-md-9 column" style="text-align: left;">
+						<table class="table table-condensed" style="font-size:14px;">
+							<thead>
+								<tr>
+								    <th>
+								       <input type="checkbox" id="allcheck" >
+								   	   <label for="allcheck">全选</label>
+								    </th>
+								    <th>商品编码</th>
+									<th>名称</th>
+									<th>规格</th>
+									<th>数量</th>
+									<th>单价</th>
+									<th>付款金额</th>
+									<th>已退</th>
+									<th>退货数量</th>
+									<th>退货金额</th>
+								</tr>
+							</thead>
+							<tbody id="orderslist">
+									
+							     <tr th:each="orders:${orderslist}">
+							     	<td>
+								       <input type="checkbox"  id="ck" />
+								       
+								       <div class="hidden">
+								          <span th:text="${orders.ordersid}" id="ordersid"></span>
+								       </div> 
+								    </td>
+					                <td th:text="${orders.vcproductcode}"></td>
+					                <td th:text="${orders.vcuniversalname}" id="vcuniversalname"></td>
+					                <td th:text="${orders.vcstandard}" id="vcstandard"></td>
+					                <td th:text="${orders.totalcounts}" id="totalcounts"></td>
+					                <td th:text="${orders.numprice}" id="numprice"></td>
+					                <td th:text="${orders.nummoney}" ></td>
+					                <td th:text="${orders.backcounts}" id="backcounts"></td>
+					                <td>
+					               		 <input type="number" value="0" id="_backcounts" style="width:60px;">
+									</td>
+					                <td id="_backcountsmoney"></td>
+					            </tr> 
+							</tbody>
+							<tbody>
+									
+							     <tr>
+					                <td colspan="8" class="text-right"> 合计：</td>
+					                <td id="numtotal">0</td>
+					                <td id="moneytotal">0</td>
+					                <td></td>
+					            </tr> 
+							</tbody>
+							
+						</table>
+					</div>
+					
+					
+					
+
+				</div>
+				
+				<div class="row clearfix" style="margin-top: 10px;">
+				  <hr>
+				  <div class="col-sm-offset-3 col-md-9 column text-center">
+				     <button class="btn btn-warning ">取消</button>
+				     <button class="btn btn-primary "  id="btn-saleback" data-toggle="modal"  onclick="validate()">退货</button>
+				  </div>
+				
+				</div>
+			</div>
+			
+			
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+								&times;
+							</button>
+							<h4 class="modal-title" id="myModalLabel">
+								退货确认
+							</h4>
+						</div>
+						<div class="modal-body">
+							<div class="row clearfix">
+								<div class="col-md-12 column">
+									<ol id="detailcheck">
+										<li>
+											<div class="row">
+											   <div class="col-md-6 column">
+											       <div>sdsds</div>
+											        <div>aa</div>
+											   </div>
+											   <div class="col-md-6 column">
+											      18*2
+											   </div>
+											</div>
+										</li>
+										
+									</ol>
+									<hr>
+									<span>合计退货：<span id="detailchecknum">2</span>件  共<span  id="detailcheckmoney">32</span>元</span>
+									<h5>请务必确认实物和本次退货清单一致后，点击提交退货。</h5>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">取消
+							</button>
+							<button type="button" class="btn btn-primary" onclick="submit()">
+								提交退货
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal -->
+			</div>
+
+
+
+
+			<script th:inline="javascript">
+			
+			var layer = layui.layer
+			  ,form = layui.form;
+			var salebackdoc={}; //原始订单信息
+			var salebackdtls=[];//退货单明细数据
+			
+				$(function() {
+					
+					$(':checkbox').iCheck({
+						checkboxClass: 'icheckbox_square-blue',
+						radioClass: 'iradio_square-blue',
+						increaseArea: '20%'
+						});
+					
+					//全选按钮
+					initCheckbox();
+					
+					//初始化按钮
+					initButtons();
+					
+					//初始化输入
+					initInput();
+				});
+				
+				
+				
+				
+				function initCheckbox(){
+
+ 					$('#allcheck').on('ifChecked', function(event){
+							$('input').iCheck('check'); 
+						});
+					$('#allcheck').on('ifUnchecked', function(event){
+						$('input').iCheck('uncheck'); 
+					});	 
+					
+				}
+				
+				
+				function initButtons(){
+					
+					$("#btn-saleback").click(function(e){
+						//清空
+						$("#detailcheck").find("li").remove();
+						salebackdtls=[];
+						
+						//var salebackdoc={};
+						salebackdoc.orderid=[[${eporder.orderid}]];
+						//var salebackdtls=[];
+						
+						var rows=$("#orderslist tr");
+						$.each(rows,function(i,c){
+							var ck=$(c).find("#ck");
+							if(ck.is(':checked') ){
+								var el={};
+								var ordersid=$(c).find("#ordersid").html();
+								var _backcounts=$(c).find("#_backcounts").val();
+								var numprice=$(c).find("#numprice").html();
+								var vcuniversalname=$(c).find("#vcuniversalname").html();
+								var vcstandard=$(c).find("#vcstandard").html();
+								el.numno=i+1;
+								el.ordersid=ordersid;
+								el.backcounts=_backcounts;
+								el.numprice=numprice;
+								el.vcuniversalname=vcuniversalname;
+								el.vcstandard=vcstandard;
+								if(_backcounts!="" && Number(_backcounts)>0){
+									salebackdtls.push(el);
+									
+									//添加确认框内容
+									var li='<li>'+
+												'<div class="row">'+
+												   '<div class="col-sm-6">'+vcuniversalname+"  "+vcstandard+'</div>'+
+												   //'<div class="col-sm-3">'+vcstandard+'</div>'+
+												   '<div class="col-sm-3">'+_backcounts+'*'+numprice+'='+(_backcounts*numprice)+'</div>'+
+												'</div>'+
+										   '</li>';
+									$("#detailcheck").append(li);
+								}
+									
+								//alert(JSON.stringify(salebackdtls));
+								
+							}
+						})
+						
+
+					//1、提示是否要提交  交给模态框了 
+						
+					
+					
+					
+					})
+					
+					
+				}
+				
+				
+				function initInput(){
+					$("#orderslist #_backcounts").bind("input",function(){
+					    var _backcounts=$(this).parent().find("#_backcounts").val();
+					    var totalcounts=$(this).parent().parent().find("#totalcounts").html();
+					    var backcounts=$(this).parent().parent().find("#backcounts").html();
+					    var numprice=$(this).parent().parent().find("#numprice").html();
+					    
+					    if(_backcounts>totalcounts-backcounts){
+					    	layer.msg("退货数量不能超过总购物数");
+					    	$(this).css({"color":"red"});
+					    }else{
+					    	
+					    	$(this).parent().parent().find("#_backcountsmoney").html(_backcounts*numprice);
+					    	if(_backcounts>0)
+					    		$(this).parent().parent().find("#ck").iCheck('check');
+					    	else
+					    		$(this).parent().parent().find("#ck").iCheck('uncheck');
+					    	$(this).css({"color":"black"});
+					    	//合计计算
+					    var rows=$("#orderslist tr");
+					    var sumnumtotal=0;
+					    var summoneytotal=0;
+						$.each(rows,function(i,c){
+							var ck=$(c).find("#ck");
+							if(ck.is(':checked') ){
+						
+								var tmp_backcounts=Number($(c).find("#_backcounts").val());
+								
+								sumnumtotal+=tmp_backcounts;
+								var tmp_backcountsmoney=Number($(c).find("#_backcountsmoney").html());
+								summoneytotal+=tmp_backcountsmoney;
+								
+							}
+						});
+						
+						$("#numtotal").html(sumnumtotal);
+						$("#moneytotal").html(summoneytotal);
+						
+					    $("#detailchecknum").html(sumnumtotal);
+					    $("#detailcheckmoney").html(summoneytotal);
+					    
+					    }
+					})
+				}
+				
+				
+				function submit(){
+					//检查行明细是否符合逻辑
+			
+					$("#myModal").modal('hide');  //手动关闭
+					var doc=JSON.stringify(salebackdoc);
+					var dtl=JSON.stringify(salebackdtls);
+					var usercode=[[${epUser.usercode}]];
+					var data={"doc":doc,"dtl":dtl,"usercode":usercode};
+					//alert(JSON.stringify(data));
+					ajaxSubmit(data);
+			
+				}
+				
+				function validate(){
+					
+					 var rows=$("#orderslist tr");
+					 var flag=true;
+					 var sumbackcounts=0;
+					 
+					 $.each(rows,function(i,c){
+							var ck=$(c).find("#ck");
+							if(ck.is(':checked') ){
+						
+								var tmp_backcounts=Number($(c).find("#_backcounts").val());
+								var backcounts=Number($(c).find("#backcounts").html());
+								var totalcounts=Number($(c).find("#totalcounts").html());
+								sumbackcounts+=tmp_backcounts;
+								
+						//行检查
+								if(tmp_backcounts<0){
+									layer.msg('退货数量不能小于0', function(){
+										//关闭后的操作
+										});
+									flag=false;
+									return false
+								}
+								
+								
+								if(tmp_backcounts>totalcounts-backcounts){
+									
+									layer.msg('存在退货数量大于可退数，请检查', function(){
+										//关闭后的操作
+										});
+									flag=false;
+									return false
+									
+								}
+							}
+						});
+					 
+					 //合计数不能为0
+					 if(sumbackcounts==0){
+						 flag=false;
+						 layer.msg('请填写退货数量', function(){
+								//关闭后的操作
+								});
+					 }
+					 
+					 if(flag)
+					 $("#myModal").modal("show")
+				}
+				
+				function ajaxSubmit(data){
+					
+					$.ajax({
+					    type:"POST",
+					    url:"/order/createsaleback",
+					    dataType:"json",
+					    data:data,
+					    success:function(data){
+					    	layer.msg(JSON.stringify(data));
+					    	/* var code=data.code;
+					    	var msg=data.msg;
+					    	if(code=="success"){
+					    		
+                                layer.alert('提交成功', {
+                                  title: "提示",
+                                    btn: ['确定']
+					    		},function (index, item) {
+										 window.location.reload();//刷新页面 
+					    			});
+					    		
+					    		//layer.msg('提交成功');
+					    		//var orderid=data.orderid;
+					    		//重定向到付款页面
+					    		//window.location.href="/pay/scantopay/"+orderid;
+					    		//window.location.href="/pay/payqrcode/"+orderid;
+					    	}else{
+					    		layer.alert(msg);
+					    	} */
+					    },
+					    error:function(jqXHR){
+					    	//layer.msg("发生错误："+jqXHR.status);
+					    	layer.alert("发生错误："+jqXHR.status);
+					    }
+					});
+				}
+				
+			</script>
+</body>
+
+</html>

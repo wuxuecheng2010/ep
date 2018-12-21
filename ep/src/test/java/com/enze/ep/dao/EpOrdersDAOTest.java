@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class EpOrdersDAOTest {
 	
 	@Autowired
-	EpOrdersDAO epOrderDAO;
+	EpOrdersDAO epOrdersDAO;
 
 	@Test
 	public void testAddOrders() {
@@ -36,21 +36,27 @@ public class EpOrdersDAOTest {
 		eporders.setVcstandard("zhengc");
 		eporders.setVcunitname("tai");
 		eporders.setVcuniversalname("有点意思fff");
-		int i=epOrderDAO.addOrders(eporders);
+		int i=epOrdersDAO.addOrders(eporders);
 		
 		log.info("成功新增："+i+"行orders");
 	}
 
 	@Test
 	public void testSelectOrdersByOrderid() {
-		List<EpOrders> list=epOrderDAO.selectOrdersByOrderid(5);
+		List<EpOrders> list=epOrdersDAO.selectOrdersByOrderid(5);
 		log.info("size:"+list.size());
 	}
 
 	@Test
 	public void testSelectOrdersByOrdersid() {
-		EpOrders epOrders=epOrderDAO.selectOrdersByOrdersid(1);
+		EpOrders epOrders=epOrdersDAO.selectOrdersByOrdersid(1);
 		log.info(epOrders.getVcproductcode());
+	}
+	
+	@Test
+	public void testUpdateOrdersBackcounts() {
+		EpOrders epOrders	=epOrdersDAO.selectOrdersByOrdersid(77);
+		epOrdersDAO.updateOrdersBackcounts(epOrders);
 	}
 
 }

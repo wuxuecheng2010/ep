@@ -50,4 +50,9 @@ public class EpUserServiceImpl implements EpUserService {
 		return epUser;
 	}
 
+	@Override
+	public EpUser findEpUserByUserCode(String usercode) {
+		return epUserDAO.selectUserByUserCode(usercode);
+	}
+
 }

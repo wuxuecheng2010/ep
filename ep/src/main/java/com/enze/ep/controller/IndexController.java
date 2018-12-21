@@ -1,25 +1,31 @@
 package com.enze.ep.controller;
 
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.enze.ep.entity.EpConfig;
+import com.enze.ep.entity.EpInpatient;
+import com.enze.ep.entity.EpSection;
 import com.enze.ep.entity.EpUser;
 import com.enze.ep.entity.WlAmdParam;
 import com.enze.ep.entity.WlAmdResponse;
-import com.enze.ep.entity.WlAmdUser;
 import com.enze.ep.entity.WlToken;
 import com.enze.ep.enums.UserType;
+import com.enze.ep.service.EpConfigService;
 import com.enze.ep.service.EpCounterService;
 import com.enze.ep.service.HistoryService;
+import com.enze.ep.utils.DateUtils;
 import com.enze.ep.utils.MyAuthUtils;
 
 @Controller
@@ -35,6 +41,11 @@ public class IndexController {
 	@Autowired
 	HistoryService historyServiceImpl;
 	
+	@Autowired
+    RedisTemplate redisTemplate;
+	
+	@Autowired
+	EpConfigService epConfigServiceImpl;
 	
 	//嵌入到对方系统中去的index主页方式
 	@RequestMapping(value = "/embed", method = RequestMethod.GET)
@@ -63,13 +74,29 @@ public class IndexController {
 		
 		//获取传递参数
 		EpUser epUser=(EpUser) amdmap.get("epUser");
+		EpInpatient epInpatient=(EpInpatient)amdmap.get("epInpatient");
+		EpSection epSection=(EpSection)amdmap.get("epSection");
 		ModelMap map=myAuthUtils.getAuthInfoByEpUser(epUser);
+		map.put("epInpatient", epInpatient);
+		map.put("epSection", epSection);
+		
+		//就诊日期
+		String credate=DateUtils.formatDateToShortStr(new Date());
+		map.put("credate", credate);
+		
+		EpConfig epConfig=epConfigServiceImpl.findEpConfigByCfgName("ep_contact");
+		String contact=epConfig.getCfgvalue();
+		map.put("contact", contact);
 		
 		//获取操作员账号类型  医生或者护士
 		String url="";
 		if(UserType.DOCTOR.getTypeValue()==epUser.getUsertype()) {
 			url="index/embed/doctor";
 		}else if(UserType.NURSE.getTypeValue()==epUser.getUsertype()) {
+			//护士开出的单据 所对应的柜台  由病人的病区决定
+			int sectionid=epInpatient.getSectionid();
+			String counterids=epCounterServiceImpl.findCouteridsBySectionid(sectionid);
+			map.put("counterids", counterids);//覆盖原来的柜台id字符串
 			url="index/embed/nurse";
 		}
 		return new ModelAndView(url,map);
@@ -91,26 +118,6 @@ public class IndexController {
 		//return "index/nurse";
 	}
 	
-	/*private ModelMap getAuthInfo(HttpServletRequest request, HttpServletResponse response) {
-		ModelMap map=new ModelMap();
-		EpUser epUser=myAuthUtils.getEpUserByCookie(request, response);
-		map.put("epUser", epUser);
-
-        //护士用户所对应的柜台 
-		if(epUser.getUsertype()==UserType.NURSE.getTypeValue()) {
-			List<EpCounter> epCounterList=epCounterServiceImpl.findCounterBySectionid(epUser.getSectionid());
-			map.put("epCounterList", epCounterList);
-			String counterids="";
-			for(EpCounter c : epCounterList) {
-				counterids+=c.getIcounterid()+",";
-			}
-			if(!"".equals(counterids))
-				counterids=counterids.substring(0, counterids.length()-1);
-			map.put("counterids", counterids);
-		}
-		
-		
-		return map;
-	}*/
+	
 
 }

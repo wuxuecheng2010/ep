@@ -7,9 +7,11 @@ import com.enze.ep.entity.EpOrder;
 import com.enze.ep.entity.EpOrderStock;
 import com.enze.ep.entity.EpOrders;
 import com.enze.ep.entity.EpPayInfo;
+import com.enze.ep.entity.EpResult;
 
 public interface EpOrderService {
-    void saveEpOrder(EpOrder epOrder,List<EpOrders> list) throws Exception;
+	void saveEpOrder(EpOrder epOrder,List<EpOrders> list) throws Exception;
+	EpResult saveEpSalesBackOrder(EpOrder epOrder,List<EpOrders> list) throws Exception;
     EpOrder findEpOrderById(int orderid);
     /**
      * 
@@ -22,7 +24,10 @@ public interface EpOrderService {
     * @throws
      */
     EpOrder findEpOrderByIdRealTime(int orderid) ;
+    EpOrders findEpOrdersByOrdersid(int ordersid) ;
     List<EpOrder> findOrderListByOrderTypeAndUsestatusAndMinutesAOB(int ordertype, int usestatus, int minutes,int flagsendstore);
+    
+    List<EpOrder> findOrderByOrderTypeAndUsestatusAndMinutesAndWeixinRefundAppFlag(int ordertype, int usestatus, int minutes,int weixinrefundappflag);
     
     List<EpOrders> findEpOrdersListByOrderid(int orderid);
     void finishOrderPay(EpPayInfo payinfo) throws Exception ;
@@ -81,4 +86,28 @@ public interface EpOrderService {
     
     boolean createSalesOrderDtl(String vcbillno,List<EpOrderStock> orderStockList);
     
+    List<EpOrder> findOrderListByAgus(int sectionid,String startdate,String enddate,String name,int usestatus);
+    
+    /**
+     * 
+    * @Title: updateOrdersBackcountsByrefundList
+    * @Description: 更新护士销售订单明细的退货数量
+    * @param @param list    参数
+    * @author wuxuecheng
+    * @return void    返回类型
+    * @throws
+     */
+    void updateOrdersBackcountsByrefundList(List<EpOrders> list);
+    
+    /**
+     * 
+    * @Title: refundDtlValidate
+    * @Description: 检查内存中退货数据的退货数量是否合法
+    * @param @param list
+    * @param @return    参数
+    * @author wuxuecheng
+    * @return boolean    返回类型
+    * @throws
+     */
+    boolean refundDtlValidate(List<EpOrders> list);
 }

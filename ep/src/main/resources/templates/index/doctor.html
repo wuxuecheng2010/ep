@@ -170,7 +170,7 @@
 							<div class="col-md-3 column">
 								<div class="input-group">
 									<span class="input-group-addon">就诊日期</span> <input type="text"
-										class="form-control" id="credate" placeholder="Date of visit">
+										th:value="${credate}" class="form-control" id="credate" placeholder="Date of visit">
 								</div>
 							</div>
 
@@ -441,7 +441,8 @@
 									  btn: ['确定','取消'] //按钮
 									}, function(){
 										//展现订单情况  确认就提交  取消则返回
-										var data={"order":orderstr,"orders":ordersstr};
+										var usercode=[[${epUser.usercode}]];
+										var data={"order":orderstr,"orders":ordersstr,"usercode":usercode};
 										ajaxSubmit(data);
 										//layer.msg('的确很重要', {icon: 1});
 

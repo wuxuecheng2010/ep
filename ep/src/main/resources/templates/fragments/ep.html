@@ -1,0 +1,60 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<nav th:fragment="nurse_nav" class="navbar navbar-default navbar-inverse navbar-fixed-top"
+		role="navigation">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span><span
+					class="icon-bar"></span><span class="icon-bar"></span><span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">便民药房</a>
+		</div>
+
+		<div class="collapse navbar-collapse"
+			id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="#"><span th:text="${hospital}"></span></a></li>
+			</ul>
+
+			<ul class="nav navbar-nav pull-right" style="margin-right: 16px;">
+
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" th:text="${epUser.username}"><strong
+						class="caret"></strong></a>
+					<ul class="dropdown-menu">
+						<li><a href="/logout">退出</a></li>
+					</ul></li>
+			</ul>
+		</div>
+	</nav>
+				
+				
+				
+
+
+    <div th:fragment="One">
+        This is fragments One!
+    </div>
+    <div id="Two">
+        This is Two!
+    </div>
+    <div th:fragment="Three" style="background: deepskyblue">
+        This is Three!
+    </div>
+    <div th:fragment="Four" style="background: deepskyblue">
+        This is Four!
+    </div>
+    <div th:fragment="Five(onevar,twovar)">
+        <p th:text="${onevar} + ' - - - - - ' + ${twovar}"></p>
+    </div>
+    <div th:fragment="Six">
+        This is Six!
+    </div>
+    <div th:fragment="Seven">
+        This is Seven!
+    </div>
+</body>
+</html>

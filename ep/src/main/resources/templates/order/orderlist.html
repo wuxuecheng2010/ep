@@ -1,0 +1,235 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8" />
+<title>开单列表</title>
+<link rel="stylesheet" href="/static/plugs/layui/css/layui.css"
+	type="text/css" />
+<link rel="stylesheet"
+	href="/static/plugs/bootstrap-3.3.7/css/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="/static/plugs/bigautocomplete/css/jquery.bigautocomplete.css"
+	type="text/css" />
+
+<link href="/static/plugs/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"
+	rel="stylesheet" />
+	
+<link href="/static/plugs/icheck/skins/all.css?v=1.0.2" rel="stylesheet">
+
+
+
+<script type="text/javascript"
+	src="/static/plugs/jquery-2.1.1/jquery-2.1.1.min.js"></script>
+<script type="text/javascript"
+	src="/static/plugs/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="/static/plugs/bigautocomplete/js/jquery.bigautocomplete.js"></script>
+<script src="/static/plugs/layui/layui.all.js"></script>
+
+<script type="text/javascript"
+	src="/static/plugs/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript"
+	src="/static/plugs/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+	
+
+<script src="/static/plugs/icheck/icheck.js?v=1.0.2"></script>
+
+<style>
+</style>
+
+</head>
+
+<body>
+
+	<div class="container">
+		<div class="row clearfix">
+			<div class="col-md-12 column">
+				<nav th:replace="fragments/ep::nurse_nav"></nav>
+
+
+				<div class="row clearfix" style="margin-top: 60px;">
+					<div class="col-md-3 column ">
+						<div class="row">
+							<!-- <div class="input-group">
+								<span class="input-group-addon" id="basic-addon2"><span
+									class="glyphicon glyphicon-time" aria-hidden="true"></span></span> <input
+									type="text" class="form-control form_datetime"
+									id="datetimepicker" name="addtime" value="2014-09-23"
+									placeholder="">
+							</div>
+
+							<div class="input-group">
+								<span class="input-group-addon" id="basic-addon2"><span
+									class="glyphicon glyphicon-time" aria-hidden="true"></span></span> <input
+									type="text" class="form-control form_datetime"
+									id="datetimepicker" name="addtime" value="2014-09-23"
+									placeholder="">
+							</div> -->
+							<form class="form-horizontal" action="/order/orderlist/100852" method="get">
+								<div id="legend" class="">
+									<h4>单据查询</h4>
+									<hr />
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">科室</label>
+									<div class="col-sm-7">
+										<input type="text" placeholder="科室" th:value="${sectionname}"
+											class="form-control" id="sectionname" disabled="disabled">
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-4 control-label">开始日期</label>
+									<div class="col-sm-7">
+										<input type="text" placeholder="start date"
+										th:value="${startdate}"	class="form-control" id="startdate" name="startdate">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">结束日期</label>
+									<div class="col-sm-7">
+										<input type="text" placeholder="end date" class="form-control"
+										th:value="${enddate}"	id="enddate" name="enddate">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">患者姓名</label>
+									<div class="col-sm-7">
+										<input type="text" placeholder="姓名" class="form-control"
+										th:value="${name}"	id="name" name="name">
+									</div>
+								</div>
+								<div class="form-group">
+								
+									<div class="col-sm-offset-1 col-sm-10">
+									
+										<span th:each="epusestatus:${usestatuslist}">
+										
+										    <span th:if="${usestatus} eq ${epusestatus.usestatus}">
+											    <input  type="radio" name="usestatus" th:value="${epusestatus.usestatus}" checked> 
+											</span>
+											
+											<span th:if="${usestatus} ne ${epusestatus.usestatus}">
+											    <input  type="radio" name="usestatus" th:value="${epusestatus.usestatus}" > 
+											</span>
+											
+										    <label for="payed" th:text="${epusestatus.usestatusname}"></label> 
+												&nbsp;&nbsp;
+												
+										</span>
+									   
+									</div>
+								
+								</div>
+								<div class="form-group">
+									<div class="col-sm-offset-4 col-sm-7">
+
+										<button type="submit" class="btn btn-info btn-sm">查询</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+
+					<div class="col-md-9 column" style="text-align: left;">
+						<table class="table table-condensed" style="font-size:14px;">
+							<thead>
+								<tr>
+								    <th>订单日期</th>
+									<th>单号</th>
+									<th>患者姓名</th>
+									<th>金额</th>
+									<th>是否支付</th>
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody>
+							    <tr th:each="order:${orderlist}">
+					                <td th:text="${#dates.format(order.credate,'yyyy-MM-dd HH:mm:ss')}" ></td>
+					                <td th:text="${order.ordercode}"></td>
+					                <td th:text="${order.name}"></td>
+					                <td th:text="${order.ordermoney}"></td>
+					                <!-- <td th:text="${order.usestatus}"></td> -->
+					                <td >
+					                   <span th:switch="${order.usestatus}">
+					                      <span th:case="1" class="text-primary">
+					                      	  <span class="glyphicon glyphicon-ok text-success" ></span>
+							             </span>
+					                      <span th:case="0" class="text-danger">
+											  <span class="glyphicon glyphicon-time text-warning" ></span>
+										  </span>
+					                   </span>
+					                   
+					                   <span th:switch="${order.paytypeid}">
+					                      <img th:case="1" src="/static/img/alipay.png" height="45%" >
+					                   	  <img th:case="2" src="/static/img/wechat.png" height="45%" >
+					                   </span>
+					                </td>
+					                <td>
+					                    <a th:href="@{'/order/orderdtl/'+${order.orderid}+'/'+${epUser.usercode}}">查看</a>
+					                </td>
+					            </tr>
+							</tbody>
+						</table>
+
+
+					</div>
+
+				</div>
+			</div>
+
+
+
+
+			<script th:inline="javascript">
+				$(function() {
+					$('#startdate').datetimepicker({
+						minView : "month", //选择日期后，不会再跳转去选择时分秒 
+						language : 'zh-CN',
+						format : 'yyyy-mm-dd',
+						todayBtn : 1,
+						autoclose : 1,
+					});
+					
+					$('#enddate').datetimepicker({
+						minView : "month", //选择日期后，不会再跳转去选择时分秒 
+						language : 'zh-CN',
+						format : 'yyyy-mm-dd',
+						todayBtn : 1,
+						autoclose : 1,
+					});
+					
+					$(':radio').iCheck({
+						checkboxClass: 'icheckbox_square-blue',
+						radioClass: 'iradio_square-blue',
+						increaseArea: '20%'
+						});
+					
+					//回写是否付款
+					setUsestatus();
+					
+					
+				});
+				
+				
+
+				function setUsestatus(){
+					
+					var usestatus=[[${usestatus}]];
+					$(":radio[name='usestatus'][value='" + val + "']").prop("checked", "checked");
+					
+					
+				}
+
+				
+				
+
+				
+				
+				
+
+				
+			</script>
+</body>
+
+</html>

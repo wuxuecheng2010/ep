@@ -396,7 +396,9 @@
 						    		var orderid=data.orderid;
 						    		//重定向到付款页面
 						    		//window.location.href="/pay/scantopay/"+orderid;
-						    		window.location.href="/pay/payqrcode/"+orderid;
+						    		var usercode=[[${epUser.usercode}]];
+						    		window.location.href="/pay/payqrcode/"+orderid+"/"+usercode;
+						    		//window.location.href="/pay/payqrcode/"+orderid;
 						    	}else{
 						    		layer.alert(msg);
 						    	}

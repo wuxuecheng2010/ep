@@ -27,7 +27,7 @@ public class OrderProcessingJob {
   //  20秒钟之后开始，每15秒一次
   //@Scheduled(initialDelay = 20000,fixedRate = 15000)
   public void salesOrderProcessing()throws Exception{
-	  log.info("-------------------Start salesOrderProcessing-------------------");
+	  log.info("Start salesOrderProcessing");
 	  int ordertype=EpOrderType.sales_order;
 	  int usestatus=EpOrderUsestatus.payed;
 	  int minutes=-100000;
@@ -38,13 +38,13 @@ public class OrderProcessingJob {
 	  for(EpOrder order:list) {
 		  epOrderServiceImpl.doSendSalesOrderToStore(order);
 	  }
-	  log.info("-------------------End   salesOrderProcessing-------------------");
+	  log.info("End salesOrderProcessing");
   
   }
   
   @Scheduled(initialDelay = 30000,fixedRate = 15000)
   public void epOrderProcessing()throws Exception{
-	  log.info("-------------------Start epOrderProcessing-------------------");
+	  log.info("Start epOrderProcessing");
 	  int ordertype=EpOrderType.electronic_prescribing;
 	  int usestatus=EpOrderUsestatus.initial;
 	  int minutes=-100000;
@@ -55,7 +55,7 @@ public class OrderProcessingJob {
 	  for(EpOrder order:list) {
 		  epOrderServiceImpl.doSendEpOrderToStore(order);
 	  }
-	  log.info("-------------------End   epOrderProcessing-------------------");
+	  log.info("End epOrderProcessing");
   
   }
   

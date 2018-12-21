@@ -69,9 +69,9 @@
 					<div class="col-md-4 column">
 						
 					</div>
-					<div class="col-md-4" style="margin-top: 20px;">
+					<!-- <div class="col-md-4" style="margin-top: 20px;">
 						<input type="text" class="form-control" placeholder="输入病人信息快速获取" style="margin-top: -7px;" id="inpatientname">
-					</div>
+					</div> -->
 				</div>
 
 				<div class="panel panel-default">
@@ -93,43 +93,49 @@
 							<div class="col-md-3 column">
 								<div class="input-group">
 									<span class="input-group-addon">病人姓名</span> <input type="text"
-										class="form-control" placeholder="姓名" id="name">
+									th:value="${epInpatient.name}"	class="form-control" placeholder="姓名" id="name"  disabled="disabled">
 								</div>
 							</div>
 							<div class="col-md-3 column">
 								<div class="input-group">
 									<span class="input-group-addon">床&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号</span>
-									<input type="text" class="form-control" placeholder="床号"
-										id="bedno">
+									<input type="text" th:value="${epInpatient.room}+' '+${epInpatient.bedno}" class="form-control" placeholder="床号"
+										id="bedno"  disabled="disabled">
 								</div>
 							</div>
 
 							<div class="col-md-3 column">
 								<div class="input-group">
 									<span class="input-group-addon">家庭住址</span> <input type="text"
-										class="form-control" placeholder="家庭地址" id="address">
+									th:value="${epInpatient.address}"	class="form-control" placeholder="家庭地址" id="address"  disabled="disabled">
 								</div>
+							</div>
+							<div class="col-md-3 column">
+									<div class="input-group">
+										<span class="input-group-addon">备注</span> <input type="text"
+											class="form-control" placeholder="memo" id="memo">
+									</div>
 							</div>
 							
 							<div style="display:none;">
 								<div class="col-md-3 column">
 									<div class="input-group">
 										<span class="input-group-addon">性别</span> <input type="text"
-											class="form-control" placeholder="sex" id="sex">
+										th:value="${epInpatient.sex}"	class="form-control" placeholder="sex" id="sex">
 									</div>
 								</div>
 								
 								<div class="col-md-3 column">
 									<div class="input-group">
 										<span class="input-group-addon">年龄</span> <input type="text"
-											class="form-control" placeholder="age" id="age">
+											th:value="${epInpatient.age}" class="form-control" placeholder="age" id="age">
 									</div>
 								</div>
 								
 								<div class="col-md-3 column">
 									<div class="input-group">
 										<span class="input-group-addon">身份证</span> <input type="text"
-											class="form-control" placeholder="idcard" id="idcard">
+										th:value="${epInpatient.idcard}"	class="form-control" placeholder="idcard" id="idcard">
 									</div>
 								</div>
 								
@@ -143,23 +149,29 @@
 								<div class="col-md-3 column">
 									<div class="input-group">
 										<span class="input-group-addon">医院就诊卡</span> <input type="text"
-											class="form-control" placeholder="hicard" id="hicard">
+										th:value="${epInpatient.regno}"	class="form-control" placeholder="hicard" id="hicard">
 									</div>
 								</div>
 								
 								<div class="col-md-3 column">
 									<div class="input-group">
 										<span class="input-group-addon">症状</span> <input type="text"
-											class="form-control" placeholder="symptom" id="symptom">
+										th:value="${epInpatient.describe}"	class="form-control" placeholder="symptom" id="symptom">
+									</div>
+								</div>
+								<div class="col-md-3 column">
+									<div class="input-group">
+										<span class="input-group-addon">门诊号</span> <input type="text"
+										th:value="${epInpatient.hisinid}"	class="form-control" placeholder="symptom" id="outpatientnumber">
+									</div>
+								</div>
+								<div class="col-md-3 column">
+									<div class="input-group">
+										<span class="input-group-addon">生日</span> <input type="text"
+										th:value="${epInpatient.dob}"	class="form-control" placeholder="symptom" id="birthday">
 									</div>
 								</div>
 								
-								<div class="col-md-3 column">
-									<div class="input-group">
-										<span class="input-group-addon">备注</span> <input type="text"
-											class="form-control" placeholder="memo" id="memo">
-									</div>
-								</div>
 							</div>
 							
 
@@ -238,7 +250,7 @@
 											<td colspan="7" class="text-right"><label
 												id="moneytotal" style="padding-top: 30px;">合计金额:</label></td>
 
-											<td><label style="padding-top: 30px;" id="moneyall">￥100</label>
+											<td><label style="padding-top: 30px;" id="moneyall">￥0</label>
 											</td>
 											<td></td>
 										</tr>
@@ -270,7 +282,7 @@
 					$(function() {
 						//alert([[${counterids}]]);
 						
-						initpatientselect();
+						//initpatientselect();
 
 						//设置下拉选择框
 						initselect();
@@ -299,27 +311,39 @@
 							//layer.msg("xxxx");
 							//获取数据 同时校验数据
 							var ordertype=1;//普通销售单
-							var outpatientnumber='';//$("#outpatientnumber").val();
+							//var outpatientnumber='';//$("#outpatientnumber").val();
 							//var creuserid=[[${epUser.userid}]];
 							//var sectionid=[[${epUser.sectionid}]];
-							var sex='';//$("#sex").val();
+							/* var sex='';//$("#sex").val();
 							var age=0;//$("#age").val();
 							var idcard='';//$("#idcard").val();
 							var micard='';//$("#micard").val();
 							var hicard='';//$("#hicard").val();
 							var credate='';//$("#credate").val();
 							var symptom='';//$("#symptom").val();
-							var memo='';//$("#memo").val();
+							var memo='';//$("#memo").val(); */
+							
+							var outpatientnumber=$("#outpatientnumber").val();
+							var sex=$("#sex").val();
+							var age=$("#age").val();
+							var idcard=$("#idcard").val();
+							var micard=$("#micard").val();
+							var hicard=$("#hicard").val();
+							var credate=$("#credate").val();
+							var symptom=$("#symptom").val();
+							var memo=$("#memo").val();
 							
 							var name=$("#name").val();
 							var address=$("#address").val();
 							var bedno=$("#bedno").val();
+							var birthday=$("#birthday").val();
 							
 							var order={"ordertype":ordertype,"outpatientnumber":outpatientnumber,"bedno":bedno,
 									"name":name,"address":address,"sex":sex,
 									"age":age,"idcard":idcard,"micard":micard,"hicard":hicard,"symptom":symptom,
-									"memo":memo
+									"memo":memo,"birthday":birthday
 									};
+							//alert(JSON.stringify(order));
 							
 							var orders=[];
 							var valiflag=true;
@@ -365,7 +389,8 @@
 									  btn: ['确定','取消'] //按钮
 									}, function(){
 										//展现订单情况  确认就提交  取消则返回
-										var data={"order":orderstr,"orders":ordersstr};
+										var usercode=[[${epUser.usercode}]];
+										var data={"order":orderstr,"orders":ordersstr,"usercode":usercode};
 										ajaxSubmit(data);
 										//layer.msg('的确很重要', {icon: 1});
 
@@ -396,7 +421,8 @@
 						    		var orderid=data.orderid;
 						    		//重定向到付款页面
 						    		//window.location.href="/pay/scantopay/"+orderid;
-						    		window.location.href="/pay/payqrcode/"+orderid;
+						    		var usercode=[[${epUser.usercode}]];
+						    		window.location.href="/pay/payqrcode/"+orderid+"/"+usercode;
 						    	}else{
 						    		layer.alert(msg);
 						    	}
@@ -427,7 +453,22 @@
 
 					//初始化商品信息输入框
 					function initselect() {
+						
 						var counterids=[[${counterids}]];
+						if(counterids==""){
+							var sectionname=[[${epSection.sectionname}]];
+							var contact=[[${contact}]]
+							//如果对应病区柜台没有维护 提示信息显示
+							layer.alert("当前您对应的科室:“"+sectionname+"”,相关的药店基本信息未维护，请联系"+contact+"，之后再重新打开此页面。否则不能使用此功能。", {
+                                title: "提示信息",
+                                  btn: ['确定']
+					    		},function (index, item) {
+									    //window.location.reload();//刷新页面 
+					    				layer.close(layer.index);
+					    			});
+							
+						}
+						
 						var url='/product/select/'+counterids;
 						//alert(url);
 						//url: 'http://localhost:85/ezapi/public/index.php/Data/customertest',

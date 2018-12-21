@@ -36,7 +36,9 @@ import com.enze.ep.entity.EpOrder;
 import com.enze.ep.entity.EpOrders;
 import com.enze.ep.entity.EpPayInfo;
 import com.enze.ep.entity.EpPayType;
+import com.enze.ep.entity.EpUser;
 import com.enze.ep.service.EpOrderService;
+import com.enze.ep.service.EpUserService;
 import com.enze.ep.utils.DESUtils;
 import com.enze.ep.utils.MyAuthUtils;
 import com.enze.ep.utils.alipay.AliPay;
@@ -65,6 +67,9 @@ public class PayController {
 	EpOrderService epOrderServiceImpl;
 	
 	@Autowired
+	EpUserService epUserServiceImpl;
+	
+	@Autowired
 	MyAuthUtils myAuthUtils;
 	
 	@Autowired
@@ -77,11 +82,14 @@ public class PayController {
 	AliPay alipay;
 	
 	//打开扫码界面
-	@RequestMapping(value="/payqrcode/{orderid}",method=RequestMethod.GET)
-	public ModelAndView payqrcode(HttpServletRequest request, HttpServletResponse response,@PathVariable(name="orderid")String  orderid) {
+	@RequestMapping(value="/payqrcode/{orderid}/{usercode}",method=RequestMethod.GET)
+	public ModelAndView payqrcode(HttpServletRequest request, HttpServletResponse response,@PathVariable(name="orderid")String  orderid,@PathVariable(name="usercode")String  usercode) {
 		//ModelMap map=new ModelMap();
-		ModelMap map=myAuthUtils.getAuthInfo(request,response);
+		//ModelMap map=myAuthUtils.getAuthInfo(request,response);
+		EpUser epUser=epUserServiceImpl.findEpUserByUserCode(usercode);
+		ModelMap map=myAuthUtils.getAuthInfoByEpUser(epUser);
 		map.put("orderid", orderid);
+		
 		EpOrder eporder=epOrderServiceImpl.findEpOrderById(Integer.valueOf(orderid));
 		List<EpOrders> orderslist=epOrderServiceImpl.findEpOrdersListByOrderid(Integer.valueOf(orderid));
 		map.put("eporder", eporder);

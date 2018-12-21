@@ -38,4 +38,8 @@ public static String WXPAY="";
  */
 public static String ORDERQUERY_URL="https://api.mch.weixin.qq.com/pay/orderquery";
 
+public static String REFUND_URL="https://api.mch.weixin.qq.com/secapi/pay/refund";
+
+public static String REFUND_QUERY_URL="https://api.mch.weixin.qq.com/pay/refundquery";
+
 }  
