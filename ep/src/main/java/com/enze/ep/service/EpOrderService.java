@@ -88,6 +88,7 @@ public interface EpOrderService {
     
     List<EpOrder> findOrderListByAgus(int sectionid,String startdate,String enddate,String name,int usestatus);
     
+    List<EpOrder> findOrderListByUseridAndDateAndNameAndUsestatus(int userid,String startdate,String enddate,String name,int usestatus);
     /**
      * 
     * @Title: updateOrdersBackcountsByrefundList

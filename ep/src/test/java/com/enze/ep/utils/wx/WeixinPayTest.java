@@ -59,7 +59,7 @@ public class WeixinPayTest {
 	public void testTradeRefundQuery() {
 
 		try {
-			String out_refund_no="2018122115125437345056";
+			String out_refund_no="2018122220120032545056";
 		 	weixinPay.tradeRefundQuery(out_refund_no);
 			
 		} catch (Exception e) {

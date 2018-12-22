@@ -94,7 +94,7 @@ public class EpOrderServiceImpl implements EpOrderService {
 		if (epOrder == null) {
 			epOrder = epOrderDAO.selectOrderByOrderid(orderid);
 			redisTemplate.opsForValue().set(key, epOrder);
-			redisTemplate.expire(key, 150, TimeUnit.SECONDS);
+			redisTemplate.expire(key, 30, TimeUnit.SECONDS);
 		}
 		return epOrder;
 		// return epOrderDAO.selectOrderByOrderid(orderid);
@@ -425,13 +425,9 @@ public class EpOrderServiceImpl implements EpOrderService {
 				String storeId=String.valueOf(epOrder.getSectionid());
 				String refundReason="多买错买退货";
 				List<EpOrder> epOrderList=epOrderDAO.selectOrderListBySourceOrderid(sourceorderid);
-				int outRequestNoCount=1;
-				if(epOrderList!=null) {
-					outRequestNoCount=epOrderList.size();
-				}
-				String outRequestNo=String.valueOf(outRequestNoCount);
-				String myrefundno=epOrder.getOrdercode();
-				result=aliPay.tradeRefund(outTradeNo, refundAmount, outRequestNo, refundReason, storeId,myrefundno);
+				String outRequestNo=String.valueOf(refundNum);
+				String original_ordercode=epOrder.getOrdercode();
+				result=aliPay.tradeRefund(outTradeNo, refundAmount, outRequestNo, refundReason, storeId,original_ordercode);
 				break;
 			case 2://微信
 				String out_refund_no=epOrder.getOrdercode();
@@ -501,6 +497,9 @@ public class EpOrderServiceImpl implements EpOrderService {
 				
 			case 2://微信
 				epOrderDAO.updateOrderWeiXinRefundAppFlag(epOrder.getOrderid());
+				//申请成功就认为是成功的 本来应该要放查询里面处理
+				epOrderDAO.updateOrderUsestatue(epOrder.getOrderid(),1,"");
+				updateOrdersBackcountsByrefundList(list);
 				break;
 
 			default:
@@ -551,6 +550,28 @@ public boolean refundDtlValidate(List<EpOrders> list) {
 public List<EpOrder> findOrderByOrderTypeAndUsestatusAndMinutesAndWeixinRefundAppFlag(int ordertype, int usestatus,
 		int minutes, int weixinrefundappflag) {
 	return epOrderDAO.selectOrderByOrderTypeAndUsestatusAndMinutesAndWeixinRefundAppFlag(ordertype, usestatus, minutes, weixinrefundappflag);
+}
+
+@Override
+public List<EpOrder> findOrderListByUseridAndDateAndNameAndUsestatus(int userid, String startdate, String enddate,
+		String name, int usestatus) {
+
+	enddate=DateUtils.getDateStringAfterX(enddate, DateUtils.SHORT_DATETIME_FORMAT, 1);
+	 List<EpOrder> list=epOrderDAO.selectOrderListByUseridAndCredateAndName(userid, startdate, enddate,name);
+	
+	 List<EpOrder> _list=new ArrayList<EpOrder>();
+	 if(usestatus==2) {//全部
+		 _list=list;
+	 }else {
+		 for(EpOrder epOrder:list) {
+			 int _usestatus= epOrder.getUsestatus();
+			 if(usestatus==_usestatus) {
+				 _list.add(epOrder);
+			 }
+		}
+	 }
+	 return _list;
+
 }
 	
 	

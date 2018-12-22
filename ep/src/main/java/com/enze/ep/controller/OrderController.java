@@ -29,6 +29,7 @@ import com.enze.ep.entity.EpResult;
 import com.enze.ep.entity.EpUser;
 import com.enze.ep.entity.TbProductPrice;
 import com.enze.ep.enums.OrderType;
+import com.enze.ep.enums.UserType;
 import com.enze.ep.service.EpOrderService;
 import com.enze.ep.service.EpProductService;
 import com.enze.ep.service.EpUserService;
@@ -217,9 +218,16 @@ public class OrderController {
 		String name=request.getParameter("name");
 		name=(name==null)?"":name;
 		map.put("name", name);
+		if(UserType.DOCTOR.getTypeValue()==epUser.getUsertype()) {
+			//医生只能看自己的
+			List<EpOrder> orderlist=epOrderServiceImpl.findOrderListByUseridAndDateAndNameAndUsestatus(epUser.getUserid(), startdate, enddate, name, _usestatus);
+			map.put("orderlist", orderlist);
+		}else if(UserType.NURSE.getTypeValue()==epUser.getUsertype()) {
+			//护士 可以插件本科室相关的单据
+			List<EpOrder> orderlist=epOrderServiceImpl.findOrderListByAgus(sectionid, startdate, enddate, name, _usestatus);
+			map.put("orderlist", orderlist);
+		}
 		
-		List<EpOrder> orderlist=epOrderServiceImpl.findOrderListByAgus(sectionid, startdate, enddate, name, _usestatus);
-		map.put("orderlist", orderlist);
 		return new ModelAndView("order/orderlist",map);
 		
 	}

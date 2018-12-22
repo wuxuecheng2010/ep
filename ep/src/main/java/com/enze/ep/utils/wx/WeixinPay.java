@@ -412,7 +412,30 @@ public class WeixinPay {
 		String return_msg  =(String)map.get("return_msg");
 		if("SUCCESS".equals(return_code)) {
 			String result_code=(String)map.get("result_code");
+			if("SUCCESS".equals(result_code)) {
+				
+				String refund_status_0=(String)map.get("refund_status_0");
+				if("SUCCESS".equals(refund_status_0)) {
+					epResult=new EpResult(EpResult.SUCCESS,"退款成功","");
+				}else {
+					String err_code=(String)map.get("err_code");
+					String err_code_des=(String)map.get("err_code_des");
+					epResult=new EpResult(EpResult.FAIL,err_code,err_code_des);
+				}
+				
+			}else {
+				
+				String err_code=(String)map.get("err_code");
+				String err_code_des=(String)map.get("err_code_des");
+				epResult=new EpResult(EpResult.FAIL,err_code,err_code_des);
+				
+			}
 			
+			
+			
+		}else {
+			
+			epResult=new EpResult(EpResult.FAIL,return_code,return_msg);
 		}
 		
 		return epResult;

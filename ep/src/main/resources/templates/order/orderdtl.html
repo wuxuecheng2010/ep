@@ -443,12 +443,13 @@
 					    dataType:"json",
 					    data:data,
 					    success:function(data){
-					    	layer.msg(JSON.stringify(data));
-					    	/* var code=data.code;
-					    	var msg=data.msg;
+					    	//layer.msg(JSON.stringify(data));
+					    	 var code=data.code;
+					    	 var msg=data.msg;
+					    	 var memo=data.memo;
 					    	if(code=="success"){
 					    		
-                                layer.alert('提交成功', {
+                                layer.alert(msg, {
                                   title: "提示",
                                     btn: ['确定']
 					    		},function (index, item) {
@@ -461,8 +462,14 @@
 					    		//window.location.href="/pay/scantopay/"+orderid;
 					    		//window.location.href="/pay/payqrcode/"+orderid;
 					    	}else{
-					    		layer.alert(msg);
-					    	} */
+					    		layer.alert(msg+" "+memo, {
+	                                  title: "提示",
+	                                    btn: ['确定']
+						    		},function (index, item) {
+											 window.location.reload();//刷新页面 
+						    			});
+					    		
+					    	} 
 					    },
 					    error:function(jqXHR){
 					    	//layer.msg("发生错误："+jqXHR.status);

@@ -76,7 +76,7 @@ public class QueryJob {
 		}.run();
 	}
 
-	@Scheduled(initialDelay = 10000, fixedRate = 5000)
+	/*@Scheduled(initialDelay = 10000, fixedRate = 5000)
 	public void queryOrderRefundWeixinState() {
 		log.info("Start queryOrderRefundWeixinState 微信退款状态查询");
 		int ordertype = EpOrderType.sales_order_refund;
@@ -103,6 +103,6 @@ public class QueryJob {
 
 			}
 		}.run();
-	}
+	}*/
 
 }

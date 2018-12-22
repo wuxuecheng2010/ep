@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @ServletComponentScan
 @SpringBootApplication
 @MapperScan(basePackages="com.enze.ep.dao")
-@EnableScheduling
+//@EnableScheduling
 public class EpApplication {
 
 	public static void main(String[] args) {

@@ -212,7 +212,7 @@ public class AliPay {
     * @throws
      */
     public EpResult tradeRefund(String outTradeNo,String refundAmount,
-    		String outRequestNo,String refundReason,String storeId,String myrefundno ) {
+    		String outRequestNo,String refundReason,String storeId,String original_ordercode ) {
     	
     	//支付结果
     	EpResult epResult=new EpResult();
@@ -250,7 +250,7 @@ public class AliPay {
         		EpPayInfo epPayInfo=new EpPayInfo();
     			epPayInfo.setPaytypeid(1);//支付宝支付
     			epPayInfo.setBusstypeid(OrderType.salebackorder.getTypeValue());
-    			epPayInfo.setOrdercode(myrefundno);
+    			epPayInfo.setOrdercode(original_ordercode);
     			String plordercode=result.getResponse().getTradeNo();
     			epPayInfo.setPlordercode(plordercode);
     			BigDecimal fee =new BigDecimal( result.getResponse().getSendBackFee()).setScale(2);

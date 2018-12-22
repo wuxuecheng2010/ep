@@ -17,10 +17,10 @@ import com.enze.ep.entity.EpPayInfo;
 @Mapper
 public interface EpOrderDAO {
 	String TABLE_NAME = "ep_order";
-    String INSET_FIELDS ="paytypeid,ordertype,ordercode,creuserid,credate,ordermoney,memo,sectionid,name,bedno,address,idcard,birthday,sex,micard,hicard,age,symptom,outpatientnumber,sourceorderid";
+    String INSET_FIELDS ="paytypeid,ordertype,ordercode,creuserid,credate,ordermoney,memo,sectionid,name,bedno,address,idcard,birthday,sex,micard,hicard,age,symptom,outpatientnumber,sourceorderid,refundnum";
     String SELECT_FIELDS ="ordertype,ordercode,creuserid,credate,ordermoney,memo,sectionid,name,bedno,address,idcard,birthday,sex,micard,hicard,age,symptom,outpatientnumber,orderid,usestatus,paydate,paytypeid,weixinnoncestr,flagsendstore,flagclosed,sourceorderid";
     
-    @Insert({"insert into ", TABLE_NAME, "(", INSET_FIELDS, ") values (#{paytypeid},#{ordertype},#{ordercode},#{creuserid},GETDATE(),#{ordermoney},#{memo},#{sectionid},#{name},#{bedno},#{address},#{idcard},#{birthday},#{sex},#{micard},#{hicard},#{age},#{symptom},#{outpatientnumber},#{sourceorderid})"})
+    @Insert({"insert into ", TABLE_NAME, "(", INSET_FIELDS, ") values (#{paytypeid},#{ordertype},#{ordercode},#{creuserid},GETDATE(),#{ordermoney},#{memo},#{sectionid},#{name},#{bedno},#{address},#{idcard},#{birthday},#{sex},#{micard},#{hicard},#{age},#{symptom},#{outpatientnumber},#{sourceorderid},#{refundnum})"})
     @Options(useGeneratedKeys=true,keyProperty="orderid",keyColumn="orderid")
     int addOrder(EpOrder epOrder);
 
@@ -72,6 +72,9 @@ public interface EpOrderDAO {
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where sectionid = #{sectionid} and credate>=#{startdate} and credate<#{enddate} and name like '%${name}%' and ordertype=1 order by credate desc" })
     List<EpOrder> selectOrderListBySectionidAndCredateAndName(int sectionid,String startdate,String enddate,String name);
 
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where creuserid = #{userid} and credate>=#{startdate} and credate<#{enddate} and name like '%${name}%' and ordertype=2 order by credate desc" })
+    List<EpOrder> selectOrderListByUseridAndCredateAndName(int userid,String startdate,String enddate,String name);
+    
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where sourceorderid = #{sourceorderid} and usestatus!=-1 " })
     List<EpOrder> selectOrderListBySourceOrderid(int sourceorderid);
     
