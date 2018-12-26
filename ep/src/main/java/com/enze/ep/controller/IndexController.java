@@ -99,6 +99,8 @@ public class IndexController {
 			map.put("counterids", counterids);//覆盖原来的柜台id字符串
 			url="index/embed/nurse";
 		}
+		
+		map.put("optype", "create");
 		return new ModelAndView(url,map);
 	}
 	

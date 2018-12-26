@@ -362,9 +362,9 @@ public class EpOrderServiceImpl implements EpOrderService {
 	@Override
 	public List<EpOrder> findOrderListByAgus(int sectionid, 
 			String startdate, String enddate, String name,
-			int usestatus) {
+			int usestatus,String idcard,int ordertype) {
 		enddate=DateUtils.getDateStringAfterX(enddate, DateUtils.SHORT_DATETIME_FORMAT, 1);
-		 List<EpOrder> list=epOrderDAO.selectOrderListBySectionidAndCredateAndName(sectionid, startdate, enddate,name);
+		 List<EpOrder> list=epOrderDAO.selectOrderListBySectionidAndCredateAndNameAndIDcard(sectionid, startdate, enddate,name,idcard, ordertype);
 		
 		 List<EpOrder> _list=new ArrayList<EpOrder>();
 		 if(usestatus==2) {//全部
@@ -572,6 +572,11 @@ public List<EpOrder> findOrderListByUseridAndDateAndNameAndUsestatus(int userid,
 	 }
 	 return _list;
 
+}
+
+@Override
+public void cancelOrderByOrder(int orderid) {
+	epOrderDAO.updateOrderUsestatueSimple(orderid, -1);
 }
 	
 	

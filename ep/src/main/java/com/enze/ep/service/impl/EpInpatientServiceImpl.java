@@ -34,7 +34,7 @@ public class EpInpatientServiceImpl implements EpInpatientService {
 		EpInpatient epInpatient=(EpInpatient)redisTemplate.opsForValue().get(key);
 		if(epInpatient==null) {
 			//根据hissectionid查询数据库中是否含有这个section
-			epInpatient=epInpatientDao.selectInpatientByHisinid(Integer.valueOf(WlAmdResponseSInpatient.getHisinid()));
+			epInpatient=epInpatientDao.selectInpatientByHisinid(WlAmdResponseSInpatient.getHisinid());
 			//查不到就保存到数据库
 			if(epInpatient==null) {
 				//int inid=epInpatientDao.addInpatient(WlAmdResponseSInpatient);

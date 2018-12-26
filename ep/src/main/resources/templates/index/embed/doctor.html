@@ -51,7 +51,7 @@
 							 <a href="#" class="dropdown-toggle" data-toggle="dropdown">菜单栏<strong class="caret"></strong></a>
 							<ul class="dropdown-menu">
 								<li>
-								     <a th:href="@{'/order/orderlist/'+${epUser.usercode}}">历史处方单</a>
+								     <a th:href="@{'/order/orderlist/'+${epUser.usercode}+'/'+${epInpatient.idcard}}">历史处方单</a>
 								</li>
 								<li>
 									 <a href="#">Another action</a>
@@ -109,7 +109,6 @@
 							</div>
 							<div class="col-md-3"></div>
 							<div class="col-md-3"></div>
-							
 						</div>
 
 					</div>
@@ -194,8 +193,16 @@
 
 							<div class="col-md-3 column">
 								<div class="input-group">
-									<span class="input-group-addon">就诊日期</span> <input type="text"
-									th:value="${credate}"	class="form-control" id="credate" disabled="disabled" placeholder="Date of visit">
+									<span class="input-group-addon">就诊日期</span> 
+									<span th:if="${optype} eq 'create'">
+										<input type="text" th:value="${credate}" class="form-control" id="credate" disabled="disabled" placeholder="Date of visit">
+									</span>
+									<span th:if=" ${optype=='edit'||optype=='copy'} ">
+										<input type="text" th:value="${#dates.format(eporder.credate, 'yyyy-MM-dd')}" class="form-control" id="credate" disabled="disabled" placeholder="Date of visit">
+									</span>
+									<span th:if=" ${optype} eq 'view'">
+										<input type="text" th:value="${#dates.format(eporder.credate, 'yyyy-MM-dd')}" class="form-control" id="credate" disabled="disabled" placeholder="Date of visit">
+									</span>
 								</div>
 							</div>
 
@@ -219,6 +226,12 @@
 							   <span id="idcard" th:text="${epInpatient.idcard}">身份证</span>
 							   <span id="hicard" th:text="${epInpatient.regno}">医院就诊卡</span>
 							   <span id="micard">医保卡</span>
+							   
+							   <span th:if="${optype} eq 'edit'"  id="orderid" th:text="${eporder.orderid}"></span>
+							   <span th:if="${optype} eq 'view'"  id="orderid" th:text="${eporder.orderid}"></span>
+							   <span th:if="${optype} eq 'create'" id="orderid"></span>
+							   
+							   
 							</div>
 						</div>
 					</div>
@@ -236,10 +249,18 @@
 							</div>
 							<div class="col-md-3"></div>
 							<div class="col-md-3">
-								<button class="btn btn-xs btn-success pull-right"
+							   
+							   <button th:if="${optype=='view'}" disabled="disabled" class="btn btn-xs btn-success pull-right"
 									onclick="createrow()" style="margin-top: -2px;">
 									<em class="glyphicon glyphicon-plus"></em>添加明细
 								</button>
+							   
+							   <button th:if="${optype!='view'}" class="btn btn-xs btn-success pull-right"
+									onclick="createrow()" style="margin-top: -2px;">
+									<em class="glyphicon glyphicon-plus"></em>添加明细
+								</button>
+								
+								
 							</div>
 						</div>
 
@@ -268,47 +289,101 @@
 										</tr>
 									</thead>
 									<tbody id="cflist">
-										<tr>
-											<td><span id="numno" style="line-height: 20px;">1</span></td>
-											<td style="display: none;"><span id="iproductid"></span>
-												<span id="iunitid"></span></td>
-											<td style="display: none;"><span id="vcproductcode"></span></td>
-											<td><input type="text" id="vcuniversalname"
-												class="textvcuniversalname" autocomplete="off" placeholder="必填"
-												style="width: 98%;" /></td>
-											<td><span id="vcstandard"></span></td>
-											<td><input type="text" id="dosis" autocomplete="off" placeholder="必填"
-												style="width: 80px;" /></td>
-											<td><span id="unitname">-</span></td>
-											<td><input type="text" id="frequency" autocomplete="off" placeholder="必填"
-												style="width: 80px;" /></td>
-											<td><input type="text" id="usage" autocomplete="off" placeholder="必填"
-												style="width: 80px;" /></td>
-											<td><input type="number" id="totalcounts" placeholder="必填"
-												autocomplete="off" style="width: 80px;" /></td>
-											<td><span id="numprice">0</span></td>
-											<td><span id="nummoney">0</span></td>
-											<td>
-												<button class="btn btn-danger btn-xs" id="btn-del">
-													<em class="glyphicon glyphicon-remove"></em>删除
-												</button>
-											</td>
-										</tr>
 
+									    <span th:if=" ${optype} eq 'create'">
+									    
+										    <tr>
+												<td><span id="numno" style="line-height: 20px;">1</span></td>
+												<td style="display: none;"><span id="iproductid"></span>
+													<span id="iunitid"></span></td>
+												<td style="display: none;"><span id="vcproductcode"></span></td>
+												<td><input type="text" id="vcuniversalname"
+													class="textvcuniversalname" autocomplete="off" placeholder="必填"
+													style="width: 98%;" /></td>
+												<td><span id="vcstandard"></span></td>
+												<td><input type="text" id="dosis" autocomplete="off" placeholder="必填"
+													style="width: 80px;" /></td>
+												<td><span id="unitname">-</span></td>
+												<td><input type="text" id="frequency" autocomplete="off" placeholder="必填"
+													style="width: 80px;" /></td>
+												<td><input type="text" id="usage" autocomplete="off" placeholder="必填"
+													style="width: 80px;" /></td>
+												<td><input type="number" id="totalcounts" placeholder="必填"
+													autocomplete="off" style="width: 80px;" /></td>
+												<td><span id="numprice">0</span></td>
+												<td><span id="nummoney">0</span></td>
+												<td>
+													<button class="btn btn-danger btn-xs" id="btn-del">
+														<em class="glyphicon glyphicon-remove"></em>删除
+													</button>
+												</td>
+										</tr>
+									    
+									    </span>
+									    
+									    <span th:if=" ${optype=='edit'||optype=='copy'}">
+									    
+										    <tr th:each="order : ${orderslist}">
+												<td><span id="numno" style="line-height: 20px;" th:text="${order.numno}">1</span></td>
+												<td style="display: none;"><span id="iproductid" th:text="${order.iproductid}"></span>
+													<span id="iunitid" th:text="${order.iunitid}"></span></td>
+												<td style="display: none;"><span id="vcproductcode" th:text="${order.vcproductcode}"></span></td>
+												<td><input type="text" id="vcuniversalname" th:value="${order.vcuniversalname}"
+													class="textvcuniversalname" autocomplete="off" placeholder="必填"
+													style="width: 98%;" /></td>
+												<td><span id="vcstandard" th:text="${order.vcstandard}"></span></td>
+												<td><input type="text" id="dosis" th:value="${order.dosis}" autocomplete="off" placeholder="必填"
+													style="width: 80px;" /></td>
+												<td><span id="unitname" th:text="${order.vcunitname}">-</span></td>
+												<td><input type="text" id="frequency" autocomplete="off" placeholder="必填" th:value="${order.frequency}"
+													style="width: 80px;" /></td>
+												<td><input type="text" id="usage" autocomplete="off" placeholder="必填" th:value="${order.usage}"
+													style="width: 80px;" /></td>
+												<td><input type="number" id="totalcounts" placeholder="必填" th:value="${order.totalcounts}"
+													autocomplete="off" style="width: 80px;" /></td>
+												<td><span id="numprice" th:text="${order.numprice}">0</span></td>
+												<td><span id="nummoney" th:text="${order.nummoney}">0</span></td>
+												<td>
+													<button class="btn btn-danger btn-xs" id="btn-del">
+														<em class="glyphicon glyphicon-remove"></em>删除
+													</button>
+												</td>
+											</tr>
+									    
+									    </span>
+									    
+									    <span th:if=" ${optype} eq 'view'">
+									    
+										    <tr th:each="order : ${orderslist}">
+												<td><span id="numno" style="line-height: 20px;" th:text="${order.numno}">1</span></td>
+												<td style="display: none;"><span id="iproductid" th:text="${order.iproductid}"></span>
+													<span id="iunitid" th:text="${order.iunitid}"></span></td>
+												<td style="display: none;"><span id="vcproductcode" th:text="${order.vcproductcode}"></span></td>
+												<td><input type="text" id="vcuniversalname" th:value="${order.vcuniversalname}"
+													class="textvcuniversalname" autocomplete="off" placeholder="必填" disabled="disabled"
+													style="width: 98%;" /></td>
+												<td><span id="vcstandard" th:text="${order.vcstandard}"></span></td>
+												<td><input type="text" id="dosis" th:value="${order.dosis}" autocomplete="off" placeholder="必填" disabled="disabled"
+													style="width: 80px;" /></td>
+												<td><span id="unitname" th:text="${order.vcunitname}">-</span></td>
+												<td><input type="text" id="frequency" autocomplete="off" placeholder="必填" th:value="${order.frequency}" disabled="disabled"
+													style="width: 80px;" /></td>
+												<td><input type="text" id="usage" autocomplete="off" placeholder="必填" th:value="${order.usage}" disabled="disabled"
+													style="width: 80px;" /></td>
+												<td><input type="number" id="totalcounts" placeholder="必填" th:value="${order.totalcounts}" disabled="disabled"
+													autocomplete="off" style="width: 80px;" /></td>
+												<td><span id="numprice" th:text="${order.numprice}">0</span></td>
+												<td><span id="nummoney" th:text="${order.nummoney}">0</span></td>
+												<td>
+													<button class="btn btn-danger btn-xs" id="btn-del" disabled="disabled">
+														<em class="glyphicon glyphicon-remove"></em>删除
+													</button>
+												</td>
+											</tr>
+									    
+									    </span>
+									    
 									</tbody>
-
-									<!-- <tbody style="font-size: medium;">
-										<br />
-										<tr>
-											<td colspan="7" class="text-right"><label
-												id="moneytotal" style="padding-top: 30px;">合计金额:</label></td>
-
-											<td><label style="padding-top: 30px;" id="moneyall">￥100</label>
-											</td>
-											<td></td>
-										</tr>
-									</tbody> -->
-
 								</table>
 							</div>
 						</div>
@@ -318,8 +393,19 @@
 
 				<div class="panel panel-default">
 					<div class="panel-body text-center">
-						<button class="btn btn-danger">取消</button>
-						<button class="btn btn-primary" id="submit">提交</button>
+						<button class="btn btn-danger" onclick="javascript:history.back(-1);">返回</button>
+						
+						<span th:if="${optype} eq 'view'">
+						     <button class="btn btn-primary" id="submit" disabled="disabled">提交</button>
+						</span>
+						<span th:if="${optype} eq 'copy'">
+						     <button class="btn btn-primary" id="submit">复制提交</button>
+						</span>
+						
+						<span th:if="${optype=='edit'||optype=='create'} ">
+						     <button class="btn btn-primary" id="submit">保存提交</button>
+						</span>
+						
 					</div>
 				</div>
 
@@ -328,14 +414,16 @@
 			</div>
 
 			<script th:inline="javascript">
+			
+			var optype="";
 					
 			var layer = layui.layer
 			  ,form = layui.form;
 
 					$(function() {
-						//alert([[${counterids}]]);
-						
+
 						//initpatientselect();
+						
 
 						//设置下拉选择框
 						initselect();
@@ -361,7 +449,9 @@
 						
 						$("#submit").click(function(e){
 							
-							//layer.msg("xxxx");
+						    optype=[[${optype}]];
+							var orderid=$("#orderid").html();
+
 							//获取数据 同时校验数据
 							var ordertype=2;//处方单类型
 							var outpatientnumber=$("#outpatientnumber").val();
@@ -371,18 +461,19 @@
 							var address=$("#address").val();
 							var sex=$("#sex").val();
 							var age=$("#age").val();
-							var idcard=$("#idcard").val();
+							var idcard=$("#idcard").html();
 							var micard=$("#micard").val();
-							var hicard=$("#hicard").val();
+							var hicard=$("#hicard").html();
 							var credate=$("#credate").val();
 							var symptom=$("#symptom").val();
 							var memo=$("#memo").val();
 							
-							var order={"ordertype":ordertype,"outpatientnumber":outpatientnumber,"bedno":'',
+							var order={"optype":optype,"orderid":orderid,"ordertype":ordertype,"outpatientnumber":outpatientnumber,"bedno":'',
 							"name":name,"address":address,"sex":sex,
 							"age":age,"idcard":idcard,"micard":micard,"hicard":hicard,"symptom":symptom,
 							"memo":memo
 							};
+							
 							
 							if(outpatientnumber==""){
 								layer.msg("门诊号码必填");
@@ -502,7 +593,10 @@
                                       title: "提示",
                                         btn: ['确定']
 						    		},function (index, item) {
- 										 window.location.reload();//刷新页面 
+ 										// window.location.reload();//刷新页面 
+ 										 //
+ 										var href= '/order/orderlist/'+[[${epUser.usercode}]]+'/'+[[${epInpatient.idcard}]];
+ 										window.location.href=href;
 						    			});
 						    		
 						    		//layer.msg('提交成功');

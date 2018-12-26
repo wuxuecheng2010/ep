@@ -86,7 +86,7 @@ public interface EpOrderService {
     
     boolean createSalesOrderDtl(String vcbillno,List<EpOrderStock> orderStockList);
     
-    List<EpOrder> findOrderListByAgus(int sectionid,String startdate,String enddate,String name,int usestatus);
+    List<EpOrder> findOrderListByAgus(int sectionid,String startdate,String enddate,String name,int usestatus,String idcard,int ordertype);
     
     List<EpOrder> findOrderListByUseridAndDateAndNameAndUsestatus(int userid,String startdate,String enddate,String name,int usestatus);
     /**
@@ -111,4 +111,7 @@ public interface EpOrderService {
     * @throws
      */
     boolean refundDtlValidate(List<EpOrders> list);
+    
+    
+    void cancelOrderByOrder(int orderid);
 }

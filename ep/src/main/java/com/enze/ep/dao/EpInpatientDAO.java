@@ -25,7 +25,7 @@ public interface EpInpatientDAO {
 	int addInpatient(EpInpatient epInpatient);
 	
 	@Select({"select ",SELECT_FIELDS," from ",TABLE_NAME," where hisinid=#{hisinid}"})
-	EpInpatient selectInpatientByHisinid(int hisinid);
+	EpInpatient selectInpatientByHisinid(String hisinid);
 
 	@Select({ "select ", SELECT_FIELDS, " from ", TABLE_NAME,
 			" where name like '%${inpatientName}%' or idcard like '%${inpatientName}%' or bedno like '%${inpatientName}%' or describe like '%${inpatientName}%' or memo like '%${inpatientName}%' or address like '%${inpatientName}%' " })

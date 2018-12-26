@@ -9,7 +9,7 @@ public class EpInpatient {
 	public static final String Prefix_Redis_Key_Separtor="-";
 
 	private int inid;
-	private int hisinid;
+	private String hisinid;
 	private String name;
 	private String idcard;
 	private String age;

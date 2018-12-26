@@ -32,12 +32,12 @@ public class EpOrderUsestatus {
 		List<EpOrderUsestatus> list = new ArrayList<EpOrderUsestatus>();
 		EpOrderUsestatus epOrderUsestatus0 = new EpOrderUsestatus();
 		epOrderUsestatus0.setUsestatus(0);
-		epOrderUsestatus0.setUsestatusname("未支付");
+		epOrderUsestatus0.setUsestatusname("初始");
 		list.add(epOrderUsestatus0);
 
 		EpOrderUsestatus epOrderUsestatus1 = new EpOrderUsestatus();
 		epOrderUsestatus1.setUsestatus(1);
-		epOrderUsestatus1.setUsestatusname("已支付");
+		epOrderUsestatus1.setUsestatusname("已购买");
 		list.add(epOrderUsestatus1);
 
 		EpOrderUsestatus epOrderUsestatus2 = new EpOrderUsestatus();

@@ -24,7 +24,15 @@ public class OrderProcessingJob {
 	EpOrderService epOrderServiceImpl;
 	
 
-  //  20秒钟之后开始，每15秒一次
+  /**
+   * 
+  * @Title: salesOrderProcessing
+  * @Description: 护士订单处理
+  * @param @throws Exception    参数
+  * @author wuxuecheng
+  * @return void    返回类型
+  * @throws
+   */
   //@Scheduled(initialDelay = 20000,fixedRate = 15000)
   public void salesOrderProcessing()throws Exception{
 	  log.info("Start salesOrderProcessing");
@@ -42,6 +50,16 @@ public class OrderProcessingJob {
   
   }
   
+  
+  /**
+   * 
+  * @Title: epOrderProcessing
+  * @Description: 电子处方处理
+  * @param @throws Exception    参数
+  * @author wuxuecheng
+  * @return void    返回类型
+  * @throws
+   */
   @Scheduled(initialDelay = 30000,fixedRate = 15000)
   public void epOrderProcessing()throws Exception{
 	  log.info("Start epOrderProcessing");

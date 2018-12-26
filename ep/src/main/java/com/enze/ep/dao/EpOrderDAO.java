@@ -68,9 +68,12 @@ public interface EpOrderDAO {
     @Update({"update", TABLE_NAME ,"set usestatus=#{usestatus},paydate=getdate(),memo=#{memo}","where orderid=#{orderid}"})
     void updateOrderUsestatue(int orderid,int usestatus,String memo);
     
+    @Update({"update", TABLE_NAME ,"set usestatus=#{usestatus}","where orderid=#{orderid}"})
+    void updateOrderUsestatueSimple(int orderid,int usestatus);
     
-    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where sectionid = #{sectionid} and credate>=#{startdate} and credate<#{enddate} and name like '%${name}%' and ordertype=1 order by credate desc" })
-    List<EpOrder> selectOrderListBySectionidAndCredateAndName(int sectionid,String startdate,String enddate,String name);
+    
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where sectionid = #{sectionid} and credate>=#{startdate} and credate<#{enddate} and name like '%${name}%' and ordertype=#{ordertype} and idcard=#{idcard} and usestatus in (0,1) order by credate desc" })
+    List<EpOrder> selectOrderListBySectionidAndCredateAndNameAndIDcard(int sectionid,String startdate,String enddate,String name,String idcard,int ordertype);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where creuserid = #{userid} and credate>=#{startdate} and credate<#{enddate} and name like '%${name}%' and ordertype=2 order by credate desc" })
     List<EpOrder> selectOrderListByUseridAndCredateAndName(int userid,String startdate,String enddate,String name);

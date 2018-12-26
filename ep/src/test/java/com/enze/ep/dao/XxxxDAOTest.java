@@ -23,7 +23,7 @@ public class XxxxDAOTest {
 	@Autowired
 	XxxxDAO xxxxDAO;
 
-	@Test
+
 	public void test() {
 		List<Xxxx> list = xxxxDAO.selectXxxxAll();
 		// System.out.println(list.size());

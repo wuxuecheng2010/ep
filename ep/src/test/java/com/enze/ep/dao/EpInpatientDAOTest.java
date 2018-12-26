@@ -25,7 +25,7 @@ public class EpInpatientDAOTest {
 		epInpatient.setAge("10");
 		epInpatient.setBedno("1002床");
 		epInpatient.setDescribe("还好");
-		epInpatient.setHisinid(102);
+		epInpatient.setHisinid("102");
 		epInpatient.setIdcard("223312144656223233");
 		epInpatient.setMemo("还好的");
 		epInpatient.setName("张三");

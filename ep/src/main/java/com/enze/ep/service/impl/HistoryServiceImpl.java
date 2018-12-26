@@ -225,7 +225,7 @@ public class HistoryServiceImpl implements HistoryService {
 		
 		//病人基本信息
 		EpInpatient epInpatient=new EpInpatient(); 
-		epInpatient.setHisinid(Integer.valueOf(wlAmdResponse.getAdm().getId()));
+		epInpatient.setHisinid(wlAmdResponse.getAdm().getId());
 		epInpatient.setName(wlAmdResponse.getPatient().getName());
 		epInpatient.setIdcard(wlAmdResponse.getPatient().getIDNo());
 		epInpatient.setAge(wlAmdResponse.getPatient().getAge());

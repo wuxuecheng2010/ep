@@ -36,7 +36,53 @@
 
 <style>
 </style>
+<script type="text/javascript">
+   function del(m){
+	   var orderid=$(m).find("#orderid_").html();
+		 layer.confirm('确定删除吗？', {
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+				//展现订单情况  确认就提交  取消则返回
+				ajaxdel(orderid);
+			}, function(){
+				
+			}); 
+		 
+	   
+	  
+   }
+   
+   function ajaxdel(orderid){
+	   $.ajax({
+		    type:"POST",
+		    url:"/order/del/"+orderid,
+		    dataType:"json",
+		    success:function(data){
+		    	layer.msg(JSON.stringify(data));
+		    	var code=data.code;
+		    	var msg=data.msg;
+		    	if(code=="success"){
+		    		
+                  layer.alert(msg, {
+                    title: "提示",
+                      btn: ['确定']
+		    		},function (index, item) {
+							 window.location.reload();//刷新页面 
+							 
+		    			});
+		    		
 
+		    	}else{
+		    		layer.alert(msg);
+		    	}
+		    },
+		    error:function(jqXHR){
+		    	//layer.msg("发生错误："+jqXHR.status);
+		    	layer.alert("发生错误："+jqXHR.status);
+		    }
+		});
+   }
+</script>
 </head>
 
 <body>
@@ -50,22 +96,8 @@
 				<div class="row clearfix" style="margin-top: 60px;">
 					<div class="col-md-3 column ">
 						<div class="row">
-							<!-- <div class="input-group">
-								<span class="input-group-addon" id="basic-addon2"><span
-									class="glyphicon glyphicon-time" aria-hidden="true"></span></span> <input
-									type="text" class="form-control form_datetime"
-									id="datetimepicker" name="addtime" value="2014-09-23"
-									placeholder="">
-							</div>
-
-							<div class="input-group">
-								<span class="input-group-addon" id="basic-addon2"><span
-									class="glyphicon glyphicon-time" aria-hidden="true"></span></span> <input
-									type="text" class="form-control form_datetime"
-									id="datetimepicker" name="addtime" value="2014-09-23"
-									placeholder="">
-							</div> -->
-							<form class="form-horizontal" action="/order/orderlist/100852" method="get">
+							
+							<form class="form-horizontal" th:attr="action=@{${formlink}}"  method="get">
 								<div id="legend" class="">
 									<h4>单据查询</h4>
 									<hr />
@@ -75,6 +107,22 @@
 									<div class="col-sm-7">
 										<input type="text" placeholder="科室" th:value="${sectionname}"
 											class="form-control" id="sectionname" disabled="disabled">
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-4 control-label">患者姓名</label>
+									<div class="col-sm-7">
+										<input type="text" placeholder="姓名" class="form-control"
+										th:value="${name}"	id="name" name="name" disabled="disabled">
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-4 control-label">身份证</label>
+									<div class="col-sm-7">
+										<input type="text" placeholder="身份证" class="form-control"
+										th:value="${idcard}"	id="idcard" name="idcard" disabled="disabled">
 									</div>
 								</div>
 
@@ -92,13 +140,7 @@
 										th:value="${enddate}"	id="enddate" name="enddate">
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label">患者姓名</label>
-									<div class="col-sm-7">
-										<input type="text" placeholder="姓名" class="form-control"
-										th:value="${name}"	id="name" name="name">
-									</div>
-								</div>
+								
 								<div class="form-group">
 								
 									<div class="col-sm-offset-1 col-sm-10">
@@ -139,7 +181,7 @@
 									<th>单号</th>
 									<th>患者姓名</th>
 									<th>金额</th>
-									<th>是否支付</th>
+									<th>购买状态</th>
 									<th>操作</th>
 								</tr>
 							</thead>
@@ -153,10 +195,10 @@
 					                <td >
 					                   <span th:switch="${order.usestatus}">
 					                      <span th:case="1" class="text-primary">
-					                      	  <span class="glyphicon glyphicon-ok text-success" ></span>
+					                      	  <span class="" >已购买</span>
 							             </span>
 					                      <span th:case="0" class="text-danger">
-											  <span class="glyphicon glyphicon-time text-warning" ></span>
+											  <span class="" >初始</span>
 										  </span>
 					                   </span>
 					                   
@@ -166,7 +208,32 @@
 					                   </span>
 					                </td>
 					                <td>
-					                    <a th:href="@{'/order/orderdtl/'+${order.orderid}+'/'+${epUser.usercode}}">查看</a>
+					                    <span th:switch="${order.ordertype}">
+					                              	
+					                         <span th:case="1">
+					                             <a th:if="${order.usestatus} eq 0" th:href="@{'/order/edit/'+${order.orderid}+'/'+${epUser.usercode}}">编辑</a>
+					                             <a th:if="${order.usestatus} eq 0" href="javascript:void(0)" onclick="del(this)" >
+					                            	<span>删除<span id="orderid_" class="hidden" th:text="${order.orderid}"></span></span>
+					                             </a>
+					                             
+					                             <a th:if="${order.usestatus} eq 1" th:href="@{'/order/orderdtl/'+${order.orderid}+'/'+${epUser.usercode}}">查看</a>
+					                         </span>
+					                    
+					                         		
+					                    	 <span th:case="2">
+					                    	 
+					                    	 	 <a th:if="${order.usestatus} eq 0" th:href="@{'/order/edit/'+${order.orderid}+'/'+${epUser.usercode}}">编辑</a>
+					                             <a th:if="${order.usestatus} eq 0" href="javascript:void(0)" onclick="del(this)">
+													<span> 删除<span id="orderid_" class="hidden" th:text="${order.orderid}"></span></span>
+												 </a>
+					                             
+					                             <a th:if="${order.usestatus} eq 1" th:href="@{'/order/view/'+${order.orderid}+'/'+${epUser.usercode}}">查看</a>
+					                         	 <a th:if="${order.usestatus} eq 1" th:href="@{'/order/copy/'+${order.orderid}+'/'+${epUser.usercode}}">复制</a>
+					                         </span>
+					                    
+					                    </span>
+					                    
+					                    
 					                </td>
 					            </tr>
 							</tbody>
@@ -205,29 +272,15 @@
 						increaseArea: '20%'
 						});
 					
-					//回写是否付款
-					setUsestatus();
-					
+				
 					
 				});
 				
 				
-
-				function setUsestatus(){
-					
-					var usestatus=[[${usestatus}]];
-					$(":radio[name='usestatus'][value='" + val + "']").prop("checked", "checked");
-					
-					
-				}
-
-				
-				
-
 				
 				
 				
-
+				
 				
 			</script>
 </body>
