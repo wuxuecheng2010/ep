@@ -4,7 +4,7 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
     <!-- <property name="log.path" value="d:\home" /> -->
-    <property name="log.path" value="d:\dzcf_log" />
+    <property name="log.path" value="d:\\Program Files\\ep\\log" />
  
     <!--0. 日志格式和颜色渲染 -->
     <!-- 彩色日志依赖的渲染类 -->

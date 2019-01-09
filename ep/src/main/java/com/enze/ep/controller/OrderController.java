@@ -135,6 +135,7 @@ public class OrderController {
 			TbProductPrice epProductPrice = epProductService.findEpProductPriceByProductid(iproductid);
 			String vcproductcode = obj.getString("vcproductcode");
 			String vcuniversalname = obj.getString("vcuniversalname");
+			String vcmanufacturer = obj.getString("vcmanufacturer");
 			String vcstandard = obj.getString("vcstandard");
 			int iunitid = obj.getInteger("iunitid");
 			String unitname = obj.getString("unitname");
@@ -157,9 +158,11 @@ public class OrderController {
 			epOrders.setIunitid(iunitid);
 			epOrders.setVcunitname(unitname);
 			epOrders.setVcuniversalname(vcuniversalname);
+			epOrders.setVcmanufacturer(vcmanufacturer);
 			epOrders.setDosis(dosis);
 			epOrders.setFrequency(frequency);
 			epOrders.setUsage(usage);
+			
 			list.add(epOrders);
 		}
 		epOrder.setOrdermoney(ordermoney);

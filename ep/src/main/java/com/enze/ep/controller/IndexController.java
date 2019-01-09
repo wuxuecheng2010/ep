@@ -28,6 +28,9 @@ import com.enze.ep.service.HistoryService;
 import com.enze.ep.utils.DateUtils;
 import com.enze.ep.utils.MyAuthUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 @RequestMapping(value = "/index")
 public class IndexController {
@@ -51,9 +54,13 @@ public class IndexController {
 	@RequestMapping(value = "/embed", method = RequestMethod.GET)
 	public ModelAndView index(HttpServletRequest request, HttpServletResponse response) {
 		//参数格式http://电子处方?action=xxx&user=xxx&adm=xxx&patient=xxx&card=xxx
+		//获取路径信息
+		//String indexurl=request.getRequestURI()+"?"+request.getQueryString();
+		//request.getSession().setAttribute("indexurl", indexurl);
 		
 		//提取参数
-		String action=request.getParameter("action");
+		//String action=request.getParameter("action");
+		String action ="JSON.LQYF.GetInfo";
 		String user=request.getParameter("user");
 		String adm=request.getParameter("adm");
 		String patient=request.getParameter("patient");
@@ -62,7 +69,8 @@ public class IndexController {
 		WlToken wlToken= historyServiceImpl.getWlToken();
 		String token=wlToken.getToken();
 		//校验 如果参数不完整，跳转到错误页面
-		
+		//System.out.println("*****1 token*****:"+token);
+		//log.debug("*****1 token*****:"+token);
 		//http方式获取信息
 		WlAmdParam wlAmdParam=new WlAmdParam(action,
 		 token,

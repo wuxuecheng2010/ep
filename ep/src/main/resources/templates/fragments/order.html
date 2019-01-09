@@ -1,0 +1,101 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="rows">
+	<span  th:if=" ${optype=='edit'||optype=='copy'}">
+	<div  class="row clearfix cfrow" th:each="order : ${orderslist}" style="margin-top: -14px;">
+							    
+								<div class="col-md-1" style="text-align:center;">
+								    <span id="numno" style="line-height:50px;" th:text="${order.numno}"></span>
+								</div>
+								<div class="col-md-10">
+								    
+								    <div class="row clearfix">
+								        <div class="col-md-4">
+								             <div class="row clearfix">
+	<input type="text" class=" textvcuniversalname" id="vcuniversalname" name="rowidvcuniversalname" th:value="${order.vcuniversalname}"   autocomplete="off"   />
+								             </div>
+								             <div class="row clearfix">
+								               <span id="vcstandard" name="rowidvcstandard" th:text="${order.vcstandard}" ></span>
+								             </div>
+								             <div class="row clearfix">
+								                <span id="vcmanufacturer" name="rowidvcmanufacturer" th:text="${order.vcmanufacturer}"></span>
+								             </div>
+								             <div class="row clearfix hidden">
+								              	 <span id="iproductid" name="rowidiproductid" th:text="${order.iproductid}" ></span>
+								              	 <span id="iunitid" name="rowidiunitid" th:text="${order.iunitid}" ></span>
+								            </div>
+								        </div>
+								        <div class="col-md-2">
+								             <input type="text" id="usage" name="rowidusage" th:value="${order.usage}" />
+								        </div>
+								        <div class="col-md-2">
+							                <div class="row clearfix">
+								                <div class="col-md-12"> 
+						<input type="text" id="frequency" name="rowidfrequency" th:value="${order.frequency}" autocomplete="off" placeholder="频次 如
+	
+	tid" />
+								                </div>
+							                </div>
+							                <div class="row clearfix">
+								                <div class="col-md-12">  
+							<input type="text" id="dosis" name="rowiddosis" th:value="${order.dosis}"  autocomplete="off" placeholder="剂量  如每次
+	
+	3粒"  />
+								                </div>
+							                </div>  
+								        </div>
+								        <div class="col-md-1">
+		<span id="numprice" name="rowidnumprice"  th:text="${order.numprice}"></span>
+	         <span>/</span>
+	        <span id="unitname" name="rowidunitname" th:text="${order.vcunitname}" ></span>
+								        </div>
+								        <div class="col-md-2">
+								            <input id="totalcounts" type="number" name="rowidtotalcounts" th:value="${order.totalcounts}" 
+	
+	autocomplete="off"  />
+								        </div>
+								        <div class="col-md-1">
+	                                       <span id="nummoney" name="rowidnummoney" th:text="${order.nummoney}" ></span>
+								        </div>
+								    </div>
+								</div>
+								<div class="col-md-1">
+									<button class="btn btn-danger btn-xs"  style="margin-top: auto;" id="btn-del">
+										<em class="glyphicon glyphicon-remove"></em>删除
+									</button>
+								</div>
+								<hr style="margin-top: 2px;">
+							</div>
+	</span>
+</div>						
+						
+						
+				
+				
+				
+
+
+    <div th:fragment="One">
+        This is fragments One!
+    </div>
+    <div id="Two">
+        This is Two!
+    </div>
+    <div th:fragment="Three" style="background: deepskyblue">
+        This is Three!
+    </div>
+    <div th:fragment="Four" style="background: deepskyblue">
+        This is Four!
+    </div>
+    <div th:fragment="Five(onevar,twovar)">
+        <p th:text="${onevar} + ' - - - - - ' + ${twovar}"></p>
+    </div>
+    <div th:fragment="Six">
+        This is Six!
+    </div>
+    <div th:fragment="Seven">
+        This is Seven!
+    </div>
+</body>
+</html>

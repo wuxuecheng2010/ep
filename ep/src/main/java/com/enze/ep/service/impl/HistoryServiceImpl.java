@@ -28,6 +28,9 @@ import com.enze.ep.service.EpUserService;
 import com.enze.ep.service.HistoryService;
 import com.enze.ep.utils.HttpClientUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class HistoryServiceImpl implements HistoryService {
 
@@ -178,6 +181,8 @@ public class HistoryServiceImpl implements HistoryService {
 			WlLoginParam wlLoginParam=new WlLoginParam(loginAction,loginUser,loginPwd);
 			Map<String,String > map=wlLoginParam.toMap();
 			String resStr = HttpClientUtil.postMap(url, map);
+			//System.out.println("*****2 resStr*****:"+resStr);
+			//log.debug("*****2 resStr*****:"+resStr);
 			JSONObject jsonObject=(JSONObject) JSON.parse(resStr);
 			String RetCode=jsonObject.getString("RetCode");
 			String Token="";
@@ -215,7 +220,8 @@ public class HistoryServiceImpl implements HistoryService {
 		epUser.setHisuserid(Integer.valueOf(wlAmdResponse.getUser().getId()));
 		epUser.setUsername(wlAmdResponse.getUser().getName());
 		epUser.setUsercode(wlAmdResponse.getUser().getId());
-		int usertype=WlAmdUser.TYPE_DOCTOR.equals(wlAmdResponse.getUser().getType())?1:2;
+		//int usertype=WlAmdUser.TYPE_DOCTOR.equals(wlAmdResponse.getUser().getType())?1:2;
+		int usertype=WlAmdUser.TYPE_DOCTOR.equals(wlAmdResponse.getUser().getType())?2:1;//测试护士
 		epUser.setUsertype(usertype);
 		epUser.setMemo(wlAmdResponse.getUser().getLevel());
 		epUser.setSectionid(epSection.getSectionid());

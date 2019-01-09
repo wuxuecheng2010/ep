@@ -10,6 +10,8 @@
 <link rel="stylesheet"
 	href="/static/plugs/bigautocomplete/css/jquery.bigautocomplete.css"
 	type="text/css" />
+	
+<link rel="stylesheet" href="/static/css/ep.css" type="text/css" />
 
 
 
@@ -229,47 +231,18 @@
 											<th>序号</th>
 											<th style="display: none;">商品ID</th>
 											<th style="display: none;">商品编码</th>
-											<th>名称/通用名</th>
-											<th>规格</th>
-											<th>每次剂量</th>
+											<th  colspan="2" width="40%;" >名称/通用名</th>
+											<th width="10%;">用法</th>
+											<th width="14%;">频次</th>
+											<th width="8%;">每次剂量</th>
+											<th width="8%;">数量</th>
 											<th>单位</th>
-											<th>频次</th>
-
-											<th>用法</th>
-											<th>数量</th>
 											<th>单价</th>
 											<th>金额</th>
 											<th>删除</th>
 										</tr>
 									</thead>
 									<tbody id="cflist">
-										<tr>
-											<td><span id="numno" style="line-height: 20px;">1</span></td>
-											<td style="display: none;"><span id="iproductid"></span>
-												<span id="iunitid"></span></td>
-											<td style="display: none;"><span id="vcproductcode"></span></td>
-											<td><input type="text" id="vcuniversalname"
-												class="textvcuniversalname" autocomplete="off" placeholder="必填"
-												style="width: 98%;" /></td>
-											<td><span id="vcstandard"></span></td>
-											<td><input type="text" id="dosis" autocomplete="off" placeholder="必填"
-												style="width: 80px;" /></td>
-											<td><span id="unitname">-</span></td>
-											<td><input type="text" id="frequency" autocomplete="off" placeholder="必填"
-												style="width: 80px;" /></td>
-											<td><input type="text" id="usage" autocomplete="off" placeholder="必填"
-												style="width: 80px;" /></td>
-											<td><input type="number" id="totalcounts" placeholder="必填"
-												autocomplete="off" style="width: 80px;" /></td>
-											<td><span id="numprice">0</span></td>
-											<td><span id="nummoney">0</span></td>
-											<td>
-												<button class="btn btn-danger btn-xs" id="btn-del">
-													<em class="glyphicon glyphicon-remove"></em>删除
-												</button>
-											</td>
-										</tr>
-
 									</tbody>
 
 									<!-- <tbody style="font-size: medium;">
@@ -306,26 +279,27 @@
 					
 			var layer = layui.layer
 			  ,form = layui.form;
+			
 
 					$(function() {
-						//alert([[${counterids}]]);
+						
 						
 						initpatientselect();
 
 						//设置下拉选择框
-						initselect();
-
-						//设置焦点
-						//$('#cflist input:first').focus();
+						//initselect();
 
 						//初始化按键
-						initkey();
+						//initkey();	
 
 						//初始化明细删除键
-						initdel();
+						//initdel();
 						
 						//数量变动事件
-						inittotalcountschange();
+						//inittotalcountschange();
+						
+						
+						createrow();
 						
 						//提交按钮
 						initSubmit();
@@ -522,9 +496,11 @@
 								width: 543,
 								url:url,
 								callback: function(data) {
+									//alert(JSON.stringify(data));
 									
+									$(c).parent().parent().find("#vcuniversalname").val(data.vcuniversalname)
 									$(c).parent().parent().find("#iproductid").html(data.iproductid);
-									$(c).parent().parent().find("#vcstandard").html(data.vcstandard);
+									//$(c).parent().parent().find("#vcstandard").html(data.vcstandard);
 									$(c).parent().parent().find("#vcproductcode").html(data.vcproductcode);
 									$(c).parent().parent().find("#unitname").html(data.unitname);
 									$(c).parent().parent().find("#iunitid").html(data.vcproductunit);
@@ -548,39 +524,48 @@
 
 						});
 					}
-
+					
+					
+					
 					function initkey() {
 						var $inp = $("#cflist input");
 						var length = $inp.length;
-						$.each($inp, function(i, c) {
-							$(this).bind('keydown', function(e) {
-								var key = e.which;
-								//alert(key);
-								if((key == 13 && "vcuniversalname" != $(this).attr("id")) || key == 39) { //向右或者回车
-									e.preventDefault();
-									if(i + 1 != length) {
-										var nxtIdx = i + 1;
-										$("#cflist input")[nxtIdx].focus();
-									}
-								}
-								if(key == 37) { //向左
-									e.preventDefault();
-									if(i != 0) {
-										var preIdx = i - 1;
-										$("#cflist input")[preIdx].focus();
-									}
-								}
-								if((key == 40 || key == 13) && $(this).attr("id") == "totalcounts") { //向下
-									e.preventDefault();
-									createrow();
-									/*initselect();
-									//设置新行的首个输入框聚焦
-									$("#cflist tr:last").find("input:first").focus();
-									initkey();*/
-								}
+						$.each($inp, function(i, c) {	
 
-							})
+							    var inputid=c.id;
+							    if(inputid=="totalcounts"){
+							    	$(this).unbind('keydown');
+							    }
+								$(this).bind('keydown', function(e) {
+									var key = e.which;
+									//alert(key);
+									//if((key == 13 && "vcuniversalname" != $(this).attr("id")) || key == 39) { //向右或者回车
+									if((key == 13 && "vcuniversalname" != $(this).attr("id")) ) { //向右或者回车
+										e.preventDefault();
+										if(i + 1 != length) {
+											var nxtIdx = i + 1;
+											if($("#cflist input")[nxtIdx]!=null)
+												$("#cflist input")[nxtIdx].focus();
+										}
+									}
+									/* if(key == 37) { //向左
+										e.preventDefault();
+										if(i != 0) {
+											var preIdx = i - 1;
+											if($("#cflist input")[preIdx]!=null)
+												$("#cflist input")[preIdx].focus();
+										}
+									} */
+									  if((key == 40 || key == 13) && $(this).attr("id") == "totalcounts") { //向下
+										e.preventDefault();
+										createrow();
+										
+									}  
+	
+								})
+							
 						});
+						
 					}
 
 					//删除行操作
@@ -628,7 +613,8 @@
 						var numno = $("#cflist tr:last").length;
 						var rownum = numno == 0 ? 1 : Number($("#cflist tr:last").find('#numno').html()) + 1;
 						//var rownum = Number($("#cflist tr:last").find('#numno').html()) + 1;
-						var row = '<tr>'+
+						var rowid="r"+rownum;
+						/* var row = '<tr id="'+rowid+'">'+
 							'<td><span id="numno" style="line-height: 20px;">'+rownum+'</span></td>'+
 							'<td style="display: none;">'+
 							    '<span id="iproductid"></span>'+
@@ -637,28 +623,101 @@
 							'<td style="display: none;"><span id="vcproductcode"></span></td>'+
 							'<td><input type="text" id="vcuniversalname" class="textvcuniversalname" autocomplete="off" style="width: 98%;" /></td>'+
 							'<td><span id="vcstandard"></span></td>'+
+							'<td><input type="text" id="usage"  style="width: 80px;"  /></td>'+
+							'<td><input type="text" id="frequency"  autocomplete="off" style="width: 80px;" /></td>'+
 							'<td><input type="text" id="dosis" autocomplete="off" style="width: 80px;"  /></td>'+
-							'<td><span id="unitname">-</span></td>'+
-							'<td><input type="text" id="frequency" autocomplete="off" style="width: 80px;" /></td>'+
-							'<td><input type="text" id="usage" autocomplete="off" style="width: 80px;"  /></td>'+
 							'<td><input type="number" id="totalcounts" autocomplete="off" style="width: 80px;" /></td>'+
+							'<td><span id="unitname">-</span></td>'+
 							'<td><span id="numprice">0</span></td>'+
 							'<td><span id="nummoney">0</span></td>'+
+							
 							'<td>'+
 								'<button class="btn btn-danger btn-xs" id="btn-del">'+
 									'<em class="glyphicon glyphicon-remove"></em>删除'+
 								'</button>'+
 							'</td>'+
-						'</tr>';
+						'</tr>'; */
+						
+						var row = '<tr id="'+rowid+'" style="font-size:14px;">'+
+						'<td><label  id="numno" style="line-height: 30px;font-size:16px;">'+rownum+'</label ></td>'+
+						'<td style="display: none;">'+
+						    '<span id="iproductid"></span>'+
+							'<span id="iunitid"></span>'+
+						'</td>'+
+						'<td style="display: none;"><span id="vcproductcode"></span></td>'+
+						'<td  colspan="2"><input type="text" class="form-control textvcuniversalname txt_input" id="vcuniversalname"  autocomplete="off"   /></td>'+
+						'<td><input type="text" id="usage" class="form-control txt_input"    /></td>'+
+						'<td><input type="text" id="frequency" class="form-control txt_input"  autocomplete="off"  /></td>'+
+						'<td><input type="text" id="dosis" class="form-control txt_input" autocomplete="off"   /></td>'+
+						'<td><input type="number" class="form-control txt_input" id="totalcounts" autocomplete="off"  /></td>'+
+						'<td><label id="unitname" style="line-height: 30px;" class="txt_input">-</label></td>'+
+						'<td><label id="numprice" style="line-height: 30px;" class="txt_input">0</label></td>'+
+						'<td><label id="nummoney" style="line-height: 30px;" class="txt_input">0</label></td>'+
+						
+						'<td>'+
+							'<button class="btn btn-danger btn-xs" id="btn-del">'+
+								'<em class="glyphicon glyphicon-remove"></em>删除'+
+							'</button>'+
+						'</td>'+
+					'</tr>';
+					
 
 						$("#cflist").append(row);
+						
+						
+						
 
-						initdel();
+						//initdel();
+						$("#"+rowid+" #btn-del").click(function() {
+							$(this).parent().parent().remove();
+						})
+						
+						
 
 						initselect();
+						
+						var frequency_url='/data/frequency';
+						$("#"+rowid+" #frequency").bigAutocomplete({
+							width: 200,
+							url:frequency_url,
+							callback: function(data) {
+								
+								//$(this).parent().parent().find("#frequency").val(data.frequency);
+								//$("#"+rowid+" #frequency").val("yyy");
+								//alert("yyy");
+							}
+						});	
+
+						
+						 var usage_url='/data/usage';
+						$("#"+rowid+" #usage").bigAutocomplete({
+							width: 100,
+							url:usage_url,
+							callback: function(data) {
+                                
+								//$(this).val("xxxx");
+								//alert("xxx");
+
+							}
+						}); 
+						
+						
+						var mock_url='/data/mock';
+						$("#"+rowid+" #dosis").bigAutocomplete({
+							width: 200,
+							url:mock_url,
+							callback: function(data) {
+								$(this).val(data.usage)
+								
+							}
+						}); 
+						
+						
 						//设置新行的首个输入框聚焦
-						$("#cflist tr:last").find("input:first").focus();
-						initkey();
+						//$("#cflist tr:last").find("input:first").focus();
+						$("#"+rowid).find("input:first").focus();
+						
+						initkey();//$("#"+rowid)
 						
 						inittotalcountschange();
 

@@ -510,6 +510,12 @@
 						var $inp = $("#cflist input");
 						var length = $inp.length;
 						$.each($inp, function(i, c) {
+							
+							 var inputid=c.id;
+							    if(inputid=="totalcounts"){
+							    	$(this).unbind('keydown');
+							    }
+							    
 							$(this).bind('keydown', function(e) {
 								var key = e.which;
 								//alert(key);
@@ -517,14 +523,16 @@
 									e.preventDefault();
 									if(i + 1 != length) {
 										var nxtIdx = i + 1;
-										$("#cflist input")[nxtIdx].focus();
+										if($("#cflist input")[nxtIdx]!=null)
+											$("#cflist input")[nxtIdx].focus();
 									}
 								}
 								if(key == 37) { //向左
 									e.preventDefault();
 									if(i != 0) {
 										var preIdx = i - 1;
-										$("#cflist input")[preIdx].focus();
+										if($("#cflist input")[preIdx]!=null)
+											$("#cflist input")[preIdx].focus();
 									}
 								}
 								if((key == 40 || key == 13) && $(this).attr("id") == "totalcounts") { //向下

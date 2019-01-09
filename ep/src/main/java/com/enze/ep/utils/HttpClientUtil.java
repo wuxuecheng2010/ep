@@ -130,6 +130,7 @@ public class HttpClientUtil {
         try {
             post.setEntity(new UrlEncodedFormEntity(pairs,"UTF-8"));
             response = httpClient.execute(post);
+            System.out.println("****请求接口服务  状态码response.getStatusLine().getStatusCode():"+response.getStatusLine().getStatusCode());
             if(response != null && response.getStatusLine().getStatusCode() == 200)
             {
                 HttpEntity entity = response.getEntity();

@@ -18,6 +18,7 @@ public class EpOrders {
 	private String vcproductcode;
 	private String vcuniversalname;
 	private String vcstandard;
+	private String vcmanufacturer;
 	private int iunitid;
 	private String vcunitname;
 	private BigDecimal totalcounts;
