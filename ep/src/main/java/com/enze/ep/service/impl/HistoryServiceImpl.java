@@ -220,8 +220,8 @@ public class HistoryServiceImpl implements HistoryService {
 		epUser.setHisuserid(Integer.valueOf(wlAmdResponse.getUser().getId()));
 		epUser.setUsername(wlAmdResponse.getUser().getName());
 		epUser.setUsercode(wlAmdResponse.getUser().getId());
-		//int usertype=WlAmdUser.TYPE_DOCTOR.equals(wlAmdResponse.getUser().getType())?1:2;
-		int usertype=WlAmdUser.TYPE_DOCTOR.equals(wlAmdResponse.getUser().getType())?2:1;//测试护士
+		int usertype=WlAmdUser.TYPE_DOCTOR.equals(wlAmdResponse.getUser().getType())?1:2;
+		//int usertype=WlAmdUser.TYPE_DOCTOR.equals(wlAmdResponse.getUser().getType())?2:1;//测试护士
 		epUser.setUsertype(usertype);
 		epUser.setMemo(wlAmdResponse.getUser().getLevel());
 		epUser.setSectionid(epSection.getSectionid());

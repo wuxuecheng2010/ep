@@ -104,7 +104,7 @@ public class PayController {
 	public Map<String,String> alipay(@PathVariable(name="orderid") int orderid) {
 		String key=Prefix_Redis_Key_Alipay_QrCode+Prefix_Redis_Key_Separtor+orderid;
 		String payurl=(String) redisTemplate.opsForValue().get(key);
-		if(payurl==null) {
+		if(payurl==null || "".equals(payurl)) {
 			//获取销售清单信息
 			EpOrder eporder=epOrderServiceImpl.findEpOrderById(orderid);
 			List<EpOrders> list=epOrderServiceImpl.findEpOrdersListByOrderid(orderid);

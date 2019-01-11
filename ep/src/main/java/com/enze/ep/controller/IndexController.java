@@ -68,9 +68,6 @@ public class IndexController {
 		
 		WlToken wlToken= historyServiceImpl.getWlToken();
 		String token=wlToken.getToken();
-		//校验 如果参数不完整，跳转到错误页面
-		//System.out.println("*****1 token*****:"+token);
-		//log.debug("*****1 token*****:"+token);
 		//http方式获取信息
 		WlAmdParam wlAmdParam=new WlAmdParam(action,
 		 token,

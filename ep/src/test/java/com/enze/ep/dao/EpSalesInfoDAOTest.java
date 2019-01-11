@@ -16,6 +16,12 @@ import com.enze.ep.entity.TbSalesInfo;
 public class EpSalesInfoDAOTest {
 	@Autowired
 	EpSalesInfoDAO epSalesInfoDAO;
+	
+	@Test
+	public void testGetSalesInfoDoc() {
+		String docno=epSalesInfoDAO.getSalesInfoDoc("ZXXS", 1);
+		System.out.println(docno);
+	}
 
 	@Test
 	public void testGetPurchaseOrderNumber() {

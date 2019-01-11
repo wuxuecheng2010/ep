@@ -67,8 +67,14 @@ public interface EpOrderService {
      */
     void doSendSalesOrderToStore(EpOrder order) throws Exception;
     
+    void doSendRefundOrderToStore(EpOrder order) throws Exception;
+
     
+   //保存在线销售中间表数据
     void saveEpOrderStock(EpOrder order) throws Exception;
+    
+    //保存退货中间表数据
+    void saveRefundEpOrderStock(EpOrder order) throws Exception;
     
     /**
      * 
@@ -81,6 +87,7 @@ public interface EpOrderService {
     * @throws
      */
     List<String> createSalesOrderByOrder(EpOrder order);
+
     
     boolean createSalesOrderDoc(String vcbillno,EpOrder order,int idepartid,int flagep);
     
@@ -114,4 +121,6 @@ public interface EpOrderService {
     
     
     void cancelOrderByOrder(int orderid);
+    
+    
 }

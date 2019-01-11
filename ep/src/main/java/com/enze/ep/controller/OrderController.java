@@ -39,12 +39,13 @@ import com.enze.ep.service.EpUserService;
 import com.enze.ep.utils.DateUtils;
 import com.enze.ep.utils.IdGenerator;
 import com.enze.ep.utils.MyAuthUtils;
+import com.enze.ep.utils.OrderCodeUtil;
 
 @Controller
 @RequestMapping("/order")
 public class OrderController {
 
-	public static final IdGenerator ID_GENERATOR = IdGenerator.INSTANCE;
+	//public static final IdGenerator ID_GENERATOR = IdGenerator.INSTANCE;
 
 	@Autowired
 	EpOrderService epOrderServiceImpl;
@@ -80,12 +81,13 @@ public class OrderController {
 		EpOrder epOrder = new EpOrder();
 		List<EpOrders> list = new ArrayList<EpOrders>();
 
-		String ordercode = ID_GENERATOR.nextId();
-		epOrder.setOrdercode(ordercode);
-
 		String order = request.getParameter("order");// 获取参数
 		JSONObject orderJsonObject = JSON.parseObject(order);
 		String optype = orderJsonObject.getString("optype");
+		
+		int ordertype = orderJsonObject.getInteger("ordertype");
+		String ordercode =OrderCodeUtil.getUniqueString(ordertype);// ID_GENERATOR.nextId();
+		epOrder.setOrdercode(ordercode);
 
 		if (Optype.Edit.getOpname().equals(optype)) {
 			int orderid = orderJsonObject.getInteger("orderid");
@@ -97,7 +99,7 @@ public class OrderController {
 			}
 		}
 
-		int ordertype = orderJsonObject.getInteger("ordertype");
+		
 		String outpatientnumber = orderJsonObject.getString("outpatientnumber");
 		String bedno = orderJsonObject.getString("bedno");
 		String name = orderJsonObject.getString("name");
@@ -360,8 +362,7 @@ public class OrderController {
 		EpOrder epOrder = new EpOrder();
 		List<EpOrders> list = new ArrayList<EpOrders>();
 
-		String ordercode = ID_GENERATOR.nextId();
-		epOrder.setOrdercode(ordercode);
+		
 
 		String originalorder = request.getParameter("doc");// 原始单据信息
 		JSONObject orderJsonObject = JSON.parseObject(originalorder);
@@ -369,6 +370,8 @@ public class OrderController {
 		EpOrder originalEpOrder = epOrderServiceImpl.findEpOrderById(sourceorderid);
 
 		int ordertype = OrderType.salebackorder.getTypeValue();// 退货单
+		String ordercode = OrderCodeUtil.getUniqueString(ordertype);//ID_GENERATOR.nextId();
+		epOrder.setOrdercode(ordercode);
 		String outpatientnumber = originalEpOrder.getOutpatientnumber();// orderJsonObject.getString("outpatientnumber");
 		String bedno = originalEpOrder.getBedno();// orderJsonObject.getString("bedno");
 		String name = originalEpOrder.getName();// orderJsonObject.getString("name");

@@ -25,4 +25,16 @@ public interface EpOrderStockDAO {
     
     @Select({"select",SELECT_FIELDS,"from",TABLE_NAME,"where orderid=#{orderid} and idepartid=#{idepartid}"})
     List<EpOrderStock> selectOrderStockByOrderIDAndDepartID(int orderid,int idepartid);
+    
+    /**
+     * 
+    * @Title: selectOrderStockByEpOrderid
+    * @Description: 退货单明细数据 根据创建的退货订单
+    * @param @param orderid
+    * @param @return    参数
+    * @author wuxuecheng
+    * @return List<EpOrderStock>    返回类型
+    * @throws
+     */
+    List<EpOrderStock> selectOrderStockByEpOrderid(int orderid);
 }

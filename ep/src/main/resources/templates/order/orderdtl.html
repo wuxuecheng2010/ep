@@ -44,7 +44,7 @@
 	<div class="container">
 		<div class="row clearfix">
 			<div class="col-md-12 column">
-				<nav th:replace="fragments/ep::nurse_nav"></nav>
+				<nav th:replace="fragments/ep::header"></nav>
 
 
 				<div class="row clearfix" style="margin-top: 60px;">
@@ -173,7 +173,7 @@
 				<div class="row clearfix" style="margin-top: 10px;">
 				  <hr>
 				  <div class="col-sm-offset-3 col-md-9 column text-center">
-				     <button class="btn btn-warning ">取消</button>
+				     <button class="btn btn-warning "  onclick="javascript:history.back(-1);">取消</button>
 				     <button class="btn btn-primary "  id="btn-saleback" data-toggle="modal"  onclick="validate()">退货</button>
 				  </div>
 				

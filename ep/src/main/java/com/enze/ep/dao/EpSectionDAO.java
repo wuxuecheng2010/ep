@@ -1,5 +1,7 @@
 package com.enze.ep.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -7,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import com.enze.ep.entity.EpSection;
+import com.enze.ep.entity.TbCounter;
 
 @Repository
 @Mapper
@@ -26,5 +29,8 @@ public interface EpSectionDAO {
 		") values (#{hissectionid},#{sectionname},#{usestatus})" })
 	@Options(useGeneratedKeys=true,keyProperty="sectionid",keyColumn="sectionid")
 	int addSection(EpSection epSection);
+	
+	@Select({"select icounterid,vccountercode,vccountername,idepartid,flagapp,sectionid from tb_Counter where sectionid=#{sectionid}"})
+	List<TbCounter> selectCounterListBySectionid(int sectionid);
 
 }

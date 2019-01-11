@@ -2,7 +2,8 @@
 
 <head>
 <meta charset="utf-8" />
-<title>便民药房</title>
+<title th:replace="fragments/ep::title"></title>
+
 <link rel="stylesheet"
 	href="/static/plugs/layui/css/layui.css"
 	type="text/css" />
@@ -11,6 +12,8 @@
 <link rel="stylesheet"
 	href="/static/plugs/bigautocomplete/css/jquery.bigautocomplete.css"
 	type="text/css" />
+	
+<link rel="stylesheet" href="/static/css/ep.css" type="text/css" />
 
 
 
@@ -20,9 +23,8 @@
 	src="/static/plugs/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="/static/plugs/bigautocomplete/js/jquery.bigautocomplete.js"></script>
 <script src="/static/plugs/layui/layui.all.js"></script>
+<script src="/static/js/ep.js"></script>
 
-<style>
-</style>
 
 </head>
 
@@ -30,51 +32,10 @@
 	<div class="container">
 		<div class="row clearfix">
 			<div class="col-md-12 column">
-				<nav class="navbar navbar-default navbar-inverse navbar-fixed-top"
-					role="navigation">
-					<div class="navbar-header">
-						<button type="button" class="navbar-toggle" data-toggle="collapse"
-							data-target="#bs-example-navbar-collapse-1">
-							<span class="sr-only">Toggle navigation</span><span
-								class="icon-bar"></span><span class="icon-bar"></span><span
-								class="icon-bar"></span>
-						</button>
-						<a class="navbar-brand" href="#">便民药房</a>
-					</div>
+				
+				<nav th:replace="fragments/ep::header"></nav>
 
-					<div class="collapse navbar-collapse"
-						id="bs-example-navbar-collapse-1">
-						<ul class="nav navbar-nav">
-							<li class="active"><a href="#"><span th:text="${hospital}"></span></a></li>
-						</ul>
-
-						<ul class="nav navbar-nav pull-right" style="margin-right: 16px;">
-
-							<li class="dropdown"><a href="#" class="dropdown-toggle"
-								data-toggle="dropdown" th:text="${epUser.username}"><strong
-									class="caret"></strong></a>
-								<ul class="dropdown-menu">
-									<li><a href="/logout">退出</a></li>
-								</ul></li>
-						</ul>
-
-
-					</div>
-
-				</nav>
-				<div class="row clearfix" style="margin-top: 60px;">
-					<div class="col-md-4 column">
-						<h3>便捷购物</h3>
-					</div>
-					<div class="col-md-4 column">
-						
-					</div>
-					<!-- <div class="col-md-4" style="margin-top: 20px;">
-						<input type="text" class="form-control" placeholder="输入病人信息快速获取" style="margin-top: -7px;" id="inpatientname">
-					</div> -->
-				</div>
-
-				<div class="panel panel-default">
+				<div class="panel panel-default" style="margin-top: 60px;">
 					<div class="panel-heading" style="height: 40px;">
 
 						<div class="row clearfix">
@@ -83,7 +44,9 @@
 							</div>
 							<div class="col-md-3"></div>
 							<div class="col-md-3"></div>
-							<div class="col-md-3"></div>
+							<div class="col-md-3 text-right">
+							   <a th:href="@{'/order/orderlist/'+${epUser.usercode}+'/'+${epInpatient.idcard}}">历史购物清单</a>
+							</div>
 						</div>
 
 					</div>
@@ -112,8 +75,9 @@
 							</div>
 							<div class="col-md-3 column">
 									<div class="input-group">
-										<span class="input-group-addon">备注</span> <input type="text"
-											class="form-control" placeholder="memo" id="memo">
+										<span class="input-group-addon">备注</span> 
+										<input th:if=" ${optype=='create'}" type="text" class="form-control"  id="memo"placeholder="Memo">
+									    <input th:if=" ${optype!='create'}" th:value="${eporder.memo}" type="text" class="form-control"  id="memo"placeholder="Memo">
 									</div>
 							</div>
 							
@@ -199,65 +163,131 @@
 					</div>
 					<div class="panel-body">
 						<div class="row clearfix">
-							<div class="col-md-12 column">
-
-								<table class="table table-condensed" style="font-size: 14px;">
-									<thead>
-										<tr>
-											<th>序号</th>
-											<th style="display: none;">商品ID</th>
-											<th>商品编码</th>
-											<th>名称/通用名</th>
-											<th>规格</th>
-
-											<th>单位</th>
-
-											<th>数量</th>
-											<th>单价</th>
-											<th>金额</th>
-											<th>删除</th>
-										</tr>
-									</thead>
-									<tbody id="cflist">
-										<tr>
-											<td><span id="numno" style="line-height: 20px;">1</span>
-											</td>
-											<td style="display: none;"><span id="iproductid"></span>
-												<span id="iunitid"></span></td>
-											<td><span id="vcproductcode"></span></td>
-											<td><input type="text" id="vcuniversalname"
-												class="textvcuniversalname" autocomplete="off"
-												style="width: 98%;" /></td>
-											<td><span id="vcstandard"></span></td>
-											<td><span id="unitname">-</span></td>
-
-											<td><input type="text" id="totalcounts"
-												autocomplete="off" style="width: 80px;" /></td>
-											<td><span id="numprice">0</span></td>
-											<td><span id="nummoney">0</span></td>
-											<td>
-												<button class="btn btn-danger btn-xs" id="btn-del">
-													<em class="glyphicon glyphicon-remove"></em>删除
-												</button>
-											</td>
-										</tr>
-
-									</tbody>
-
-									<tbody style="font-size: medium;">
-										<br />
-										<tr>
-											<td colspan="7" class="text-right"><label
-												id="moneytotal" style="padding-top: 30px;">合计金额:</label></td>
-
-											<td><label style="padding-top: 30px;" id="moneyall">￥0</label>
-											</td>
-											<td></td>
-										</tr>
-									</tbody>
-
-								</table>
+						
+						    <div class="col-md-1" style="text-align:center;">
+							    <b>序号</b>
 							</div>
+							<div class="col-md-10">
+							    
+							    <div class="row clearfix">
+							        <div class="col-md-4">
+							             <b>通用名、规格</b>
+							        </div>
+							        
+							        <div class="col-md-4">
+							            <b>生产厂家</b>
+							        </div>
+							        
+							        <div class="col-md-2 hidden">
+							            <b>用法</b>
+							        </div>
+							        <div class="col-md-2 hidden">
+							           <b>用量</b>
+							        </div>
+							        <div class="col-md-1">
+							            		 <b>单价</b>
+							        </div>
+							        <div class="col-md-2">
+							                     <b>数量</b>
+							        </div>
+							        <div class="col-md-1">
+							                     <b>金额</b>
+							        </div>
+							    </div>
+							    
+							</div>
+							<div class="col-md-1">
+							  <b>操作</b>  
+							</div>
+							 <hr style="margin-top: 2px;">
+							 
+							 <div id="cflist" >
+							 
+							 <span  th:if=" ${optype=='edit'||optype=='copy' ||optype=='view'}">
+		<div  class="row clearfix cfrow" th:each="order : ${orderslist}" th:id="r+${order.numno}" style="margin-top: -14px;">
+							    
+								<div class="col-md-1" style="text-align:center;">
+								    <span id="numno" style="line-height:50px;" th:text="${order.numno}"></span>
+								</div>
+								<div class="col-md-10">
+								    
+								    <div class="row clearfix">
+								        <div class="col-md-4">
+								             <div class="row clearfix">
+												 <input type="text" class=" textvcuniversalname" id="vcuniversalname" th:name="r+${order.numno}+vcuniversalname" th:value="${order.vcuniversalname}"   autocomplete="off"   />
+								             </div>
+								             <div class="row clearfix">
+								               <span id="vcstandard" th:name="r+${order.numno}+vcstandard" th:text="${order.vcstandard}" ></span>
+								             </div>
+								             
+								             <div class="row clearfix hidden">
+								              	 <span id="iproductid" th:name="r+${order.numno}+iproductid" th:text="${order.iproductid}" ></span>
+								              	 <span id="iunitid" th:name="r+${order.numno}+iunitid" th:text="${order.iunitid}" ></span>
+								              	 <span id="vcproductcode" th:name="r+${order.numno}+vcproductcode" th:text="${order.vcproductcode}" ></span>
+								              	 
+								            </div>
+								        </div>
+								        
+								        <div class="col-md-4">
+								             <span id="vcmanufacturer" th:name="r+${order.numno}+vcmanufacturer" th:text="${order.vcmanufacturer}"></span>
+								        </div>
+								        
+								        <div class="col-md-2 hidden">
+								             <input type="text" id="usage" th:name="r+${order.numno}+usage" th:value="${order.usage}" />
+								        </div>
+								        <div class="col-md-2 hidden">
+							                <div class="row clearfix">
+								                <div class="col-md-12"> 
+						<input type="text" id="frequency" th:name="r+${order.numno}+frequency" th:value="${order.frequency}" autocomplete="off" placeholder="频次 如tid" />
+								                </div>
+							                </div>
+							                <div class="row clearfix">
+								                <div class="col-md-12">  
+							<input type="text" id="dosis" th:name="r+${order.numno}+dosis" th:value="${order.dosis}"  autocomplete="off" placeholder="剂量  如每次3粒"  />
+								                </div>
+							                </div>  
+								        </div>
+								        <div class="col-md-1">
+		<span id="numprice" th:name="r+${order.numno}+numprice"  th:text="${order.numprice}"></span>
+	         <span>/</span>
+	        <span id="unitname" th:name="r+${order.numno}+unitname" th:text="${order.vcunitname}" ></span>
+								        </div>
+								        <div class="col-md-2">
+								            <input id="totalcounts" type="number" th:name="r+${order.numno}+totalcounts" th:value="${order.totalcounts}"  autocomplete="off"  />
+								        </div>
+								        <div class="col-md-1">
+	                                       <span id="nummoney" th:name="r+${order.numno}+nummoney" th:text="${order.nummoney}" ></span>
+								        </div>
+								    </div>
+								</div>
+								<div class="col-md-1">
+									<button class="btn btn-danger btn-xs"  style="margin-top: auto;" id="btn-del">
+										<em class="glyphicon glyphicon-remove"></em>删除
+									</button>
+								</div>
+								<hr style="margin-top: 2px;">
+							</div>
+		
+								</span>
+								
+								
+							 
+							 </div>
+							 
+							 <div class="row clearfix cfrow"  style="margin-top: -14px;">
+								<div class="col-md-10 text-right">
+								   <b><span style="margin-right: -34px;">合计金额:</span></b>
+								</div>
+								<div class="col-md-2 text-left">
+								   <b>
+								      <span id="moneyall" th:if=" ${optype=='edit'||optype=='copy' ||optype=='view'}" style="margin-left: 14px;" th:text="${eporder.ordermoney}">0</span>
+								      <span id="moneyall" th:if=" ${optype=='create'}" style="margin-left: 14px;" >0</span>
+								   </b>
+								</div>
+							</div>
+							 
+							 
+							
 						</div>
 					</div>
 				</div>
@@ -265,7 +295,7 @@
 
 				<div class="panel panel-default">
 					<div class="panel-body text-center">
-						<button class="btn btn-danger">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+						<button class="btn btn-danger"  onclick="javascript:history.back(-1);">返回</button>
 						<button class="btn btn-primary" id="submit">提交并购买</button>
 					</div>
 				</div>
@@ -280,25 +310,19 @@
 			  ,form = layui.form;
 
 					$(function() {
-						//alert([[${counterids}]]);
-						
-						//initpatientselect();
-
-						//设置下拉选择框
+						//添加一行
+						var optype=[[${optype}]];
+						if(optype=="create"){
+							createrow();
+						}
+						if(optype=="view"){
+							$("input").attr("disabled","disabled");
+						}
+						//初始化按键和统计
 						initselect();
-
-						//设置焦点
-						//$('#cflist input:first').focus();
-
-						//初始化按键
 						initkey();
-
-						//初始化明细删除键
-						initdel();
-						
-						//数量变动事件
 						inittotalcountschange();
-						
+						formattotalcounts();
 						//提交按钮
 						initSubmit();
 
@@ -307,22 +331,8 @@
 					function initSubmit(){
 						
 						$("#submit").click(function(e){
-							
-							//layer.msg("xxxx");
 							//获取数据 同时校验数据
 							var ordertype=1;//普通销售单
-							//var outpatientnumber='';//$("#outpatientnumber").val();
-							//var creuserid=[[${epUser.userid}]];
-							//var sectionid=[[${epUser.sectionid}]];
-							/* var sex='';//$("#sex").val();
-							var age=0;//$("#age").val();
-							var idcard='';//$("#idcard").val();
-							var micard='';//$("#micard").val();
-							var hicard='';//$("#hicard").val();
-							var credate='';//$("#credate").val();
-							var symptom='';//$("#symptom").val();
-							var memo='';//$("#memo").val(); */
-							
 							var outpatientnumber=$("#outpatientnumber").val();
 							var sex=$("#sex").val();
 							var age=$("#age").val();
@@ -343,17 +353,17 @@
 									"age":age,"idcard":idcard,"micard":micard,"hicard":hicard,"symptom":symptom,
 									"memo":memo,"birthday":birthday
 									};
-							//alert(JSON.stringify(order));
 							
 							var orders=[];
 							var valiflag=true;
-							var trs=$("#cflist tr");
+							var trs=$("#cflist .cfrow");
 							$.each(trs,function(i,c){
 								var numno=$(c).find("#numno").html();
 								var iproductid=$(c).find("#iproductid").html();
 								var vcproductcode=$(c).find("#vcproductcode").html();
 								var vcuniversalname=$(c).find("#vcuniversalname").val();
 								var vcstandard=$(c).find("#vcstandard").html();
+								var vcmanufacturer=$(c).find("#vcmanufacturer").html();
 								var iunitid=$(c).find("#iunitid").html();
 								var unitname=$(c).find("#unitname").html();
 								var totalcounts=$(c).find("#totalcounts").val();
@@ -361,19 +371,31 @@
 								var nummoney=$(c).find("#nummoney").html();
 								
 								var row={'numno':numno,'iproductid':iproductid,'vcproductcode':vcproductcode,'vcuniversalname':vcuniversalname,
-										'vcstandard':vcstandard,'iunitid':iunitid,'unitname':unitname,'totalcounts':totalcounts,
+										'vcstandard':vcstandard,'vcmanufacturer':vcmanufacturer,'iunitid':iunitid,'unitname':unitname,'totalcounts':totalcounts,
 										'numprice':numprice,'nummoney':nummoney};
 								if(numprice==""){
 									layer.msg("第"+numno+"行,售价未设置，不允许销售，请删除后再尝试此操作");
 									valiflag=false;
+									$(c).find("#vcuniversalname")[0].focus();
+									return false;
 								}
 								if(totalcounts==""||totalcounts=="0"){
 									layer.msg("第"+numno+"行,未填写购买数量，请填写后再尝试此操作");
 									valiflag=false;
+									$(c).find("#totalcounts")[0].focus();
+									return false;
 								}
 								if(iproductid==""){
 									layer.msg("第"+numno+"行,未选择商品名称。");
 									valiflag=false;
+									$(c).find("#vcuniversalname")[0].focus();
+									return false;
+								}
+								if(!checkRate(totalcounts)){
+									layer.msg("第"+numno+"行,数量必须为正整数。");
+									valiflag=false;
+									$(c).find("#totalcounts")[0].focus();
+									return false;
 								}
 								orders.push(row);
 								
@@ -451,102 +473,147 @@
 						
 					}
 
-					//初始化商品信息输入框
-					function initselect() {
+				//初始化商品信息输入框
+				function initselect(){
+						
+					var counterids=[[${counterids}]];
+					if(counterids==""){
+						var sectionname=[[${sectionname}]];
+						var contact=[[${contact}]]
+						//如果对应病区柜台没有维护 提示信息显示
+						layer.alert("当前您对应的科室:“"+sectionname+"”,相关的药店基本信息未维护，请联系"+contact+"，之后再重新打开此页面。否则不能使用此功能。", {
+                            title: "提示信息",
+                              btn: ['确定']
+				    		},function (index, item) {
+								    //window.location.reload();//刷新页面 
+				    				layer.close(layer.index);
+				    			});
+						
+					}
+					
 						
 						var counterids=[[${counterids}]];
-						if(counterids==""){
-							var sectionname=[[${epSection.sectionname}]];
-							var contact=[[${contact}]]
-							//如果对应病区柜台没有维护 提示信息显示
-							layer.alert("当前您对应的科室:“"+sectionname+"”,相关的药店基本信息未维护，请联系"+contact+"，之后再重新打开此页面。否则不能使用此功能。", {
-                                title: "提示信息",
-                                  btn: ['确定']
-					    		},function (index, item) {
-									    //window.location.reload();//刷新页面 
-					    				layer.close(layer.index);
-					    			});
-							
-						}
-						
 						var url='/product/select/'+counterids;
-						//alert(url);
-						//url: 'http://localhost:85/ezapi/public/index.php/Data/customertest',
-						$names = $(".textvcuniversalname");
-						$.each($names, function(i, c) {
-							//$(this).val($(this).val().toUpperCase());
-							$(this).bigAutocomplete({
+						
+						var frequency_url='/data/frequency';
+						var usage_url='/data/usage';
+				 		var mock_url='/data/mock';
+						
+						var rs=$(".cfrow");
+						$.each(rs,function(i,c){
+							
+						    //var vcuniversalname=$(c).find("#vcuniversalname")
+						    var rowid='r'+$(c).find("#numno").html();
+							$(c).find("#vcuniversalname").bigAutocomplete({
 								width: 543,
 								url:url,
-								callback: function(data) {
-									
-									$(c).parent().parent().find("#iproductid").html(data.iproductid);
-									$(c).parent().parent().find("#vcstandard").html(data.vcstandard);
-									$(c).parent().parent().find("#vcproductcode").html(data.vcproductcode);
-									$(c).parent().parent().find("#unitname").html(data.unitname);
-									$(c).parent().parent().find("#iunitid").html(data.vcproductunit);
-									$(c).parent().parent().find("#numprice").html(data.numprice);
-
-									var precount = $("#cflist tr:first input").length;
-									var nexIdx = precount * i + 1;
-									$("#cflist input")[nexIdx].focus();
-									
+								callback:function(data){
+									document.getElementsByName(rowid+"vcuniversalname")[0].value=data.vcuniversalname;
+									document.getElementsByName(rowid+"vcstandard")[0].innerText=data.vcstandard;
+									document.getElementsByName(rowid+"iproductid")[0].innerText=data.iproductid;
+									document.getElementsByName(rowid+"vcproductcode")[0].innerText=data.vcproductcode;
+									document.getElementsByName(rowid+"iunitid")[0].innerText=data.vcproductunit;
+									document.getElementsByName(rowid+"vcmanufacturer")[0].innerText=data.vcmanufacturer;
+									document.getElementsByName(rowid+"unitname")[0].innerText=data.unitname;
+									document.getElementsByName(rowid+"numprice")[0].innerText=(data.numprice).toFixed(2);
+									document.getElementsByName(rowid+"usage")[0].value=data.usage;
+									document.getElementsByName(rowid+"frequency")[0].value=data.frequency;
+									document.getElementsByName(rowid+"dosis")[0].value='每次'+data.cfyl+data.cfunit;
+									document.getElementsByName(rowid+"totalcounts")[0].value=1;
+									$("#"+rowid+" #totalcounts").focus();
 									//更新行金额
 									var numprice=data.numprice;
-									var numtotalcounts=$(c).parent().parent().find("#totalcounts").val()==""?0:$(c).parent().parent().find("#totalcounts").val();
-									$(c).parent().parent().find("#nummoney").html(numprice*numtotalcounts);
-									
+									     var _numtotalcounts=document.getElementsByName(rowid+"totalcounts")[0].value;
+									var numtotalcounts=_numtotalcounts==""?0:_numtotalcounts;
+									document.getElementsByName(rowid+"nummoney")[0].innerText=(numprice*numtotalcounts).toFixed(2);
 									//更新总金额
 					                var moneyall=gettotalmoney();
-					                $("#moneyall").html(moneyall);
-
+					                $("#moneyall").html(moneyall); 
+	 
 								}
 							});
+							
+							
+							
+							$(c).find("#frequency").bigAutocomplete({
+								width: 200,
+								url:frequency_url,
+								callback: function(data) {
+									//document.getElementsByName(rowid+"dosis")[0].value="每次?";
+								}
+							});	 
 
-						});
+							
+					 		 
+							$(c).find("#usage").bigAutocomplete({
+								width: 100,
+								url:usage_url,
+								callback: function(data) {
+									//alert(data.usage);
+									//document.getElementsByName(rowid+"usage")[0].value=data.usage;
+								}
+							}); 
+							 
+							
+						 	//
+							$(c).find("#dosis").bigAutocomplete({
+								width: 200,
+								url:mock_url,
+								callback: function(data) {
+									$(this).val(data.usage)
+									
+								}
+							});   
+							
+						
+							});
+						
 					}
 
+					
+					
 					function initkey() {
 						var $inp = $("#cflist input");
 						var length = $inp.length;
-						$.each($inp, function(i, c) {
-							
-							 var inputid=c.id;
+						$.each($inp, function(i, c) {	
+
+							    var inputid=c.id;
 							    if(inputid=="totalcounts"){
 							    	$(this).unbind('keydown');
 							    }
-							    
-							$(this).bind('keydown', function(e) {
-								var key = e.which;
-								//alert(key);
-								if((key == 13 && "vcuniversalname" != $(this).attr("id")) || key == 39) { //向右或者回车
-									e.preventDefault();
-									if(i + 1 != length) {
-										var nxtIdx = i + 1;
-										if($("#cflist input")[nxtIdx]!=null)
-											$("#cflist input")[nxtIdx].focus();
+								$(this).bind('keydown', function(e) {
+									var key = e.which;
+									//alert(key);
+									//if((key == 13 && "vcuniversalname" != $(this).attr("id")) || key == 39) { //向右或者回车
+									if((key == 13 && "vcuniversalname" != $(this).attr("id")) ) { //向右或者回车
+										e.preventDefault();
+										if(i + 1 != length) {
+											var nxtIdx = i + 1;
+											if($("#cflist input")[nxtIdx]!=null)
+												$("#cflist input")[nxtIdx].focus();
+										}
 									}
-								}
-								if(key == 37) { //向左
-									e.preventDefault();
-									if(i != 0) {
-										var preIdx = i - 1;
-										if($("#cflist input")[preIdx]!=null)
-											$("#cflist input")[preIdx].focus();
-									}
-								}
-								if((key == 40 || key == 13) && $(this).attr("id") == "totalcounts") { //向下
-									e.preventDefault();
-									createrow();
-									/*initselect();
-									//设置新行的首个输入框聚焦
-									$("#cflist tr:last").find("input:first").focus();
-									initkey();*/
-								}
-
-							})
+									/* if(key == 37) { //向左
+										e.preventDefault();
+										if(i != 0) {
+											var preIdx = i - 1;
+											if($("#cflist input")[preIdx]!=null)
+												$("#cflist input")[preIdx].focus();
+										}
+									} */
+									  if((key == 40 || key == 13) && $(this).attr("id") == "totalcounts") { //向下
+										e.preventDefault();
+										createrow();
+										
+									}  
+	
+								})
+							
 						});
+						
 					}
+						
+						
 
 					//删除行操作
 					function initdel() {
@@ -565,7 +632,7 @@
 			                //更新行金额
 			                var numtotalcounts=e.delegateTarget.value;
 			                var numprice=Number($(this).parent().parent().find("#numprice").html());
-			                $(this).parent().parent().find("#nummoney").html(numtotalcounts*numprice);
+			                $(this).parent().parent().find("#nummoney").html((numtotalcounts*numprice).toFixed(2));
 			                
 			                //更新总金额
 			                var moneyall=gettotalmoney();
@@ -574,6 +641,13 @@
 			            });
 						
 					}
+					
+					function formattotalcounts(){
+						$.each($("#cflist #totalcounts"),function(i,c){
+							$(c).val(parseInt($(c).val()));
+							})
+					}
+					
 					//获取列表总金额
 					function gettotalmoney(){
 						var total=0;
@@ -589,54 +663,152 @@
 					
 					//新加一行
 					function createrow() {
-						//var rownum=$("#cflist tr").length+1;
-						var numno = $("#cflist tr:last").length;
-						var rownum = numno == 0 ? 1 : Number($("#cflist tr:last").find('#numno').html()) + 1;
-						//var rownum = Number($("#cflist tr:last").find('#numno').html()) + 1;
-						var row = '<tr>' +
-							'<td>' +
-							'<span id="numno">' + rownum + '</span>' +
-							'</td>' +
-							'<td style="display: none;">' +
-							'<span id="iproductid"></span>' +
-							'<span id="iunitid"></span>'+
-							'</td>' +
-							'<td>' +
-							'<span id="vcproductcode"></span>' +
-							'</td>' +
-							'<td>' +
-							'<input type="text" id="vcuniversalname"  class="textvcuniversalname " autocomplete="off" style="width: 98%;" />' +
-							'</td>' +
-							'<td>' +
-							'<span id="vcstandard"></span>' +
-							'</td>' +
-
-							'<td>' +
-							'<span id="unitname">-</span>' +
-							'</td>' +
-							'<td>' +
-							'<input type="number" id="totalcounts"  autocomplete="off" style="width: 80px;"  />' +
-							'</td>' +
-							'<td>' +
-							'<span id="numprice">0</span>' +
-							'</td>' +
-							'<td>' +
-							'<span id="nummoney">0</span>' +
-							'</td>' +
-							'<td>' +
-							'<button class="btn btn-danger btn-xs" id="btn-del"><em class="glyphicon glyphicon-remove"></em>删除</button>' +
-							'</td>' +
-							'</tr>';
+						
+						var numno = $("#cflist .cfrow").length;
+						var rownum = numno == 0 ? 1 : Number($("#cflist .cfrow:last").find('#numno').html()) + 1;
+						var rowid="r"+rownum;
+					 
+					   var row='<span><div id="'+rowid+'" class="row clearfix cfrow" style="margin-top: -14px;">'+
+						    
+							'<div class="col-md-1" style="text-align:center;">'+
+							    '<span id="numno" style="line-height:50px;">'+rownum+'</span>'+
+							'</div>'+
+							'<div class="col-md-10">'+
+							    
+							    '<div class="row clearfix">'+
+							        '<div class="col-md-4">'+
+							             '<div class="row clearfix">'+
+							               '<input type="text" class=" textvcuniversalname" id="vcuniversalname" name="'+rowid+'vcuniversalname"  autocomplete="off"   />'+
+							             '</div>'+
+							             '<div class="row clearfix">'+
+							               '<span id="vcstandard" name="'+rowid+'vcstandard"></span>'+
+							             '</div>'+
+							             //'<div class="row clearfix">'+
+							            //    '<span id="vcmanufacturer" name="'+rowid+'vcmanufacturer"></span>'+
+							            // '</div>'+
+							             '<div class="row clearfix hidden">'+
+							              	' <span id="iproductid" name="'+rowid+'iproductid" ></span>'+
+							              	' <span id="iunitid" name="'+rowid+'iunitid"></span>'+
+							              	' <span id="vcproductcode" name="'+rowid+'vcproductcode"></span>'+
+							             '</div>'+
+							        '</div>'+
+							        '<div class="col-md-4">'+
+							             '<span id="vcmanufacturer" name="'+rowid+'vcmanufacturer"></span>'+
+						            '</div>'+
+							        '<div class="col-md-2 hidden">'+
+							             '<input type="text" id="usage" name="'+rowid+'usage" />'+
+							        '</div>'+
+							        '<div class="col-md-2 hidden">'+
+						                '<div class="row clearfix">'+
+							                '<div class="col-md-12"> '+  
+							                    '<input type="text" id="frequency" name="'+rowid+'frequency"  autocomplete="off" placeholder="频次 如tid" />'+
+							                '</div>'+
+						                '</div>'+
+						                '<div class="row clearfix">'+
+							                '<div class="col-md-12">  '+
+							          		    '<input type="text" id="dosis" name="'+rowid+'dosis"  autocomplete="off" placeholder="剂量  如每次3粒"  />'+
+							                '</div>'+
+						                '</div>  '+
+							        '</div>'+
+							        '<div class="col-md-1">'+
+							            '<span id="numprice" name="'+rowid+'numprice" ></span><span>/</span><span id="unitname" name="'+rowid+'unitname"  ></span>'+
+							        '</div>'+
+							        '<div class="col-md-2">'+
+							            '<input id="totalcounts" type="number" name="'+rowid+'totalcounts"  autocomplete="off"  />'+
+							        '</div>'+
+							        '<div class="col-md-1">'+
+                                       '<span id="nummoney" name="'+rowid+'nummoney" ></span>'+
+							        '</div>'+
+							    '</div>'+
+							'</div>'+
+							'<div class="col-md-1">'+
+								'<button class="btn btn-danger btn-xs"  style="margin-top: auto;" id="btn-del">'+
+									'<em class="glyphicon glyphicon-remove"></em>删除'+
+								'</button>'+
+							'</div>'+
+							'<hr style="margin-top: 2px;">'+
+						'</div></span>'
 
 						$("#cflist").append(row);
-
-						initdel();
-
-						initselect();
-						//设置新行的首个输入框聚焦
-						$("#cflist tr:last").find("input:first").focus();
-						initkey();
 						
+
+						//initdel();
+						$("#"+rowid+" #btn-del").click(function() {
+							$(this).parent().parent().remove();
+						})
+						
+						
+
+						//initselect();
+						var counterids=[[${counterids}]];
+						var url='/product/select/'+counterids;
+						$("#"+rowid+" #vcuniversalname").bigAutocomplete({
+							width: 543,
+							url:url,
+							callback:function(data){
+								document.getElementsByName(rowid+"vcuniversalname")[0].value=data.vcuniversalname;
+								document.getElementsByName(rowid+"vcstandard")[0].innerText=data.vcstandard;
+								document.getElementsByName(rowid+"iproductid")[0].innerText=data.iproductid;
+								document.getElementsByName(rowid+"vcproductcode")[0].innerText=data.vcproductcode;
+								document.getElementsByName(rowid+"iunitid")[0].innerText=data.vcproductunit;
+								document.getElementsByName(rowid+"vcmanufacturer")[0].innerText=data.vcmanufacturer;
+								document.getElementsByName(rowid+"unitname")[0].innerText=data.unitname;
+								document.getElementsByName(rowid+"numprice")[0].innerText=(data.numprice).toFixed(2);
+								document.getElementsByName(rowid+"usage")[0].value=data.usage;
+								document.getElementsByName(rowid+"frequency")[0].value=data.frequency;
+								document.getElementsByName(rowid+"dosis")[0].value='每次'+data.cfyl+data.cfunit;
+								document.getElementsByName(rowid+"totalcounts")[0].value=1;
+								$("#"+rowid+" #totalcounts").focus();
+								//更新行金额
+								var numprice=data.numprice;
+								     var _numtotalcounts=document.getElementsByName(rowid+"totalcounts")[0].value;
+								var numtotalcounts=_numtotalcounts==""?0:_numtotalcounts;
+								document.getElementsByName(rowid+"nummoney")[0].innerText=(numprice*numtotalcounts).toFixed(2);
+								//更新总金额
+				                var moneyall=gettotalmoney();
+				                $("#moneyall").html(moneyall); 
+ 
+							}
+						});
+						
+						
+						
+			 			var frequency_url='/data/frequency';
+						$("#"+rowid+" #frequency").bigAutocomplete({
+							width: 200,
+							url:frequency_url,
+							callback: function(data) {
+								//document.getElementsByName(rowid+"frequency")[0].value=data.frequency;
+							}
+						});	 
+
+						
+				 		 var usage_url='/data/usage';
+						$("#"+rowid+" #usage").bigAutocomplete({
+							width: 100,
+							url:usage_url,
+							callback: function(data) {
+								//alert(data.usage);
+								//document.getElementsByName(rowid+"usage")[0].value=data.usage;
+							}
+						}); 
+						 
+						
+					 	var mock_url='/data/mock';
+						$("#"+rowid+" #dosis").bigAutocomplete({
+							width: 200,
+							url:mock_url,
+							callback: function(data) {
+								$(this).val(data.usage)
+								
+							}
+						});  
+						
+						
+						//设置新行的首个输入框聚焦
+						$("#"+rowid).find("input:first").focus();
+						
+						initkey();
 						inittotalcountschange();
 
 					}

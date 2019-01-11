@@ -32,5 +32,8 @@ public interface EpSalesInfoDAO {
 	
 	@Insert({"insert into",TABLE_NAME,"(",INSET_FIELDS,")values (#{vcbillno}, #{idepartid}, getdate(), #{createdby}, getdate(), getdate(), #{lastupdatedby}, #{bstatus}, #{imembercardid}, #{iprescriptionid}, #{vcmemo}, #{nummoneyall}, #{flagapp}, #{salespreson}, #{numdiscount}, #{ipackage}, #{vcpreson}, #{numtime}, #{numprint}, #{cashier_account}, #{appdate}, #{dyqk}, #{cfsb},#{paytypeid} )"})
     void addSalesInfo(TbSalesInfo tbSalesInfo);
+	
+	@Select({"select ",SELECT_FIELDS," from ",TABLE_NAME ," where vcbillno=#{vcbillno} "})
+	TbSalesInfo selectTbSalesInfoByVcbillno(String vcbillno);
 
 }

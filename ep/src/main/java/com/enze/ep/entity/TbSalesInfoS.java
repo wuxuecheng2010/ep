@@ -32,5 +32,6 @@ public class TbSalesInfoS {
 	private int ipackage;
 	private int icounterid;
 	private int iflagaccpayed;
+	private int epordersid;
 
 }

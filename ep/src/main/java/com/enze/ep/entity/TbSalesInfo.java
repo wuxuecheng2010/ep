@@ -8,7 +8,8 @@ import lombok.Data;
 @Data
 public class TbSalesInfo {
 	
-	public static final String VCBILLNO_PREFIX="LSKP";
+	public static final String VCBILLNO_PREFIX="ZXXS";//在线销售
+	public static final String VCBILLNO_REFUND_PREFIX="ZXTH";//在线销售
 	public static final String DEFAULT_CREATER_MAN="admin";
 	public static final int DEFAULT_SALES_PERSON=34;
 
