@@ -55,8 +55,8 @@ public class IndexController {
 	public ModelAndView index(HttpServletRequest request, HttpServletResponse response) {
 		//参数格式http://电子处方?action=xxx&user=xxx&adm=xxx&patient=xxx&card=xxx
 		//获取路径信息
-		//String indexurl=request.getRequestURI()+"?"+request.getQueryString();
-		//request.getSession().setAttribute("indexurl", indexurl);
+		String indexurl=request.getServletPath()+"?"+request.getQueryString();
+		request.getSession().setAttribute("indexurl", indexurl);
 		
 		//提取参数
 		//String action=request.getParameter("action");
