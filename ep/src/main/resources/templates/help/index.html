@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>帮助页面</title>
+<style>
+/*	html {
+				background-color: #E9E7E7;
+				text-align: center;
+			}
+
+			p {
+				text-align: center;
+
+			}
+
+
+			 .container {
+				margin: 0 auto;
+				width: 80%;
+				//height:180px; 
+				//border:1px solid #F00
+			}
+
+			.browser {
+				float: left;
+				margin: 0 auto;
+				width: 150px;
+				height: 150px;
+				//background-color: #F3F2EF;
+				margin: 10px;
+			} 
+*/
+.container {
+	margin: 0 auto;
+	width: 80%;
+}
+
+.browser {
+	text-align: center;
+	margin-left:10px;
+	float: left;
+	border:0px solid #F00
+}
+
+img {
+	width: 120px;
+}
+</style>
+<script src="/static/plugs/clipboard/clipboard.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<p>
+		<h2>帮助页面</h2>
+		</p>
+		<p>
+		<h3>当您看到本页面，说明浏览器不兼容，请按如下操作</h3>
+		</p>
+		<p>
+		<h4>一、请下载如下浏览器(如已安装，请忽略此步骤)或者其他支持的浏览器，如360 、Firefox等</h4>
+		<div>
+			<span class="browser"> <a href="http://128.8.60.20:8088/file/ChromeStandaloneSetup32.exe"> <img
+					src="/static/img/browser/Chrome.png" />
+					<h5>Chome 浏览器</h5>
+			</a>
+			</span> 
+			<!-- <span class="browser"> <a href=""> <img
+					src="/static/img/browser/Firefox.png" />
+					<h5>Firefox 浏览器</h5>
+			</a>
+			</span> 
+			<span class="browser"> <a href=""> <img
+					src="/static/img/browser/360.png" />
+					<h5>360 浏览器</h5>
+			</a>
+			</span> -->
+
+		</div>
+		</p>
+		<p style="clear: both;">
+		<h4>二、复制以下网址，在新安装的浏览器中打开</h4>
+		<p>
+			<label>网址:</label>
+		<p id="indexurl" th:text="${session.indexurl}"></p>
+		</p></p>
+	</div>
+	<script>
+		function copyLink() {
+			var e = document.getElementById("indexurl");
+			e.select(); // 选择对象
+			document.execCommand("Copy"); // 执行浏览器复制命令
+			document.getElementById("info").innerText = "复制成功";
+			//alert("复制成功！");
+		}
+	</script>
+</body>
+</html>
