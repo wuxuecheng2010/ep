@@ -24,13 +24,17 @@ input{
             border-radius: 0px;
             color: #000;
             font-family: 'Open Sans', sans-serif;
-            font-size: 1em;
+            font-size:12px;
             height: 30px;
             transition: background 0.3s ease-in-out;
             width: 100%;
+
         }
  input:focus {
      outline: none;
      border-color: #9ecaed;
      box-shadow: 0 0 10px #9ecaed;
  }
+ 
+ 
+ 

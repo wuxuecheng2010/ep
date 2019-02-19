@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.enze.ep.entity.EpConfig;
 import com.enze.ep.entity.EpFrequency;
+import com.enze.ep.entity.EpUsage;
 
 @Repository
 @Mapper
@@ -21,6 +22,7 @@ public interface EpFrequencyDAO {
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where upper(frequency) like '%${frequencyInfo}%' or upper(vccode) like '%${frequencyInfo}%' "})
     List<EpFrequency> selectFrequencyListByFrequencyInfo(@Param(value = "frequencyInfo") String frequencyInfo);
     
-    
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " order by frequency "})
+    List<EpFrequency> selectAllFrequency();
 
 }

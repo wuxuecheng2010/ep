@@ -9,4 +9,5 @@ import com.enze.ep.entity.EpUser;
 
 public interface EpUsageService {
 	 List<EpUsage> findUsageListByUsage(String usage);
+	 List<EpUsage> findAllUsage();
 }

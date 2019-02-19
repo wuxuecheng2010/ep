@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EpFrequency {
+	public static final String Prefix_Redis_Key="EpFrequency";
+	public static final String Prefix_Redis_Key_Separtor="-";
 	private String title;
 	private int frequencyid;
 	private String frequency;

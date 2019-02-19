@@ -23,5 +23,7 @@ public interface EpUsageDAO {
     EpUsage selectUsageListByUsageID(int usageid);
     
 
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " order by usage "})
+    List<EpUsage> selectAllUsage();
     
 }

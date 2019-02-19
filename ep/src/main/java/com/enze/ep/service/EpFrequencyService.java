@@ -10,4 +10,5 @@ import com.enze.ep.entity.EpUser;
 
 public interface EpFrequencyService {
 	 List<EpFrequency> findFrequencyListByFrequency(String usage);
+	 List<EpFrequency> findAllFrequency();
 }

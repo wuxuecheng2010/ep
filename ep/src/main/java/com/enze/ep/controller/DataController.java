@@ -52,6 +52,29 @@ public class DataController {
 		return map;
 	}
 	
+	/**
+	 * 
+	* @Title: usageOptions
+	* @Description: TODO(获取所有用法选项)
+	* @param @param request
+	* @param @param response
+	* @param @return    参数
+	* @author wuxuecheng
+	* @return Map<String,List<EpUsage>>    返回类型
+	* @throws
+	 */
+	@ResponseBody
+	@PostMapping("/usageall")
+	public Map<String,List<EpUsage>> usageOptions(HttpServletRequest  request,HttpServletResponse response) {
+		//String usage=request.getParameter("keyword");
+		List<EpUsage> list=epUsageServiceImpl.findAllUsage();
+		Map<String,List<EpUsage>> map=new HashMap<String,List<EpUsage>>();
+		map.put("data", list);
+		return map;
+	} 
+	
+	
+	
 	
 	@ResponseBody
 	@PostMapping("/frequency")
@@ -74,6 +97,26 @@ public class DataController {
 		return map;
 	}
 	
+	/**
+	 * 
+	* @Title: frequencyOptions
+	* @Description: TODO(获取所有频度选项)
+	* @param @param request
+	* @param @param response
+	* @param @return    参数
+	* @author wuxuecheng
+	* @return Map<String,List<EpUsage>>    返回类型
+	* @throws
+	 */
+	@ResponseBody
+	@PostMapping("/frequencyall")
+	public Map<String,List<EpFrequency>> frequencyOptions(HttpServletRequest  request,HttpServletResponse response) {
+		List<EpFrequency> list=epFrequencyServiceImpl.findAllFrequency();
+		Map<String,List<EpFrequency>> map=new HashMap<String,List<EpFrequency>>();
+		map.put("data", list);
+		return map;
+	} 
+	
 	
 	/**
 	 * 
@@ -95,6 +138,23 @@ public class DataController {
 		map.put("data", list);
 		return map;
 	}
+	
+	@ResponseBody
+	@PostMapping("/usagefrequencyoptions")
+	public Map<String,Map<String,List>> usageFrequencyOptions(HttpServletRequest  request,HttpServletResponse response){
+		
+		List<EpUsage> listu=epUsageServiceImpl.findAllUsage();
+		List<EpFrequency> listf=epFrequencyServiceImpl.findAllFrequency();
+		
+		Map<String,List> map=new HashMap<String,List>();
+		map.put("usageoptions", listu);
+		map.put("frequencyoptions", listf);
+		
+		Map<String,Map<String,List>> data=new HashMap<String,Map<String,List>>();
+		data.put("data", map);
+		return data;
+	}
+	
 	
 
 }

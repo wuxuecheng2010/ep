@@ -20,51 +20,14 @@
 <script type="text/javascript" src="/static/plugs/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="/static/plugs/layui/layui.all.js"></script>
 
-		<style type="text/css">
-            .div-wrap{
-		        position: relative;
-		        margin-bottom: 20px;
-		    }
-		    .select-wrap{
-		        overflow: hidden;
-		        margin-left: 40px;
-		        width: 28px;
-		    }
-		    .select{
-		        margin-left: -40px;
-		        border: 1px solid #ccc;
-		        border-radius: 0px;
-		        width: 72px !important;
-		        height: 32px !important;
-		    }
-		    .input1{
-		        position: absolute;
-		        top: 1px;
-		        left: 1px;
-		        border: none;
-		        border-top-left-radius: 0px;
-		        border-bottom-left-radius: 0px;
-		        padding: 0 5px;
-		        width: 54px;
-		        height: 30px;
-		        color: #212121;
-		        text-align: left;
-		        font-size: 12px;
-		    }
-		    
-		    .container-fluid{
-		    margin: auto 10px;
-		    }
-
-        </style>
 
 
 </head>
 
 <body>
-	<div class="container-fluid">
+	<div class="container">
 		<div class="row clearfix">
-			<div style="margin: 1px;">
+			<div class="col-md-12 column">
 			
 			<nav th:replace="fragments/ep::header"></nav>
 				
@@ -257,33 +220,23 @@
 							<div class="col-md-10">
 							    
 							    <div class="row clearfix">
-							        <div class="col-md-3">
-							             <b>通用名</b>
-							        </div>
-							        <div class="col-md-1">
-							             <b>规格</b>
+							        <div class="col-md-4">
+							             <b>通用名、规格、厂家</b>
 							        </div>
 							        <div class="col-md-2">
-							             <b>厂家</b>
+							            	<b>用法</b>
 							        </div>
-							        
-							        <div class="col-md-1">
-							             <b>用法</b>
-							        </div>
-							        <div class="col-md-1">
-							             <b>频度</b>
+							        <div class="col-md-2">
+							           <b>用量</b>
 							        </div>
 							        <div class="col-md-1">
-							             <b>剂量</b>
+							            		 <b>单价</b>
+							        </div>
+							        <div class="col-md-2">
+							                     <b>数量</b>
 							        </div>
 							        <div class="col-md-1">
-							             <b>单价</b>
-							        </div>
-							        <div class="col-md-1">
-							             <b>数量</b>
-							        </div>
-							        <div class="col-md-1">
-							             <b>金额</b>
+							                     <b>金额</b>
 							        </div>
 							        
 							    </div>
@@ -301,16 +254,21 @@
 		<div  class="row clearfix cfrow" th:each="order : ${orderslist}" th:id="r+${order.numno}" style="margin-top: -14px;">
 							    
 								<div class="col-md-1" style="text-align:center;">
-								    <span id="numno" style="line-height:40px;" th:text="${order.numno}"></span>
+								    <span id="numno" style="line-height:50px;" th:text="${order.numno}"></span>
 								</div>
 								<div class="col-md-10">
 								    
 								    <div class="row clearfix">
-								        <div class="col-md-3">
+								        <div class="col-md-4">
 								             <div class="row clearfix">
-										<input type="text" class=" textvcuniversalname" id="vcuniversalname" th:name="r+${order.numno}+vcuniversalname" th:value="${order.vcuniversalname}"   autocomplete="off"   />
+	<input type="text" class=" textvcuniversalname" id="vcuniversalname" th:name="r+${order.numno}+vcuniversalname" th:value="${order.vcuniversalname}"   autocomplete="off"   />
 								             </div>
-								             
+								             <div class="row clearfix">
+								               <span id="vcstandard" th:name="r+${order.numno}+vcstandard" th:text="${order.vcstandard}" ></span>
+								             </div>
+								             <div class="row clearfix">
+								                <span id="vcmanufacturer" th:name="r+${order.numno}+vcmanufacturer" th:text="${order.vcmanufacturer}"></span>
+								             </div>
 								             <div class="row clearfix hidden">
 								              	 <span id="iproductid" th:name="r+${order.numno}+iproductid" th:text="${order.iproductid}" ></span>
 								              	 <span id="iunitid" th:name="r+${order.numno}+iunitid" th:text="${order.iunitid}" ></span>
@@ -318,47 +276,28 @@
 								              	 
 								            </div>
 								        </div>
-								        <div class="col-md-1">
-								              <span id="vcstandard" th:name="r+${order.numno}+vcstandard" th:text="${order.vcstandard}" ></span>
+								        <div class="col-md-2">
+								             <input type="text" id="usage" th:name="r+${order.numno}+usage" th:value="${order.usage}" />
 								        </div>
 								        <div class="col-md-2">
-								              <span id="vcmanufacturer" style="color:blue;font-size:12px;" th:name="r+${order.numno}+vcmanufacturer" th:text="${order.vcmanufacturer}"></span>
+							                <div class="row clearfix">
+								                <div class="col-md-12"> 
+						<input type="text" id="frequency" th:name="r+${order.numno}+frequency" th:value="${order.frequency}" autocomplete="off" placeholder="频次 如tid" />
+								                </div>
+							                </div>
+							                <div class="row clearfix">
+								                <div class="col-md-12">  
+							<input type="text" id="dosis" th:name="r+${order.numno}+dosis" th:value="${order.dosis}"  autocomplete="off" placeholder="剂量  如每次3粒"  />
+								                </div>
+							                </div>  
 								        </div>
 								        <div class="col-md-1">
-								             
-								             <div class="div-wrap">
-									            <span class="select-wrap">
-									                <select id="usageselect" class="select" name="'+rowid+'usageselect">
-									                    
-									                </select>
-									            </span>
-									            <input id="usage" class="input1" th:name="r+${order.numno}+usage" th:value="${order.usage}" >
-									        </div>
-									        
+		<span id="numprice" th:name="r+${order.numno}+numprice"  th:text="${order.numprice}"></span>
+	         <span>/</span>
+	        <span id="unitname" th:name="r+${order.numno}+unitname" th:text="${order.vcunitname}" ></span>
 								        </div>
-								        <div class="col-md-1">
-								             
-								             <div class="div-wrap">
-									            <span class="select-wrap">
-									                <select id="frequencyselect" class="select" name="'+rowid+'frequencyselect">
-									                     
-									                </select>
-									            </span>
-									            <input id="frequency" class="input1" th:name="r+${order.numno}+frequency" th:value="${order.frequency}">
-								        	 </div>
-								        
-								        </div>
-								        <div class="col-md-1">
-								             <input type="text"  style="width:72px;font-size:12px;" id="dosis" th:name="r+${order.numno}+dosis" th:value="${order.dosis}"  autocomplete="off" placeholder="eg 每次3粒"  />
-								        </div>
-								        
-								        <div class="col-md-1" style="font-size:12px;">
-										<span id="numprice" th:name="r+${order.numno}+numprice"  th:text="${order.numprice}"></span>
-									         <span>/</span>
-									        <span id="unitname" th:name="r+${order.numno}+unitname" th:text="${order.vcunitname}" ></span>
-								        </div>
-								        <div class="col-md-1">
-								            <input id="totalcounts"  style="width:72px;font-size:12px;" type="number" th:name="r+${order.numno}+totalcounts" th:value="${order.totalcounts}" 
+								        <div class="col-md-2">
+								            <input id="totalcounts" type="number" th:name="r+${order.numno}+totalcounts" th:value="${order.totalcounts}" 
 	
 	autocomplete="off"  />
 								        </div>
@@ -417,8 +356,6 @@
 
 
 			</div>
-			</div>
-			</div>
 
 			<script th:inline="javascript">
 			
@@ -426,14 +363,8 @@
 					
 			var layer = layui.layer
 			  ,form = layui.form;
-			
-			var usage_options_html="";
-			var frequency_options_html="";
 
 					$(function() {
-						//初始化下拉框选项
-						initOptions();
-						
 						//添加一行
 						var optype=[[${optype}]];
 						if(optype=="create"){
@@ -450,41 +381,6 @@
 						initSubmit();
 
 					});
-					
-					//初始化下拉框选项
-					function initOptions(){
-						$.ajax({
-						    type:"POST",
-						    url:"/data/usagefrequencyoptions",
-						    dataType:"json",
-						    async: false,
-						    success:function(data){
-						    	//layer.msg(JSON.stringify(data));
-						    
-						    		var usageoptions=data.data.usageoptions;
-						    		//layer.msg(JSON.stringify(usageoptions));
-						    		var frequencyoptions=data.data.frequencyoptions;
-						    		$.each(usageoptions,function(i,c){
-						    			var option="<option>"+c.usage+"</option>";
-						    			usage_options_html+=option;
-						    		})
-						    		
-						    		$.each(frequencyoptions,function(i,c){
-						    			var option="<option>"+c.frequency+"</option>";
-						    			frequency_options_html+=option;
-						    		})
-						    		
-						    	
-						    },
-						    error:function(jqXHR){
-						    	layer.alert("发生错误："+jqXHR.status);
-						    }
-						});
-						
-					}
-					
-					
-
 					
 					function initSubmit(){
 						
@@ -587,8 +483,8 @@
 									$(c).find("#usage")[0].focus();
 									return false;
 								}
-								if(totalcounts==""||totalcounts=="0"||Number(totalcounts)<0){
-									layer.msg("第"+numno+"行,数量不对，请填写后再尝试提交");
+								if(totalcounts==""||totalcounts=="0"){
+									layer.msg("第"+numno+"行,未填写数量，请填写后再尝试提交");
 									valiflag=false;
 									$(c).find("#totalcounts")[0].focus();
 									return false;
@@ -773,69 +669,47 @@
 					   var row='<span><div id="'+rowid+'" class="row clearfix cfrow" style="margin-top: -14px;">'+
 						    
 							'<div class="col-md-1" style="text-align:center;">'+
-							    '<span id="numno" style="line-height:40px;">'+rownum+'</span>'+
+							    '<span id="numno" style="line-height:50px;">'+rownum+'</span>'+
 							'</div>'+
 							'<div class="col-md-10">'+
 							    
 							    '<div class="row clearfix">'+
-							        '<div class="col-md-3">'+
+							        '<div class="col-md-4">'+
 							             '<div class="row clearfix">'+
 							               '<input type="text" class=" textvcuniversalname" id="vcuniversalname" name="'+rowid+'vcuniversalname"  autocomplete="off"   />'+
 							             '</div>'+
-							             //'<div class="row clearfix">'+
-							             //  '<span id="vcstandard" name="'+rowid+'vcstandard"></span>'+
-							             //'</div>'+
-							             //'<div class="row clearfix">'+
-							             //   '<span style="color:blue;font-size:12px;" id="vcmanufacturer" name="'+rowid+'vcmanufacturer"></span>'+
-							             //'</div>'+
+							             '<div class="row clearfix">'+
+							               '<span id="vcstandard" name="'+rowid+'vcstandard"></span>'+
+							             '</div>'+
+							             '<div class="row clearfix">'+
+							                '<span id="vcmanufacturer" name="'+rowid+'vcmanufacturer"></span>'+
+							             '</div>'+
 							             '<div class="row clearfix hidden">'+
 							              	' <span id="iproductid" name="'+rowid+'iproductid" ></span>'+
 							              	' <span id="iunitid" name="'+rowid+'iunitid"></span>'+
 							              	' <span id="vcproductcode" name="'+rowid+'vcproductcode"></span>'+
 							             '</div>'+
 							        '</div>'+
-							        '<div class="col-md-1">'+
-							          '<span id="vcstandard" name="'+rowid+'vcstandard"></span>'+
-						            '</div>'+
-						            '<div class="col-md-2">'+
-						            '<span style="color:blue;font-size:12px;" id="vcmanufacturer" name="'+rowid+'vcmanufacturer"></span>'+
-						            '</div>'+
-							        '<div class="col-md-1">'+
-							            // '<input type="text"  style="width:72px;font-size:12px;display:none;"  id="usage" name="'+rowid+'usage" />'+
-							        
-							             '<div class="div-wrap">'+
-								            '<span class="select-wrap">'+
-								                '<select id="usageselect" class="select" name="'+rowid+'usageselect">'+
-								                    usage_options_html+
-								                '</select>'+
-								            '</span>'+
-								            '<input id="usage" class="input1" name="'+rowid+'usage" >'+
-								        '</div>'+
-								        
+							        '<div class="col-md-2">'+
+							             '<input type="text" id="usage" name="'+rowid+'usage" />'+
+							        '</div>'+
+							        '<div class="col-md-2">'+
+						                '<div class="row clearfix">'+
+							                '<div class="col-md-12"> '+  
+							                    '<input type="text" id="frequency" name="'+rowid+'frequency"  autocomplete="off" placeholder="频次 如tid" />'+
+							                '</div>'+
+						                '</div>'+
+						                '<div class="row clearfix">'+
+							                '<div class="col-md-12">  '+
+							          		    '<input type="text" id="dosis" name="'+rowid+'dosis"  autocomplete="off" placeholder="剂量  如每次3粒"  />'+
+							                '</div>'+
+						                '</div>  '+
 							        '</div>'+
 							        '<div class="col-md-1">'+
-							        //'<input type="text"  style="width:72px;font-size:12px;display:none;" id="frequency" name="'+rowid+'frequency"  autocomplete="off" placeholder="eg 1天一次" />'+
-							        
-							        
-							        '<div class="div-wrap">'+
-							            '<span class="select-wrap">'+
-							                '<select id="frequencyselect" class="select" name="'+rowid+'frequencyselect">'+
-							                     frequency_options_html+
-							                '</select>'+
-							            '</span>'+
-							            '<input id="frequency" class="input1" name="'+rowid+'frequency">'+
-						        	'</div>'+
-							        
-							        '</div>'+
-							        '<div class="col-md-1">'+
-							           '<input type="text"  style="width:72px;font-size:12px;" id="dosis" name="'+rowid+'dosis"  autocomplete="off" placeholder="eg 每次3粒"  />'+
-							        '</div>'+
-
-							        '<div class="col-md-1" style="font-size:12px;">'+
 							            '<span id="numprice" name="'+rowid+'numprice" ></span><span>/</span><span id="unitname" name="'+rowid+'unitname"  ></span>'+
 							        '</div>'+
-							        '<div class="col-md-1">'+
-							            '<input id="totalcounts"  style="width:72px;font-size:12px;" type="number" name="'+rowid+'totalcounts"  autocomplete="off"  />'+
+							        '<div class="col-md-2">'+
+							            '<input id="totalcounts" type="number" name="'+rowid+'totalcounts"  autocomplete="off"  />'+
 							        '</div>'+
 							        '<div class="col-md-1">'+
                                        '<span id="nummoney" name="'+rowid+'nummoney" ></span>'+
@@ -867,7 +741,6 @@
 							width: 543,
 							url:url,
 							callback:function(data){
-								//alert(JSON.stringify(data));
 								document.getElementsByName(rowid+"vcuniversalname")[0].value=data.vcuniversalname;
 								document.getElementsByName(rowid+"vcstandard")[0].innerText=data.vcstandard;
 								document.getElementsByName(rowid+"iproductid")[0].innerText=data.iproductid;
@@ -928,14 +801,6 @@
 						
 						//设置新行的首个输入框聚焦
 						$("#"+rowid).find("input:first").focus();
-						
-						//下拉框选项变化事件
-						$("#"+rowid+ " #usageselect").change(function(){
-							 $(this).parent().parent().find("#usage").val(this.options[this.selectedIndex].value);
-							});
-						$("#"+rowid+ " #frequencyselect").change(function(){
-							 $(this).parent().parent().find("#frequency").val(this.options[this.selectedIndex].value);
-							});
 						
 						initkey();
 						inittotalcountschange();
@@ -1019,25 +884,19 @@
 									
 								}
 							});   
-						 	
-						 	
-							//下拉框选项变化事件
-							$(c).find("#usageselect").html(usage_options_html);
-							$(c).find("#usageselect").change(function(){
-								 $(this).parent().parent().find("#usage").val(this.options[this.selectedIndex].value);
-							});
-							$(c).find("#frequencyselect").html(frequency_options_html);
-							$(c).find("#frequencyselect").change(function(){
-								 $(this).parent().parent().find("#frequency").val(this.options[this.selectedIndex].value);
-							});
 							
 							
-	
+							
+							
 						
 							});
 						
 						
-
+						
+						
+						
+			 			
+						
 						
 					}
 					
