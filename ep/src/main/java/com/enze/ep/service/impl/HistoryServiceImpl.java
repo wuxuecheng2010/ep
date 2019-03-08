@@ -252,4 +252,51 @@ public class HistoryServiceImpl implements HistoryService {
 		return map;
 	}
 
+	@Override
+	public WlAmdPatient getWlAmdPatientByCardNo(Map<String,String> map) {
+		//redies中查找是否已经存在
+				String key =  WlAmdPatient.Prefix_Redis_Key + WlAmdPatient.Prefix_Redis_Key_Separtor +map.get("card");
+				WlAmdPatient wlAmdPatient = (WlAmdPatient) redisTemplate.opsForValue().get(key);
+				if(wlAmdPatient==null) {
+					//没有就http获取并解析
+					//WlAmdResponse wlAmdResponse = null;
+					//Map<String, String> map = new HashMap<String, String>();
+					String resStr = HttpClientUtil.postMap(url, map);
+					if (resStr != null && !"".equals(resStr))
+						wlAmdPatient = formatWlAmdPatientStringToEntity(resStr);
+					//保存解析结果中的基本信息
+					//存入redies
+					redisTemplate.opsForValue().set(key, wlAmdPatient);
+					redisTemplate.expire(key, 24, TimeUnit.HOURS);//保存2小时
+					//保存基础信息
+				}
+				return wlAmdPatient;
+	}
+
+	@Override
+	public WlAmdPatient formatWlAmdPatientStringToEntity(String resStr) {
+		JSONObject jsonObject=(JSONObject) JSON.parse(resStr);
+		JSONObject jsonObjectPatient=jsonObject.getJSONObject("Patient");
+		String Address=jsonObjectPatient.getString("Address");
+		String Age=jsonObjectPatient.getString("Age");
+		String Dob=jsonObjectPatient.getString("Dob");
+		String IDNo=jsonObjectPatient.getString("IDNo");
+		String _Name=jsonObjectPatient.getString("Name");
+		String RegNo=jsonObjectPatient.getString("RegNo");
+		String Sex=jsonObjectPatient.getString("Sex");
+		String SocialStatus=jsonObjectPatient.getString("SocialStatus");
+		String Tel=jsonObjectPatient.getString("Tel");
+		WlAmdPatient wlAmdPatient=new WlAmdPatient(
+				 Address,
+				 Age,
+				 Dob,
+				 IDNo,
+				 _Name,
+				 RegNo,
+				 Sex,
+				 SocialStatus,
+				 Tel);
+		return wlAmdPatient;
+	}
+
 }
