@@ -28,6 +28,7 @@ public class EpOrders {
 	private String dosis;
 	private String frequency;
 	private String usage;
+	private String cfunit;//中文用量单位
 	
 	private BigDecimal backcounts;
 	

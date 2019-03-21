@@ -1,25 +1,24 @@
-
-b{
-	font-size:14px;
+b {
+	font-size: 14px;
 }
-input{
-            border: 1px solid #ccc;
-            border-radius: 0px;
-            color: #000;
-            font-family: 'Open Sans', sans-serif;
-            font-size:14px;
-            height: 30px;
-            transition: background 0.3s ease-in-out;
-            width: 100%;
 
-        }
- input:focus {
-     outline: none;
-     border-color: #9ecaed;
-     box-shadow: 0 0 10px #9ecaed;
- }
- 
- 
+input {
+	border: 1px solid #ccc;
+	border-radius: 0px;
+	color: #000;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
+	height: 30px;
+	transition: background 0.3s ease-in-out;
+	width: 100%;
+}
 
- 
- 
+input:focus {
+	outline: none;
+	border-color: #9ecaed;
+	box-shadow: 0 0 10px #9ecaed;
+}
+
+.numinput {
+	background-color: #FFFFE0;
+}

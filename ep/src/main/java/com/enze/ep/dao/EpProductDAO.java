@@ -28,5 +28,14 @@ public interface EpProductDAO {
     @Select({"select ", "iproductid,numprice", " from tb_ProductPrice  where ipricetypeid=3 "," and iproductid=#{iproductid}"})
     TbProductPrice selectProductByProductid(int iproductid);
 
+    @Select({"select distinct", SELECT_FIELDS, " from tb_Productinfo a left join tb_StockProductInfo b ",
+        "on a.IPRODUCTID = b.IPRODUCTID",
+        "left join tb_UnitInfo c on a.VCPRODUCTUNIT=c.ISID",
+        "left join (select * from tb_ProductPrice where ipricetypeid=3 )d on a.IPRODUCTID = d.IPRODUCTID ",
+        "left join ep_usage e on a.cfyf=e.usageid",
+        "left join ep_frequency f on a.cfpd=f.frequencyid",
+        "left join tb_UnitInfo g on a.cfunit=g.isid",
+        " where   a.IPRODUCTID=#{iproductid}"})
+    TbProduct selectProductByProductID(int iproductid);
 
 }

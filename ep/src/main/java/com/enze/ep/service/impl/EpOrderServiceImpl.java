@@ -14,6 +14,7 @@ import com.enze.ep.dao.EpOrderDAO;
 import com.enze.ep.dao.EpOrderStockDAO;
 import com.enze.ep.dao.EpOrdersDAO;
 import com.enze.ep.dao.EpPayInfoDAO;
+import com.enze.ep.dao.EpProductDAO;
 import com.enze.ep.dao.EpSalesInfoDAO;
 import com.enze.ep.dao.EpSalesInfoSDAO;
 import com.enze.ep.dao.EpSectionDAO;
@@ -24,8 +25,8 @@ import com.enze.ep.entity.EpOrderType;
 import com.enze.ep.entity.EpOrders;
 import com.enze.ep.entity.EpPayInfo;
 import com.enze.ep.entity.EpResult;
-import com.enze.ep.entity.TbCounter;
 import com.enze.ep.entity.TbDepartMent;
+import com.enze.ep.entity.TbProduct;
 import com.enze.ep.entity.TbSalesInfo;
 import com.enze.ep.entity.TbSalesInfoS;
 import com.enze.ep.entity.TbStockProductInfo;
@@ -65,6 +66,9 @@ public class EpOrderServiceImpl implements EpOrderService {
 
 	@Autowired
 	EpOrderStockDAO epOrderStockDAO;
+	
+	@Autowired
+	EpProductDAO epProductDAO;
 
 	@Autowired
 	RedisTemplate redisTemplate;
@@ -118,6 +122,13 @@ public class EpOrderServiceImpl implements EpOrderService {
 		List<EpOrders> list = (List<EpOrders>) redisTemplate.opsForValue().get(key);
 		if (list == null) {
 			list = epOrdersDAO.selectOrdersByOrderid(orderid);
+			for(EpOrders epOrders:list) {
+				int iproductid=epOrders.getIproductid();
+				TbProduct tbProduct=epProductDAO.selectProductByProductID(iproductid);
+				if(tbProduct!=null)
+				epOrders.setCfunit(tbProduct.getCfunit());
+			}
+			
 			redisTemplate.opsForValue().set(key, list);
 			redisTemplate.expire(key, 25, TimeUnit.SECONDS);
 		}

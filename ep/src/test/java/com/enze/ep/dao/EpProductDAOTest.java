@@ -30,5 +30,14 @@ public class EpProductDAOTest {
 		List<TbProduct> list=epProductDAO.selectProductByProductName(counterids, productName);
 		log.info("list length:"+list.size());
 	}
+	
+	@Test
+	public void testSelectProductByProductID() {
+		//1221
+		TbProduct p=epProductDAO.selectProductByProductID(1221);
+		log.info(p.getCfunit());
+	}
+	
+	
 
 }
