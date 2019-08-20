@@ -39,7 +39,7 @@ public interface EpOrderDAO {
     * @return List<EpOrder>    返回类型
     * @throws
      */
-    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where ordertype = #{ordertype} and usestatus=#{usestatus} and flagsendstore=#{flagsendstore} and credate>=dateadd(MINUTE,#{minutes},GETDATE())"})
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where ordertype = #{ordertype} and usestatus=#{usestatus} and flagsendstore=#{flagsendstore} and credate<=dateadd(MINUTE,#{minutes},GETDATE())"})
     List<EpOrder> selectOrderByOrderTypeAndUsestatusAndMinutesAndFlagSendStoreAOB(int ordertype, int usestatus,int minutes,int flagsendstore);
     
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where ordertype = #{ordertype} and usestatus=#{usestatus} and weixinrefundappflag=#{weixinrefundappflag} and credate>=dateadd(MINUTE,#{minutes},GETDATE())"})

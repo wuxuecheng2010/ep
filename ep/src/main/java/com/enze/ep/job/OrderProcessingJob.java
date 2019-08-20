@@ -3,6 +3,7 @@ package com.enze.ep.job;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,8 @@ public class OrderProcessingJob {
 	@Autowired
 	EpOrderService epOrderServiceImpl;
 	
-
+	@Value("${order.expired.days}")
+	private int order_expired_days;
   /**
    * 
   * @Title: salesOrderProcessing
@@ -49,6 +51,27 @@ public class OrderProcessingJob {
 	  log.info("End salesOrderProcessing");
   
   }
+  
+  //查询未结账的电子处方单据  并过时
+  @Scheduled(initialDelay = 30000,fixedRate = 15000)
+  public void epOrderProcessing()throws Exception{
+	  log.info("Start epOrderProcessing");
+	  int ordertype=EpOrderType.electronic_prescribing;
+	  int usestatus=EpOrderUsestatus.initial;
+	  //int minutes=-10000000;
+	  int minutes=-1*order_expired_days*24*60;
+	  int flagsendstore=0;
+	  //System.out.println(order_expired_days);
+	  //查询未结账的电子处方单据  时间   类型等因数查询
+	  List<EpOrder> list=epOrderServiceImpl.findOrderListByOrderTypeAndUsestatusAndMinutesAOB(ordertype, usestatus, minutes,flagsendstore);
+	  
+	  for(EpOrder order:list) {
+		  epOrderServiceImpl.cancelOrderByOrder(order.getOrderid());
+	  }
+	  log.info("End epOrderProcessing");
+  
+  }
+  
   
   /**
    * 

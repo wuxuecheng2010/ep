@@ -33,5 +33,17 @@ public class OrderProcessingJobTest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void testepOrderProcessing() {
+		
+		try {
+			orderProcessingJob.epOrderProcessing();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 
 }
